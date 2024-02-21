@@ -1,15 +1,20 @@
 {
-  "name": "components-account",
+  "name": "@kne-components/components-account",
   "version": "0.1.0",
-  "private": true,
+  "files": [
+    "build"
+  ],
   "dependencies": {
+    "@kne/use-control-value": "^0.1.8",
+    "js-cookie": "^3.0.5",
+    "md5": "^2.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "^5.0.0"
   },
   "scripts": {
     "start": "cross-env PORT=3001 MODULES_DEV_PUBLIC_URL=/ craco start",
-    "build": "cross-env COMPONENTS_NAME=components-name MODULES_DEV_PUBLIC_URL=/components-name  craco build",
+    "build": "cross-env COMPONENTS_NAME=components-name MODULES_DEV_PUBLIC_URL=/components-account  craco build",
     "test": "craco test --coverage",
     "eject": "react-scripts eject",
     "init": "npm i --legacy-peer-deps",
@@ -41,7 +46,7 @@
     }
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss}": [
       "prettier --config .prettierrc --write",
       "git add"
     ]
@@ -55,8 +60,7 @@
   },
   "devDependencies": {
     "@craco/craco": "^7.1.0",
-    "@kne/craco-module-federation": "^1.1.7",
-    "@kne/modules-dev": "^0.1.27",
+    "@kne/modules-dev": "^2.0.6",
     "@kne/react-fetch": "^1.4.3",
     "@kne/remote-loader": "^1.2.3",
     "antd": "^5.14.1",
@@ -67,7 +71,7 @@
     "husky": "^8.0.3",
     "lint-staged": "^13.3.0",
     "lodash": "^4.17.21",
-    "node-sass": "^7.0.3",
+    "node-sass": "^9.0.0",
     "prettier": "^2.8.8",
     "react-router-dom": "^6.22.1"
   }

@@ -1,0 +1,70 @@
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { createWithFetch } from '@kne/react-fetch';
+import { createWithRemoteLoader } from '@kne/remote-loader';
+import ResetPasswordComponent from '@components/ResetPassword';
+import { useProps, useBaseUrl } from '../../common/context';
+import { App } from 'antd';
+import merge from 'lodash/merge';
+import md5 from 'md5';
+import { moduleName } from '../../locale';
+
+const NavigateToLogin = () => {
+  const baseUrl = useBaseUrl();
+  return <Navigate to={`${baseUrl}/login`} />;
+};
+
+const EmailFormToken = createWithFetch({
+  error: () => <NavigateToLogin />
+})(({ data, children }) => {
+  return children({ email: data.email });
+});
+
+const ResetPassword = createWithRemoteLoader({
+  modules: ['components-core:Global@usePreset', 'components-core:Intl@useIntl']
+})(({ remoteModules }) => {
+  const [usePreset, useIntl] = remoteModules;
+  const { apis: presetApis, ajax } = usePreset();
+  const { apis, baseUrl } = useProps();
+  const { formatMessage } = useIntl({ moduleName });
+  const navigate = useNavigate();
+  const { message } = App.useApp();
+  const account = Object.assign({}, presetApis?.account, apis);
+  const { token } = useParams();
+  return (
+    <EmailFormToken
+      {...merge({}, account.parseResetEmailToken, {
+        data: {
+          token: decodeURIComponent(token)
+        }
+      })}
+    >
+      {({ email }) => {
+        return (
+          <ResetPasswordComponent
+            email={email}
+            onSubmit={async formData => {
+              const newPwd = md5(formData.newPwd);
+              const { data: resData } = await ajax(
+                merge({}, account.resetPassword, {
+                  data: {
+                    email: formData.email,
+                    oldPwd: md5(formData.oldPwd),
+                    newPwd: newPwd,
+                    confirmPwd: newPwd
+                  }
+                })
+              );
+              if (resData.code !== 0) {
+                return;
+              }
+              message.success(formatMessage({ id: 'resetSuccess' }));
+              navigate(`${baseUrl}/login`);
+            }}
+          />
+        );
+      }}
+    </EmailFormToken>
+  );
+});
+
+export default ResetPassword;

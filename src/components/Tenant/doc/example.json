@@ -1,0 +1,39 @@
+{
+  "isFull": true,
+  "list": [
+    {
+      "title": "这里填写示例标题",
+      "description": "这里填写示例说明",
+      "code": "./base.js",
+      "scope": [
+        {
+          "name": "_Tenant",
+          "packageName": "@components/Tenant"
+        },
+        {
+          "name": "_LoginOuterContainer",
+          "packageName": "@components/LoginOuterContainer"
+        },
+        {
+          "name": "lodash",
+          "packageName": "lodash"
+        }
+      ]
+    },
+    {
+      "title": "租户列表为空的情况",
+      "description": "租户列表为空的情况",
+      "code": "./empty.js",
+      "scope": [
+        {
+          "name": "_Tenant",
+          "packageName": "@components/Tenant"
+        },
+        {
+          "name": "_LoginOuterContainer",
+          "packageName": "@components/LoginOuterContainer"
+        }
+      ]
+    }
+  ]
+}
