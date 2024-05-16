@@ -29,18 +29,20 @@
 - _Modify(@components/Modify)
 
 ```jsx
-const {default: Modify} = _Modify;
+const { default: Modify } = _Modify;
 const BaseExample = () => {
-    return <Modify
-        className="outer"
-        email="test@test.com"
-        onSubmit={(data) => {
-            console.log(data);
-        }}
-    />;
+  return (
+    <Modify
+      className="outer"
+      email="test@test.com"
+      onSubmit={data => {
+        console.log(data);
+      }}
+    />
+  );
 };
 
-render(<BaseExample/>);
+render(<BaseExample />);
 
 ```
 

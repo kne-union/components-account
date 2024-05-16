@@ -1,27 +1,23 @@
-import { HashRouter } from "react-router-dom";
-import createEntry from "@kne/modules-dev/dist/create-entry";
-import "@kne/modules-dev/dist/create-entry.css";
-import readme from "readme";
+import { Routes, Route, Navigate } from 'react-router-dom';
+import pages from './pages';
+import MainLayout, { BeforeLoginLayout } from './MainLayout';
+import './index.scss';
 
-const ExampleRoutes = createEntry.ExampleRoutes;
+const { Home, Account, Error, NotFound } = pages;
 
-const App = ({ preset, themeToken, ...props }) => {
+const App = ({ globalPreset }) => {
   return (
-      <HashRouter>
-        <ExampleRoutes
-            {...props}
-            paths={[
-              {
-                key: "components",
-                path: "/",
-                title: "首页",
-              },
-            ]}
-            preset={preset}
-            themeToken={themeToken}
-            readme={readme}
-        />
-      </HashRouter>
+    <Routes>
+      <Route path="account" element={<BeforeLoginLayout preset={globalPreset} themeToken={globalPreset.themeToken} />}>
+        <Route path="*" element={<Account baseUrl="/account" />} />
+      </Route>
+      <Route path="/" element={<MainLayout preset={globalPreset} themeToken={globalPreset.themeToken} paths={[]} />}>
+        <Route index element={<Home />} />
+        <Route path="error" element={<Error />} />
+        <Route path="404" element={<NotFound />} />
+        <Route path="*" element={<Navigate to="404" />} />
+      </Route>
+    </Routes>
   );
 };
 
