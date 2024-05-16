@@ -1,10 +1,10 @@
 
-# ResetPassword
+# Register
 
 
 ### 概述
 
-重置密码
+注册账户
 
 
 ### 示例
@@ -26,20 +26,14 @@
 
 - 这里填写示例标题
 - 这里填写示例说明
-- _ResetPassword(@components/ResetPassword),router(react-router-dom)
+- _Register(@components/Register)
 
 ```jsx
-const { default: ResetPassword } = _ResetPassword;
-const { useLocation } = router;
+const { default: Register } = _Register;
 const BaseExample = () => {
-  const location = useLocation();
-  const list = location.pathname.split('/');
-  const baseUrl = list.slice(0, list.indexOf('ResetPassword') + 1).join('/') + '/account';
   return (
-    <ResetPassword
+    <Register
       className="outer"
-      baseUrl={baseUrl}
-      email="test@test.com"
       onSubmit={data => {
         console.log(data);
       }}

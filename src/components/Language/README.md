@@ -24,8 +24,8 @@ const BaseExample = () => {
       <Language />
       <div
         style={{
-          padding: "0 10px",
-          background: "var(--primary-color)",
+          padding: '0 10px',
+          background: 'var(--primary-color)'
         }}
       >
         <Language colorful />

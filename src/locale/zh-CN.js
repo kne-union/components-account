@@ -21,7 +21,13 @@ const message = {
   nextStep: '下一步',
   existingAccount: '已有账户，去登录',
   resetSuccess: '重置密码成功',
-  noTenantErrorTips: '暂无可选择的租户,请联系管理员!'
+  noTenantErrorTips: '暂无可选择的租户,请联系管理员!',
+  registerAccount: '注册账号',
+  phoneNumber: '电话号码',
+  loginPassword: '登录密码',
+  repeatPassword: '确认密码',
+  verificationCode: '验证码',
+  getVerificationCode: '获取验证码'
 };
 
 export default message;
