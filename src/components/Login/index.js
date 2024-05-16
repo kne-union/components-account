@@ -84,7 +84,7 @@ const Login = createWithRemoteLoader({
     ),
     formInner: () => (
       <>
-        <Input name="email" label={formatMessage({ id: 'emailAccount' })} rule="REQ EMAIL" />
+        <Input name="username" label={formatMessage({ id: 'emailAccount' })} rule="REQ EMAIL" />
         <Input.Password type="password" name="password" label={formatMessage({ id: 'password' })} rule="REQ LEN-6-50" />
       </>
     )

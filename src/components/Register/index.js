@@ -2,17 +2,20 @@ import { Button, Col, Row, Space } from 'antd';
 import commonStyle from '../../common/common.module.scss';
 import { createWithRemoteLoader } from '@kne/remote-loader';
 import classnames from 'classnames';
+import VerificationCodeButton from '@components/VerificationCodeButton';
 import rules from '../../common/rules';
 import importMessages, { moduleName } from '../../locale';
+import get from 'lodash/get';
 import style from './style.module.scss';
+import { useRef } from 'react';
 
 const Register = createWithRemoteLoader({
   modules: ['FormInfo@formModule', 'components-core:Intl@useIntl']
-})(({ remoteModules, onSubmit, className, render }) => {
+})(({ remoteModules, type, sendVerificationCode, validateCode, onSubmit, className, render }) => {
   const [formModule, useIntl] = remoteModules;
   const { Form, Input, SubmitButton, PhoneNumber } = formModule;
   const { formatMessage } = useIntl({ moduleName });
-
+  const formRef = useRef(null);
   const { title, formInner, footer, formOuter } = render({
     title: () => (
       <>
@@ -22,20 +25,32 @@ const Register = createWithRemoteLoader({
     ),
     formInner: () => (
       <>
-        <Input name="email" label={formatMessage({ id: 'emailAccount' })} rule="REQ EMAIL" />
-        <PhoneNumber name="phone" label={formatMessage({ id: 'phoneNumber' })} rule="REQ" />
-        <Input.Password name="password" label={formatMessage({ id: 'loginPassword' })} rule="REQ LEN-6-50" />
-        <Input.Password name="repeatPwd" label={formatMessage({ id: 'repeatNewPassword' })} rule="REQ LEN-6-50 REPEAT-newPwd" />
+        {type === 'phone' ? <PhoneNumber name="phone" label={formatMessage({ id: 'phoneNumber' })} rule="REQ" realtime /> : <Input name="email" label={formatMessage({ id: 'emailAccount' })} rule="REQ EMAIL" realtime />}
         <Row align={'bottom'} justify={'space-between'}>
           <Col className={style['code-field']}>
-            <Input name="verificationCode" label={formatMessage({ id: 'verificationCode' })} rule="REQ LEN-6" />
+            <Input name="code" label={formatMessage({ id: 'verificationCode' })} rule="REQ LEN-6 VALIDATE_CODE" />
           </Col>
           <Col>
-            <Button className={style['get-code']} type={'link'}>
+            <VerificationCodeButton
+              className={style['get-code']}
+              type={'link'}
+              target={{ name: type === 'phone' ? 'phone' : 'email' }}
+              onClick={async () => {
+                return (
+                  sendVerificationCode &&
+                  (await sendVerificationCode({
+                    type,
+                    data: type === 'phone' ? get(formRef.current.data, 'phone') : { email: get(formRef.current.data, 'email') }
+                  }))
+                );
+              }}
+            >
               {formatMessage({ id: 'getVerificationCode' })}
-            </Button>
+            </VerificationCodeButton>
           </Col>
         </Row>
+        <Input.Password name="password" label={formatMessage({ id: 'password' })} rule="REQ LEN-6-50" />
+        <Input.Password name="repeatPwd" label={formatMessage({ id: 'repeatNewPassword' })} rule="REQ LEN-6-50 REPEAT-password" />
       </>
     ),
     footer: () => (
@@ -43,8 +58,22 @@ const Register = createWithRemoteLoader({
         {formatMessage({ id: 'submit' })}
       </SubmitButton>
     ),
-    formOuter: ({ title, formInner, footer }) => (
-      <Form type="inner" rules={rules} size="large" onSubmit={onSubmit}>
+    formOuter: ({ title, formInner, footer, ref }) => (
+      <Form
+        ref={ref}
+        type="inner"
+        rules={Object.assign({}, rules, {
+          VALIDATE_CODE: async (value, { data: formData }) => {
+            return await validateCode({
+              code: value,
+              name: type === 'phone' ? formData.phone : formData.email,
+              type: type === 'phone' ? 0 : 1
+            });
+          }
+        })}
+        size="large"
+        onSubmit={onSubmit}
+      >
         <Space className={classnames(commonStyle['form-inner'])} size={38} direction="vertical">
           <div className={commonStyle['title']}>{title}</div>
           <div>{formInner}</div>
@@ -57,7 +86,16 @@ const Register = createWithRemoteLoader({
   const footerComponent = footer(),
     formInnerComponent = formInner(),
     titleComponent = title();
-  return <div className={classnames(commonStyle['out-container'], className)}>{formOuter({ title: titleComponent, formInner: formInnerComponent, footer: footerComponent })}</div>;
+  return (
+    <div className={classnames(commonStyle['out-container'], className)}>
+      {formOuter({
+        title: titleComponent,
+        formInner: formInnerComponent,
+        footer: footerComponent,
+        ref: formRef
+      })}
+    </div>
+  );
 });
 
 Register.defaultProps = {

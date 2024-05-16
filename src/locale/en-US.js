@@ -1,6 +1,7 @@
 const message = {
   login: 'Login',
   loginSuccess: 'Login Succeeded',
+  registerSuccess: 'Register Succeeded',
   emailAccount: 'Email Account',
   password: 'Password',
   rememberAccount: 'Remember Account',

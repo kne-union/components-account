@@ -1,6 +1,7 @@
 const message = {
   login: '登录',
   loginSuccess: '登录成功',
+  registerSuccess: '注册成功',
   emailAccount: '邮箱账号',
   password: '密码',
   rememberAccount: '记住账号',
@@ -11,7 +12,7 @@ const message = {
   newPassword: '新密码',
   setNewPassword: '设置新密码',
   setNewPasswordTips: '您正在重置登录密码，请设置您的新密码',
-  repeatNewPassword: '重复新密码',
+  repeatNewPassword: '重复密码',
   submit: '提交',
   returnToLogin: '返回登录',
   resetPassword: '重置密码',
