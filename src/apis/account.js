@@ -22,3 +22,18 @@ export const register = {
   url: '/api/v1/account/register',
   method: 'POST'
 };
+
+export const accountIsExists = {
+  url: '/api/v1/account/accountIsExists',
+  method: 'POST'
+};
+
+export const getUserInfo = {
+  url: '/api/v1/account/getUserInfo',
+  method: 'GET'
+};
+
+export const getUserTenant = {
+  url: '/api/v1/account/getUserTenant',
+  method: 'GET'
+};

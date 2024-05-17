@@ -6,6 +6,7 @@ import { preset as remoteLoaderPreset } from '@kne/remote-loader';
 import * as apis from './apis';
 import transform from 'lodash/transform';
 import omit from 'lodash/omit';
+import { getCookies } from '@common/cookies';
 
 if (window.runtimePublicUrl) {
   window.PUBLIC_URL = window.runtimePublicUrl;
@@ -20,10 +21,29 @@ export const ajax = (() => {
     }
   });
 
+  instance.interceptors.request.use(config => {
+    const token = getCookies('X-User-Token');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    return config;
+  });
+
+  instance.interceptors.response.use(response => {
+    if (response.status === 401 || response.data.code === 401) {
+      const searchParams = new URLSearchParams(window.location.search);
+      const referer = encodeURIComponent(window.location.pathname + window.location.search);
+      searchParams.append('referer', referer);
+      window.location.hash = '/account/login?' + searchParams.toString();
+      response.showError = false;
+    }
+    return response;
+  });
+
   instance.interceptors.response.use(
     response => {
       if (response.status !== 200) {
-        message.error(response?.data?.msg || '请求发生错误');
+        response.showError !== false && message.error(response?.data?.msg || '请求发生错误');
       }
       return response;
     },

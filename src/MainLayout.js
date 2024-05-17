@@ -5,7 +5,6 @@ const MainLayout = createWithRemoteLoader({
   modules: ['components-core:Global', 'components-core:Layout']
 })(({ remoteModules, paths, preset, ...props }) => {
   const [Global, Layout] = remoteModules;
-
   return (
     <Global {...props} preset={preset}>
       <Layout

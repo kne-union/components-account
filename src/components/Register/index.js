@@ -1,4 +1,4 @@
-import { Button, Col, Row, Space } from 'antd';
+import { Col, Row, Space } from 'antd';
 import commonStyle from '../../common/common.module.scss';
 import { createWithRemoteLoader } from '@kne/remote-loader';
 import classnames from 'classnames';
@@ -11,21 +11,20 @@ import { useRef } from 'react';
 
 const Register = createWithRemoteLoader({
   modules: ['FormInfo@formModule', 'components-core:Intl@useIntl']
-})(({ remoteModules, type, sendVerificationCode, validateCode, onSubmit, className, render }) => {
+})(({ remoteModules, type, sendVerificationCode, validateCode, accountIsExists, onSubmit, className, render }) => {
   const [formModule, useIntl] = remoteModules;
   const { Form, Input, SubmitButton, PhoneNumber } = formModule;
   const { formatMessage } = useIntl({ moduleName });
   const formRef = useRef(null);
   const { title, formInner, footer, formOuter } = render({
-    title: () => (
-      <>
-        {formatMessage({ id: 'registerAccount' })}
-        <div className={commonStyle['reset-new-desc']}>{formatMessage({ id: 'changePasswordTips' })}</div>
-      </>
-    ),
+    title: () => <>{formatMessage({ id: 'registerAccount' })}</>,
     formInner: () => (
       <>
-        {type === 'phone' ? <PhoneNumber name="phone" label={formatMessage({ id: 'phoneNumber' })} rule="REQ" realtime /> : <Input name="email" label={formatMessage({ id: 'emailAccount' })} rule="REQ EMAIL" realtime />}
+        {type === 'phone' ? (
+          <PhoneNumber name="phone" label={formatMessage({ id: 'phoneNumber' })} rule="REQ ACCOUNT_IS_EXISTS" codeType="code" realtime interceptor="phone-number-string" />
+        ) : (
+          <Input name="email" label={formatMessage({ id: 'emailAccount' })} rule="REQ EMAIL ACCOUNT_IS_EXISTS" realtime />
+        )}
         <Row align={'bottom'} justify={'space-between'}>
           <Col className={style['code-field']}>
             <Input name="code" label={formatMessage({ id: 'verificationCode' })} rule="REQ LEN-6 VALIDATE_CODE" />
@@ -40,7 +39,12 @@ const Register = createWithRemoteLoader({
                   sendVerificationCode &&
                   (await sendVerificationCode({
                     type,
-                    data: type === 'phone' ? get(formRef.current.data, 'phone') : { email: get(formRef.current.data, 'email') }
+                    data:
+                      type === 'phone'
+                        ? {
+                            phone: get(formRef.current.data, 'phone')
+                          }
+                        : { email: get(formRef.current.data, 'email') }
                   }))
                 );
               }}
@@ -63,6 +67,9 @@ const Register = createWithRemoteLoader({
         ref={ref}
         type="inner"
         rules={Object.assign({}, rules, {
+          ACCOUNT_IS_EXISTS: async (value, { field, data }) => {
+            return await accountIsExists(data[field.name]);
+          },
           VALIDATE_CODE: async (value, { data: formData }) => {
             return await validateCode({
               code: value,

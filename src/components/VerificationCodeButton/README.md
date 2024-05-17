@@ -16,9 +16,9 @@
 - _VerificationCodeButton(@components/VerificationCodeButton)
 
 ```jsx
-const {default:VerificationCodeButton} = _VerificationCodeButton;
-const BaseExample = ()=>{
-    return <VerificationCodeButton />;
+const { default: VerificationCodeButton } = _VerificationCodeButton;
+const BaseExample = () => {
+  return <VerificationCodeButton />;
 };
 
 render(<BaseExample />);

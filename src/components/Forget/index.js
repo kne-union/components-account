@@ -36,7 +36,7 @@ const Forget = createWithRemoteLoader({
         {formatMessage({ id: 'nextStep' })}
       </SubmitButton>
     ),
-    formInner: () => <Input name="email" label={formatMessage({ id: 'emailAccount' })} rule="REQ EMAIL" description={formatMessage({ id: 'emailAccountResetTips' })} />,
+    formInner: () => <Input name="email" label={formatMessage({ id: 'emailAccount' })} rule="REQ EMAIL" />,
     formOuter: ({ navigator, title, footer, formInner }) => (
       <Form
         type="inner"
