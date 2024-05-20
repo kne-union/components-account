@@ -5,7 +5,7 @@ export const UserInfo = createWithRemoteLoader({
   modules: ['components-core:Global@SetGlobal', 'components-core:Global@usePreset']
 })(({ remoteModules, children }) => {
   const [SetGlobal, usePreset] = remoteModules;
-  const { apis } = usePreset();
+  const { apis, ...props } = usePreset();
   return (
     <Fetch
       {...Object.assign({}, apis.account.getUserInfo)}

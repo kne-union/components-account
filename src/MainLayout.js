@@ -1,10 +1,23 @@
 import { createWithRemoteLoader } from '@kne/remote-loader';
 import { Outlet } from 'react-router-dom';
+import { UserInfo } from './Authenticate';
 
-const MainLayout = createWithRemoteLoader({
-  modules: ['components-core:Global', 'components-core:Layout']
-})(({ remoteModules, paths, preset, ...props }) => {
-  const [Global, Layout] = remoteModules;
+const Global = createWithRemoteLoader({
+  modules: ['components-core:Global']
+})(({ remoteModules, paths, preset, children, ...props }) => {
+  const [Global] = remoteModules;
+
+  return (
+    <Global {...props} preset={preset}>
+      {children}
+    </Global>
+  );
+});
+
+const GlobalLayout = createWithRemoteLoader({
+  modules: ['components-core:Layout', 'components-core:Global']
+})(({ remoteModules, paths, preset, children, ...props }) => {
+  const [Layout, Global] = remoteModules;
   return (
     <Global {...props} preset={preset}>
       <Layout
@@ -13,22 +26,46 @@ const MainLayout = createWithRemoteLoader({
           list: paths
         }}
       >
-        <Outlet />
+        {children}
       </Layout>
     </Global>
   );
 });
 
+const MainLayout = props => {
+  return (
+    <GlobalLayout {...props}>
+      <Outlet />
+    </GlobalLayout>
+  );
+};
+
 export default MainLayout;
 
-export const BeforeLoginLayout = createWithRemoteLoader({
-  modules: ['components-core:Global']
-})(({ remoteModules, paths, preset, ...props }) => {
-  const [Global] = remoteModules;
-
+export const AfterUserLoginLayout = props => {
   return (
-    <Global {...props} preset={preset}>
+    <GlobalLayout {...props}>
+      <UserInfo>
+        <Outlet />
+      </UserInfo>
+    </GlobalLayout>
+  );
+};
+
+export const AfterAdminUserLoginLayout = props => {
+  return (
+    <GlobalLayout {...props}>
+      <UserInfo>
+        <Outlet />
+      </UserInfo>
+    </GlobalLayout>
+  );
+};
+
+export const BeforeLoginLayout = props => {
+  return (
+    <Global {...props}>
       <Outlet />
     </Global>
   );
-});
+};

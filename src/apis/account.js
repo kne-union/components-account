@@ -37,3 +37,8 @@ export const getUserTenant = {
   url: '/api/v1/account/getUserTenant',
   method: 'GET'
 };
+
+export const initSuperAdmin = {
+  url: '/api/v1/account/initSuperAdmin',
+  method: 'POST'
+};
