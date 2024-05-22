@@ -9,6 +9,8 @@ const loadableWithProps = func =>
 const pages = {
   Home: loadableWithProps(() => import('./Home')),
   Account: loadableWithProps(() => import('./Account')),
+  Admin: loadableWithProps(() => import('./Admin')),
+  InitAdmin: loadableWithProps(() => import('./Admin').then(({ InitAdmin }) => InitAdmin)),
   Error: loadableWithProps(() => import('./Error')),
   NotFound: loadableWithProps(() => import('./NotFound'))
 };

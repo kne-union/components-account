@@ -5,7 +5,7 @@ import { App } from 'antd';
 import { moduleName } from '../../locale';
 import md5 from 'md5';
 import { useProps } from '../../common/context';
-import { setCookies, getCookies } from '../../common/cookies';
+import { setCookies } from '../../common/cookies';
 import useNavigate from '../../common/useNavigate';
 
 const DoLogin = createWithRemoteLoader({
@@ -13,7 +13,7 @@ const DoLogin = createWithRemoteLoader({
 })(({ remoteModules, children }) => {
   const [usePreset, useIntl] = remoteModules;
   const { apis: presetApis, ajax } = usePreset();
-  const { apis, targetUrl, headerKeys, baseUrl } = useProps();
+  const { apis, targetUrl, storeKeys } = useProps();
   const { formatMessage } = useIntl({ moduleName });
   const account = Object.assign({}, presetApis?.account, apis);
   const { message } = App.useApp();
@@ -21,8 +21,8 @@ const DoLogin = createWithRemoteLoader({
   const [searchParams] = useSearchParams();
   const referer = searchParams.get('referer');
   return children({
-    login: async (formData, callback) => {
-      const response = await ajax(
+    login: async ({ isTenant, ...formData }, callback) => {
+      const { data: resData } = await ajax(
         merge({}, account.login, {
           data: {
             ...formData,
@@ -30,38 +30,39 @@ const DoLogin = createWithRemoteLoader({
           }
         })
       );
-      const { data, headers } = response;
-
-      if (data.code !== 0) {
-        return response;
+      if (resData.code !== 0) {
+        return;
       }
-      let refererHref = targetUrl || baseUrl;
+      let refererHref = targetUrl || '/';
 
-      Object.values(headerKeys).forEach(key => {
-        headers[key] && setCookies(key, headers[key]);
+      Object.keys(storeKeys).forEach(key => {
+        resData.data[key] && setCookies(storeKeys[key], resData.data[key]);
       });
 
       if (referer) {
         const _referer = decodeURIComponent(referer);
         let obj = new URL(/http(s)?:/.test(_referer) ? _referer : window.location.origin + _referer);
-        Object.values(headerKeys).forEach(key => obj.searchParams.delete(key.toUpperCase()));
+        Object.values(resData.data).forEach(key => obj.searchParams.delete(key.toUpperCase()));
         refererHref = obj.pathname + obj.search;
       }
-      const talentList = data.data || [];
-      if (talentList.length === 0) {
-        message.error(formatMessage({ id: 'noTenantErrorTips' }));
+
+      if (!isTenant) {
+        navigate(refererHref);
         return;
       }
+      /*const talentList = data.data || [];
+            if (talentList.length === 0) {
+              message.error(formatMessage({ id: 'noTenantErrorTips' }));
+              return;
+            }*/
 
-      callback && (await Promise.resolve(callback({ data, headers, talentList, referer: refererHref })));
+      callback && (await Promise.resolve(callback({ referer: refererHref })));
 
       message.success(formatMessage({ id: 'loginSuccess' }));
-
       //如果存在上次设置的租户id，跳转到referer
-      if (talentList.some(({ id }) => id.toString() === (getCookies(headerKeys['tenantId'])?.toString() || ''))) {
-        navigate(refererHref);
-      }
-      return response;
+      /*if (talentList.some(({ id }) => id.toString() === (getCookies(headerKeys['tenantId'])?.toString() || ''))) {
+              navigate(refererHref);
+            }*/
     }
   });
 });

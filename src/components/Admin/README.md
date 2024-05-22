@@ -1,10 +1,10 @@
 
-# VerificationCodeButton
+# Admin
 
 
 ### 概述
 
-发送验证码
+提供一个管理后台，用于管理租户等
 
 
 ### 示例
@@ -13,12 +13,12 @@
 
 - 这里填写示例标题
 - 这里填写示例说明
-- _VerificationCodeButton(@components/VerificationCodeButton)
+- _Admin(@components/Admin)
 
 ```jsx
-const { default: VerificationCodeButton } = _VerificationCodeButton;
+const { default: Admin } = _Admin;
 const BaseExample = () => {
-  return <VerificationCodeButton />;
+  return <Admin />;
 };
 
 render(<BaseExample />);

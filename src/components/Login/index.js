@@ -44,6 +44,9 @@ const Login = createWithRemoteLoader({
             </Checkbox>
           </Col>
           <Col>
+            <LinkButton className={style['forget-button']} type="link" size="small" to={`${baseUrl}/register`}>
+              {formatMessage({ id: 'registerAccount' })}
+            </LinkButton>
             <LinkButton className={style['forget-button']} type="link" size="small" to={`${baseUrl}/forget`}>
               {formatMessage({ id: 'forgotPassword' })}
             </LinkButton>

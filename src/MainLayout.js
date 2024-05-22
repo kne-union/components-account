@@ -1,35 +1,75 @@
 import { createWithRemoteLoader } from '@kne/remote-loader';
 import { Outlet } from 'react-router-dom';
+import { SuperAdminInfo, UserInfo } from './Authenticate';
 
-const MainLayout = createWithRemoteLoader({
-  modules: ['components-core:Global', 'components-core:Layout']
-})(({ remoteModules, paths, preset, ...props }) => {
-  const [Global, Layout] = remoteModules;
+const Global = createWithRemoteLoader({
+  modules: ['components-core:Global']
+})(({ remoteModules, paths, preset, children, ...props }) => {
+  const [Global] = remoteModules;
 
+  return (
+    <Global {...props} preset={preset}>
+      {children}
+    </Global>
+  );
+});
+
+const GlobalLayout = createWithRemoteLoader({
+  modules: ['components-core:Layout', 'components-core:Global']
+})(({ remoteModules, navigation, title, preset, children, ...props }) => {
+  const [Layout, Global] = remoteModules;
   return (
     <Global {...props} preset={preset}>
       <Layout
         navigation={{
-          defaultTitle: 'KneUnion',
-          list: paths
+          defaultTitle: title,
+          ...navigation
         }}
       >
-        <Outlet />
+        {children}
       </Layout>
     </Global>
   );
 });
 
+const MainLayout = props => {
+  console.log('MainLayout');
+  return (
+    <GlobalLayout {...props}>
+      <Outlet />
+    </GlobalLayout>
+  );
+};
+
 export default MainLayout;
 
-export const BeforeLoginLayout = createWithRemoteLoader({
-  modules: ['components-core:Global']
-})(({ remoteModules, paths, preset, ...props }) => {
-  const [Global] = remoteModules;
-
+export const AfterUserLoginLayout = props => {
+  console.log('AfterUserLoginLayout');
   return (
-    <Global {...props} preset={preset}>
+    <GlobalLayout {...props}>
+      <UserInfo>
+        <Outlet />
+      </UserInfo>
+    </GlobalLayout>
+  );
+};
+
+export const AfterAdminUserLoginLayout = props => {
+  console.log('AfterAdminUserLoginLayout');
+  return (
+    <GlobalLayout {...props}>
+      <SuperAdminInfo>
+        <Outlet />
+      </SuperAdminInfo>
+    </GlobalLayout>
+  );
+};
+
+export const BeforeLoginLayout = props => {
+  console.log('BeforeLoginLayout');
+  return (
+    <Global {...props}>
       <Outlet />
     </Global>
   );
-});
+};

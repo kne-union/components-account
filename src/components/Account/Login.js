@@ -15,7 +15,7 @@ const Login = createWithRemoteLoader({
 })(({ remoteModules }) => {
   const [useGlobalContext] = remoteModules;
   const navigate = useNavigate();
-  const { headerKeys, language, baseUrl } = useProps();
+  const { storeKeys, language, baseUrl, isTenant } = useProps();
   const refererRef = useRef(baseUrl);
   const [tenantList, setTenantList] = useState([]);
   const { global: locale, setGlobal: setLocale } = useGlobalContext('locale');
@@ -23,14 +23,13 @@ const Login = createWithRemoteLoader({
     <LoginOuterContainer>
       <DoLogin>
         {({ login }) => {
-          if (tenantList.length > 0) {
+          if (isTenant && tenantList.length > 0) {
             return (
               <LoginTenant
                 data={tenantList}
                 onChange={({ tenantId }) => {
-                  setCookies(headerKeys['tenantId'], tenantId);
-                  const decodeReferer = refererRef.current ? refererRef.current : baseUrl;
-                  navigate(decodeReferer);
+                  setCookies(storeKeys['tenantId'], tenantId);
+                  navigate(refererRef.current ? refererRef.current : baseUrl);
                 }}
                 onBack={() => {
                   setTenantList([]);
@@ -59,9 +58,9 @@ const Login = createWithRemoteLoader({
                 });
               }}
               onSubmit={async formData => {
-                await login(formData, ({ talentList, referer }) => {
+                await login(Object.assign({}, formData, { isTenant }), ({ talentList, referer }) => {
                   refererRef.current = referer;
-                  setTenantList(talentList);
+                  isTenant && setTenantList(talentList);
                 });
               }}
             />

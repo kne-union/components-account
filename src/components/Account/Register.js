@@ -1,5 +1,4 @@
 import RegisterComponent from '@components/Register';
-import { useParams } from 'react-router-dom';
 import { useProps } from '../../common/context';
 import useNavigate from '../../common/useNavigate';
 import { createWithRemoteLoader } from '@kne/remote-loader';
@@ -7,22 +6,36 @@ import merge from 'lodash/merge';
 import md5 from 'md5';
 import { App } from 'antd';
 import { moduleName } from '../../locale';
-import { validateCode } from '../../apis/account';
 
 const Register = createWithRemoteLoader({
   modules: ['component-core:Global@usePreset', 'components-core:Intl@useIntl']
 })(({ remoteModules }) => {
   const [usePreset, useIntl] = remoteModules;
   const { apis: presetApis, ajax } = usePreset();
-  const { apis, baseUrl } = useProps();
-  const { email } = useParams();
+  const { apis, baseUrl, registerType } = useProps();
   const { formatMessage } = useIntl({ moduleName });
   const navigate = useNavigate();
   const { message } = App.useApp();
   const account = Object.assign({}, presetApis?.account, apis);
   return (
     <RegisterComponent
-      email={email}
+      type={registerType}
+      accountIsExists={async value => {
+        const { data: resData } = await ajax(
+          merge({}, account.accountIsExists, {
+            data: { username: value }
+          })
+        );
+        if (resData.code !== 0) {
+          return { result: false, errMsg: resData.msg || '%s请求错误' };
+        }
+
+        if (resData.data.isExists) {
+          return { result: false, errMsg: '%s已注册，请直接登录' };
+        }
+
+        return { result: true };
+      }}
       validateCode={async data => {
         const { data: resData } = await ajax(
           merge({}, account.validateCode, {
@@ -52,6 +65,7 @@ const Register = createWithRemoteLoader({
           merge({}, account.register, {
             data: {
               email: formData.email,
+              phone: formData.phone,
               password: newPwd,
               code: formData.code
             }
@@ -60,7 +74,7 @@ const Register = createWithRemoteLoader({
         if (resData.code !== 0) {
           return;
         }
-        message.success(formatMessage({ id: 'resetSuccess' }));
+        message.success(formatMessage({ id: 'registerSuccess' }));
         navigate(`${baseUrl}/login`);
       }}
     />

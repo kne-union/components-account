@@ -43,9 +43,9 @@ const Account = ({ className, baseUrl, ...props }) => {
 
 Account.defaultProps = {
   baseUrl: '/',
-  headerKeys: {
+  isTenant: false,
+  storeKeys: {
     tenantId: 'X-Tenant-Id',
-    userId: 'X-User-Id',
     token: 'X-User-Token'
   }
 };
