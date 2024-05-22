@@ -1,6 +1,6 @@
 import { createWithRemoteLoader } from '@kne/remote-loader';
 import { Outlet } from 'react-router-dom';
-import { UserInfo } from './Authenticate';
+import { SuperAdminInfo, UserInfo } from './Authenticate';
 
 const Global = createWithRemoteLoader({
   modules: ['components-core:Global']
@@ -16,14 +16,14 @@ const Global = createWithRemoteLoader({
 
 const GlobalLayout = createWithRemoteLoader({
   modules: ['components-core:Layout', 'components-core:Global']
-})(({ remoteModules, paths, preset, children, ...props }) => {
+})(({ remoteModules, navigation, title, preset, children, ...props }) => {
   const [Layout, Global] = remoteModules;
   return (
     <Global {...props} preset={preset}>
       <Layout
         navigation={{
-          defaultTitle: 'KneUnion',
-          list: paths
+          defaultTitle: title,
+          ...navigation
         }}
       >
         {children}
@@ -33,6 +33,7 @@ const GlobalLayout = createWithRemoteLoader({
 });
 
 const MainLayout = props => {
+  console.log('MainLayout');
   return (
     <GlobalLayout {...props}>
       <Outlet />
@@ -43,6 +44,7 @@ const MainLayout = props => {
 export default MainLayout;
 
 export const AfterUserLoginLayout = props => {
+  console.log('AfterUserLoginLayout');
   return (
     <GlobalLayout {...props}>
       <UserInfo>
@@ -53,16 +55,18 @@ export const AfterUserLoginLayout = props => {
 };
 
 export const AfterAdminUserLoginLayout = props => {
+  console.log('AfterAdminUserLoginLayout');
   return (
     <GlobalLayout {...props}>
-      <UserInfo>
+      <SuperAdminInfo>
         <Outlet />
-      </UserInfo>
+      </SuperAdminInfo>
     </GlobalLayout>
   );
 };
 
 export const BeforeLoginLayout = props => {
+  console.log('BeforeLoginLayout');
   return (
     <Global {...props}>
       <Outlet />

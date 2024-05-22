@@ -1,16 +1,14 @@
-import { createWithRemoteLoader } from '@kne/remote-loader';
 import { Routes, Route } from 'react-router-dom';
 import { Provider } from '../../common/context';
 import InitAdminPage from './InitAdmin';
 import HomePage from './HomePage';
-import style from './style.module.scss';
+import Tenant from './Tenant';
+import User from './User';
 
 export const InitAdmin = ({ baseUrl, ...props }) => {
   return (
     <Provider value={{ baseUrl, ...props }}>
-      <Routes>
-        <Route path="initAdmin" element={<InitAdminPage />} />
-      </Routes>
+      <InitAdminPage />
     </Provider>
   );
 };
@@ -24,6 +22,8 @@ const Admin = ({ baseUrl, ...props }) => {
     <Provider value={{ baseUrl, ...props }}>
       <Routes>
         <Route index element={<HomePage />} />
+        <Route path="tenant" element={<Tenant />} />
+        <Route path="user" element={<User />} />
       </Routes>
     </Provider>
   );

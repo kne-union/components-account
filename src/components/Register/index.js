@@ -1,4 +1,4 @@
-import { Col, Row, Space } from 'antd';
+import { Button, Col, Row, Space } from 'antd';
 import commonStyle from '../../common/common.module.scss';
 import { createWithRemoteLoader } from '@kne/remote-loader';
 import classnames from 'classnames';
@@ -8,14 +8,18 @@ import importMessages, { moduleName } from '../../locale';
 import get from 'lodash/get';
 import style from './style.module.scss';
 import { useRef } from 'react';
+import useNavigate from '../../common/useNavigate';
+import { useBaseUrl } from '../../common/context';
 
 const Register = createWithRemoteLoader({
-  modules: ['FormInfo@formModule', 'components-core:Intl@useIntl']
-})(({ remoteModules, type, sendVerificationCode, validateCode, accountIsExists, onSubmit, className, render }) => {
-  const [formModule, useIntl] = remoteModules;
+  modules: ['FormInfo@formModule', 'components-core:Intl@useIntl', 'components-core:Icon']
+})(({ remoteModules, baseUrl: baseUrlProp, type, sendVerificationCode, validateCode, accountIsExists, onSubmit, className, render }) => {
+  const [formModule, useIntl, Icon] = remoteModules;
   const { Form, Input, SubmitButton, PhoneNumber } = formModule;
   const { formatMessage } = useIntl({ moduleName });
   const formRef = useRef(null);
+  const navigate = useNavigate();
+  const baseUrl = useBaseUrl(baseUrlProp);
   const { title, formInner, footer, formOuter } = render({
     title: () => <>{formatMessage({ id: 'registerAccount' })}</>,
     formInner: () => (
@@ -81,6 +85,17 @@ const Register = createWithRemoteLoader({
         size="large"
         onSubmit={onSubmit}
       >
+        <Button
+          className={commonStyle['back-link']}
+          type="link"
+          size="large"
+          onClick={() => {
+            navigate(`${baseUrl}/login`);
+          }}
+        >
+          <Icon type="arrow-thin-left" />
+          {formatMessage({ id: 'existingAccount' })}
+        </Button>
         <Space className={classnames(commonStyle['form-inner'])} size={38} direction="vertical">
           <div className={commonStyle['title']}>{title}</div>
           <div>{formInner}</div>

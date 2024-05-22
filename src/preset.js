@@ -127,8 +127,6 @@ export const globalInit = async () => {
     };
   }
 
-  console.log(remoteComponentsLoader);
-
   remoteLoaderPreset({
     remotes: remoteComponentsLoader
   });

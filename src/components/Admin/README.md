@@ -16,9 +16,9 @@
 - _Admin(@components/Admin)
 
 ```jsx
-const {default:Admin} = _Admin;
-const BaseExample = ()=>{
-    return <Admin />;
+const { default: Admin } = _Admin;
+const BaseExample = () => {
+  return <Admin />;
 };
 
 render(<BaseExample />);
