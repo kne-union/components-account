@@ -31,11 +31,6 @@ const getColumns = () => {
       }
     },
     {
-      name: 'description',
-      title: '描述',
-      type: 'description'
-    },
-    {
       name: 'status',
       title: '状态',
       type: 'tag',
@@ -55,6 +50,11 @@ const getColumns = () => {
 
         return { text: '其他' };
       }
+    },
+    {
+      name: 'description',
+      title: '个人简介',
+      type: 'description'
     }
   ];
 };

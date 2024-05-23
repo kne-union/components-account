@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { createWithRemoteLoader } from '@kne/remote-loader';
-import { Space, Button } from 'antd';
+import { Space, Button, App } from 'antd';
 import getColumns from './getColumns';
 import FormInner from './FormInner';
+import ResetPasswordFormInner from './ResetPasswordFormInner';
+import md5 from 'md5';
 
 const User = createWithRemoteLoader({
   modules: ['components-core:Layout@TablePage', 'components-core:Filter@fields', 'components-core:FormInfo@useFormModal', 'components-core:Global@usePreset']
@@ -10,8 +12,9 @@ const User = createWithRemoteLoader({
   const [TablePage, filterFields, useFormModal, usePreset] = remoteModules;
   const [filter, setFilter] = useState([]);
   const { InputFilterItem } = filterFields;
-  const { apis } = usePreset();
+  const { ajax, apis } = usePreset();
   const formModal = useFormModal();
+  const { message } = App.useApp();
   return (
     <TablePage
       {...apis.account.getAllUserList}
@@ -26,10 +29,10 @@ const User = createWithRemoteLoader({
           valueOf: item => {
             return [
               {
-                children: '编辑基本信息',
+                children: '编辑',
                 onClick: () => {
                   formModal({
-                    title: '编辑基本信息',
+                    title: '编辑用户信息',
                     size: 'small',
                     children: <FormInner />,
                     formProps: {
@@ -37,6 +40,36 @@ const User = createWithRemoteLoader({
                     }
                   });
                 }
+              },
+              {
+                children: '修改密码',
+                onClick: () => {
+                  const modalApi = formModal({
+                    title: '修改用户密码',
+                    size: 'small',
+                    children: <ResetPasswordFormInner />,
+                    formProps: {
+                      onSubmit: async data => {
+                        const { data: resData } = await ajax(
+                          Object.assign({}, apis.account.resetUserPassword, {
+                            data: {
+                              password: md5(data.password),
+                              userId: item.id
+                            }
+                          })
+                        );
+                        if (resData.code !== 0) {
+                          return;
+                        }
+                        message.success('修改密码成功');
+                        modalApi.close();
+                      }
+                    }
+                  });
+                }
+              },
+              {
+                children: '设置为超级管理员'
               },
               {
                 children: '禁用'
@@ -56,7 +89,11 @@ const User = createWithRemoteLoader({
           onChange: setFilter,
           list: [[<InputFilterItem label="用户名" name="text" />]]
         },
-        titleExtra: <Space align="center"></Space>
+        titleExtra: (
+          <Space align="center">
+            <Button type="primary">添加用户</Button>
+          </Space>
+        )
       }}
     />
   );
