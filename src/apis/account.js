@@ -72,3 +72,8 @@ export const saveTenant = {
   url: '/api/v1/account/saveTenant',
   method: 'POST'
 };
+
+export const resetUserPassword = {
+  url: '/api/v1/account/resetUserPassword',
+  method: 'POST'
+};

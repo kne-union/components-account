@@ -4,6 +4,7 @@ import InitAdminPage from './InitAdmin';
 import HomePage from './HomePage';
 import Tenant from './Tenant';
 import User from './User';
+import Permission from './Permission';
 
 export const InitAdmin = ({ baseUrl, ...props }) => {
   return (
@@ -24,6 +25,7 @@ const Admin = ({ baseUrl, ...props }) => {
         <Route index element={<HomePage />} />
         <Route path="tenant" element={<Tenant />} />
         <Route path="user" element={<User />} />
+        <Route path="permission" element={<Permission />} />
       </Routes>
     </Provider>
   );

@@ -19,6 +19,11 @@ const getColumns = () => {
       name: 'serviceEndTime',
       title: '服务结束时间',
       type: 'date'
+    },
+    {
+      name: 'description',
+      title: '简介',
+      type: 'description'
     }
   ];
 };
