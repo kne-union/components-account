@@ -34,7 +34,7 @@ export const getUserInfo = {
 };
 
 export const getUserTenant = {
-  url: '/api/v1/account/getUserTenant',
+  url: '/api/v1/account/tenant/getUserTenant',
   method: 'GET'
 };
 
@@ -43,37 +43,42 @@ export const initSuperAdmin = {
   method: 'POST'
 };
 
-export const addSuperAdmin = {
-  url: '/api/v1/account/addSuperAdmin',
+export const addUser = {
+  url: '/api/v1/account/admin/addUser',
   method: 'POST'
 };
 
 export const getSuperAdminInfo = {
-  url: '/api/v1/account/getSuperAdminInfo',
+  url: '/api/v1/account/admin/getSuperAdminInfo',
   method: 'GET'
 };
 
 export const getAllUserList = {
-  url: '/api/v1/account/getAllUserList',
+  url: '/api/v1/account/admin/getAllUserList',
   method: 'GET'
 };
 
 export const getAllTenantList = {
-  url: '/api/v1/account/getAllTenantList',
+  url: '/api/v1/account/admin/getAllTenantList',
   method: 'GET'
 };
 
 export const addTenant = {
-  url: '/api/v1/account/addTenant',
+  url: '/api/v1/account/admin/addTenant',
   method: 'POST'
 };
 
 export const saveTenant = {
-  url: '/api/v1/account/saveTenant',
+  url: '/api/v1/account/admin/saveTenant',
   method: 'POST'
 };
 
 export const resetUserPassword = {
-  url: '/api/v1/account/resetUserPassword',
+  url: '/api/v1/account/admin/resetUserPassword',
+  method: 'POST'
+};
+
+export const saveUser = {
+  url: '/api/v1/account/admin/saveUser',
   method: 'POST'
 };

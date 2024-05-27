@@ -134,7 +134,16 @@ export const globalInit = async () => {
 
 export const globalPreset = {
   ajax,
-  apis,
+  apis: Object.assign({}, apis, {
+    oss: {
+      url: '/api/static/file-url/{id}',
+      paramsType: 'urlParams',
+      ignoreSuccessState: true
+    },
+    ossUpload: async ({ file }) => {
+      return await axios.postForm('/api/static/upload', { file });
+    }
+  }),
   themeToken: {
     colorPrimary: '#4F185A',
     colorPrimaryHover: '#702280'
