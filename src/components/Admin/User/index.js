@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { createWithRemoteLoader } from '@kne/remote-loader';
 import { Space, Button, App } from 'antd';
 import getColumns from './getColumns';
 import FormInner from './FormInner';
 import ResetPasswordFormInner from './ResetPasswordFormInner';
 import md5 from 'md5';
+import get from 'lodash/get';
 
 const User = createWithRemoteLoader({
   modules: ['components-core:Layout@TablePage', 'components-core:Filter@fields', 'components-core:FormInfo@useFormModal', 'components-core:Global@usePreset']
@@ -15,10 +16,12 @@ const User = createWithRemoteLoader({
   const { ajax, apis } = usePreset();
   const formModal = useFormModal();
   const { message } = App.useApp();
+  const ref = useRef(null);
   return (
     <TablePage
       {...apis.account.getAllUserList}
       name="user-list"
+      ref={ref}
       columns={[
         ...getColumns(),
         {
@@ -31,12 +34,25 @@ const User = createWithRemoteLoader({
               {
                 children: '编辑',
                 onClick: () => {
-                  formModal({
+                  const modalApi = formModal({
                     title: '编辑用户信息',
                     size: 'small',
                     children: <FormInner />,
                     formProps: {
-                      data: Object.assign({}, item)
+                      data: Object.assign({}, item),
+                      onSubmit: async data => {
+                        const { data: resData } = await ajax(
+                          Object.assign({}, apis.account.saveUser, {
+                            data: Object.assign({}, data, { id: item.id })
+                          })
+                        );
+                        if (resData.code !== 0) {
+                          return;
+                        }
+                        message.success('修改成功');
+                        ref.current.reload();
+                        modalApi.close();
+                      }
                     }
                   });
                 }
@@ -68,9 +84,13 @@ const User = createWithRemoteLoader({
                   });
                 }
               },
-              {
-                children: '设置为超级管理员'
-              },
+              get(item, 'adminRole.role') !== 'SuperAdmin'
+                ? {
+                    children: '设置超管'
+                  }
+                : {
+                    children: '取消超管'
+                  },
               {
                 children: '禁用'
               },
@@ -91,7 +111,33 @@ const User = createWithRemoteLoader({
         },
         titleExtra: (
           <Space align="center">
-            <Button type="primary">添加用户</Button>
+            <Button
+              type="primary"
+              onClick={() => {
+                const modalApi = formModal({
+                  title: '添加用户',
+                  size: 'small',
+                  children: <FormInner />,
+                  formProps: {
+                    onSubmit: async data => {
+                      const { data: resData } = await ajax(
+                        Object.assign({}, apis.account.addUser, {
+                          data: Object.assign({}, data)
+                        })
+                      );
+                      if (resData.code !== 0) {
+                        return;
+                      }
+                      message.success('添加成功');
+                      ref.current.reload();
+                      modalApi.close();
+                    }
+                  }
+                });
+              }}
+            >
+              添加用户
+            </Button>
           </Space>
         )
       }}

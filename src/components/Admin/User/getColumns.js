@@ -3,6 +3,12 @@ import get from 'lodash/get';
 const getColumns = () => {
   return [
     {
+      name: 'avatar',
+      title: '头像',
+      type: 'avatar',
+      valueOf: (item, { name }) => Object.assign({}, { gender: item['gender'] || 'M' }, { id: item[name] })
+    },
+    {
       name: 'nickname',
       title: '昵称',
       type: 'mainInfo'
