@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import { Provider } from '../../common/context';
 import InitAdminPage from './InitAdmin';
 import HomePage from './HomePage';
-import Tenant from './Tenant';
+import Tenant, { Detail as TenantDetail } from './Tenant';
 import User from './User';
 import Permission from './Permission';
 
@@ -24,6 +24,7 @@ const Admin = ({ baseUrl, ...props }) => {
       <Routes>
         <Route index element={<HomePage />} />
         <Route path="tenant" element={<Tenant />} />
+        <Route path="tenant/detail/:id" element={<TenantDetail />} />
         <Route path="user" element={<User />} />
         <Route path="permission" element={<Permission />} />
       </Routes>

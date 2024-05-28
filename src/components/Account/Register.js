@@ -23,7 +23,7 @@ const Register = createWithRemoteLoader({
       accountIsExists={async value => {
         const { data: resData } = await ajax(
           merge({}, account.accountIsExists, {
-            data: { username: value }
+            data: value
           })
         );
         if (resData.code !== 0) {

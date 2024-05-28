@@ -1,15 +1,12 @@
 import { createWithRemoteLoader } from '@kne/remote-loader';
 import { useParams, useSearchParams } from 'react-router-dom';
 import Fetch from '@kne/react-fetch';
-import FormInner from '../FormInner';
-import ContactsList from './ContactsList';
-import PositionList from './PositionList';
-import ContactsFormInner from './ContactsFormInner';
+import Role from '../Role';
 
-const CompanyInfo = createWithRemoteLoader({
+const BaseInfo = createWithRemoteLoader({
   modules: ['components-core:InfoPage', 'components-core:Descriptions', 'components-core:Enum']
 })(({ data, remoteModules }) => {
-  const [InfoPage, Descriptions, Enum] = remoteModules;
+  const [InfoPage, Descriptions] = remoteModules;
   return (
     <InfoPage>
       <InfoPage.Part title="基本信息">
@@ -25,7 +22,7 @@ const CompanyInfo = createWithRemoteLoader({
             [
               { label: '服务开始时间', content: data.serviceStartTime },
               {
-                label: 'serviceEndTime',
+                label: '服务结束时间',
                 content: data.serviceEndTime
               }
             ],
@@ -43,9 +40,8 @@ const CompanyInfo = createWithRemoteLoader({
 });
 
 const detailMap = {
-  companyInfo: CompanyInfo,
-  contacts: ContactsList,
-  position: PositionList
+  baseInfo: BaseInfo,
+  role: Role
 };
 
 const Detail = createWithRemoteLoader({
@@ -56,12 +52,12 @@ const Detail = createWithRemoteLoader({
   const formModal = useFormModal();
   const { id } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
-  const activeKey = searchParams.get('tab') || 'companyInfo';
+  const activeKey = searchParams.get('tab') || 'baseInfo';
   const DetailInner = detailMap[activeKey];
 
   return (
     <Fetch
-      {...Object.assign({}, apis.company.detail, { params: { id } })}
+      {...Object.assign({}, apis.account.getTenantInfo, { params: { id } })}
       render={({ data }) => {
         return (
           <StateBarPage
@@ -72,12 +68,17 @@ const Detail = createWithRemoteLoader({
                 setSearchParams(searchParams.toString());
               },
               stateOption: [
-                { tab: '公司信息', key: 'companyInfo' },
+                { tab: '租户信息', key: 'baseInfo' },
                 {
-                  tab: '公司联系人',
-                  key: 'contacts'
+                  tab: '角色权限',
+                  key: 'role'
                 },
-                { tab: '职位', key: 'position' }
+                { tab: '组织架构', key: 'org' },
+                { tab: '共享组', key: 'shareGroup' },
+                {
+                  tab: '租户用户',
+                  key: 'user'
+                }
               ]
             }}
             header={
@@ -87,24 +88,11 @@ const Detail = createWithRemoteLoader({
                 options={[
                   {
                     children: '编辑',
-                    onClick: () => {
-                      formModal({
-                        title: '编辑公司信息',
-                        children: <FormInner />,
-                        formProps: {
-                          data
-                        }
-                      });
-                    }
+                    onClick: () => {}
                   },
                   {
                     children: '添加公司联系人',
-                    onClick: () => {
-                      formModal({
-                        title: '添加公司联系人',
-                        children: <ContactsFormInner />
-                      });
-                    }
+                    onClick: () => {}
                   },
                   {
                     children: '禁用'
