@@ -3,6 +3,8 @@ import { createWithRemoteLoader } from '@kne/remote-loader';
 import { Space, Button, App } from 'antd';
 import getColumns from './getColumns';
 import FormInner from '../FormInner';
+import { useNavigate } from 'react-router-dom';
+import { useBaseUrl } from '@common/context';
 
 const List = createWithRemoteLoader({
   modules: ['components-core:Layout@TablePage', 'components-core:Filter', 'components-core:FormInfo@useFormModal', 'components-core:Global@usePreset']
@@ -15,6 +17,11 @@ const List = createWithRemoteLoader({
   const formModal = useFormModal();
   const { message } = App.useApp();
   const ref = useRef();
+  const baseUrl = useBaseUrl();
+  const navigate = useNavigate();
+  const navigateTo = ({ id }) => {
+    return navigate(`${baseUrl}/tenant/detail/${id}`);
+  };
   return (
     <TablePage
       {...Object.assign({}, apis.account.getAllTenantList, {
@@ -24,7 +31,7 @@ const List = createWithRemoteLoader({
       ref={ref}
       name="tenant-list"
       columns={[
-        ...getColumns(),
+        ...getColumns({ navigateTo }),
         {
           name: 'options',
           title: '操作',
