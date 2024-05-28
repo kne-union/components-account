@@ -1,9 +1,12 @@
-const getColumns = () => {
+const getColumns = ({ navigateTo }) => {
   return [
     {
       name: 'name',
       title: '租户名',
-      type: 'mainInfo'
+      type: 'mainInfo',
+      onClick: ({ colItem: item }) => {
+        navigateTo(item);
+      }
     },
     {
       name: 'accountNumber',

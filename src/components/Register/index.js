@@ -72,7 +72,7 @@ const Register = createWithRemoteLoader({
         type="inner"
         rules={Object.assign({}, rules, {
           ACCOUNT_IS_EXISTS: async (value, { field, data }) => {
-            return await accountIsExists(data[field.name]);
+            return await accountIsExists({ [field.name]: data[field.name] });
           },
           VALIDATE_CODE: async (value, { data: formData }) => {
             return await validateCode({

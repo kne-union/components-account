@@ -82,3 +82,28 @@ export const saveUser = {
   url: '/api/v1/account/admin/saveUser',
   method: 'POST'
 };
+
+export const getTenantInfo = {
+  url: '/api/v1/account/admin/getTenantInfo',
+  method: 'GET'
+};
+
+export const getTenantRoleList = {
+  url: '/api/v1/account/admin/getRoleList',
+  method: 'GET'
+};
+
+export const addTenantRole = {
+  url: '/api/v1/account/admin/addRole',
+  method: 'POST'
+};
+
+export const saveTenantRole = {
+  url: '/api/v1/account/admin/saveRole',
+  method: 'POST'
+};
+
+export const remoteTenantRole = {
+  url: '/api/v1/account/admin/removeRole',
+  method: 'POST'
+};
