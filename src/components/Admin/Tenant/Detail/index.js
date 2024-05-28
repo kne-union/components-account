@@ -1,7 +1,10 @@
 import { createWithRemoteLoader } from '@kne/remote-loader';
 import { useParams, useSearchParams } from 'react-router-dom';
 import Fetch from '@kne/react-fetch';
+import dayjs from 'dayjs';
+
 import Role from '../Role';
+import Organization from '../Organization';
 
 const BaseInfo = createWithRemoteLoader({
   modules: ['components-core:InfoPage', 'components-core:Descriptions', 'components-core:Enum']
@@ -20,10 +23,10 @@ const BaseInfo = createWithRemoteLoader({
               }
             ],
             [
-              { label: '服务开始时间', content: data.serviceStartTime },
+              { label: '服务开始时间', content: dayjs(data.serviceStartTime).format('YYYY-MM-DD') },
               {
                 label: '服务结束时间',
-                content: data.serviceEndTime
+                content: dayjs(data.serviceEndTime).format('YYYY-MM-DD')
               }
             ],
             [
@@ -41,7 +44,8 @@ const BaseInfo = createWithRemoteLoader({
 
 const detailMap = {
   baseInfo: BaseInfo,
-  role: Role
+  role: Role,
+  org: Organization
 };
 
 const Detail = createWithRemoteLoader({
@@ -85,22 +89,24 @@ const Detail = createWithRemoteLoader({
               <PageHeader
                 title={data.name}
                 info={`编号:${data.id}`}
-                options={[
-                  {
-                    children: '编辑',
-                    onClick: () => {}
-                  },
-                  {
-                    children: '添加公司联系人',
-                    onClick: () => {}
-                  },
-                  {
-                    children: '禁用'
-                  },
-                  {
-                    children: '删除'
-                  }
-                ]}
+                buttonOptions={{
+                  list: [
+                    {
+                      children: '编辑',
+                      onClick: () => {}
+                    },
+                    {
+                      children: '添加公司联系人',
+                      onClick: () => {}
+                    },
+                    {
+                      children: '禁用'
+                    },
+                    {
+                      children: '删除'
+                    }
+                  ]
+                }}
               />
             }
           >

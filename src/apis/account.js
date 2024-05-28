@@ -112,3 +112,11 @@ export const remoteTenantRole = {
   url: '/api/v1/account/admin/removeRole',
   method: 'POST'
 };
+
+export const getTenantOrgList = {
+  url: '/api/v1/account/admin/tenant/orgList'
+};
+
+export const addTenantOrg = {
+  url: '/api/v1/account/admin/tenant/addOrg'
+};
