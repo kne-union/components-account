@@ -82,3 +82,8 @@ export const saveUser = {
   url: '/api/v1/account/admin/saveUser',
   method: 'POST'
 };
+
+export const closeUser = {
+  url: '/api/v1/account/admin/closeUser',
+  method: 'POST'
+};
