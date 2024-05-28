@@ -92,12 +92,25 @@ const User = createWithRemoteLoader({
                     children: '取消超管'
                   },
               {
-                children: '禁用'
-              },
-              {
                 isDelete: true,
                 confirm: true,
-                children: '关闭'
+                children: '关闭',
+                message: '确定要关闭该账号吗？',
+                okText: '确认',
+                onClick: async () => {
+                  const { data: resData } = await ajax(
+                    Object.assign({}, apis.account.closeUser, {
+                      data: {
+                        userId: item.id
+                      }
+                    })
+                  );
+                  if (resData.code !== 0) {
+                    return;
+                  }
+                  message.success('账号已关闭');
+                  ref.current.reload();
+                }
               }
             ];
           }
