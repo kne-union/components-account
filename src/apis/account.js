@@ -121,3 +121,8 @@ export const addTenantOrg = {
   url: '/api/v1/account/admin/tenant/addOrg',
   method: 'POST'
 };
+
+export const removeTenantOrg = {
+  url: '/api/v1/account/admin/tenant/removeOrg',
+  method: 'POST'
+};

@@ -2,7 +2,7 @@ import { createWithRemoteLoader } from '@kne/remote-loader';
 
 const FormInner = createWithRemoteLoader({
   modules: ['components-core:FormInfo']
-})(({ remoteModules, treeData }) => {
+})(({ remoteModules, treeData, record = {} }) => {
   const [FormInfo] = remoteModules;
   const { Input, TreeSelect } = FormInfo.fields;
 
@@ -22,6 +22,7 @@ const FormInner = createWithRemoteLoader({
             children: 'children'
           }}
           treeData={treeData}
+          display={Number(record.pid) !== 0 || !record.id}
           showSearch
           treeNodeFilterProp="name"
         >
