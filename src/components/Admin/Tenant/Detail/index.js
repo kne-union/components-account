@@ -1,46 +1,10 @@
 import { createWithRemoteLoader } from '@kne/remote-loader';
 import { useParams, useSearchParams } from 'react-router-dom';
 import Fetch from '@kne/react-fetch';
-import dayjs from 'dayjs';
 
+import BaseInfo from '../BaseInfo';
 import Role from '../Role';
 import Organization from '../Organization';
-
-const BaseInfo = createWithRemoteLoader({
-  modules: ['components-core:InfoPage', 'components-core:Descriptions', 'components-core:Enum']
-})(({ data, remoteModules }) => {
-  const [InfoPage, Descriptions] = remoteModules;
-  return (
-    <InfoPage>
-      <InfoPage.Part title="基本信息">
-        <Descriptions
-          dataSource={[
-            [
-              { label: '租户名称', content: data.name },
-              {
-                label: '账号数量',
-                content: data.accountNumber
-              }
-            ],
-            [
-              { label: '服务开始时间', content: dayjs(data.serviceStartTime).format('YYYY-MM-DD') },
-              {
-                label: '服务结束时间',
-                content: dayjs(data.serviceEndTime).format('YYYY-MM-DD')
-              }
-            ],
-            [
-              {
-                label: '简介',
-                content: data.description
-              }
-            ]
-          ]}
-        />
-      </InfoPage.Part>
-    </InfoPage>
-  );
-});
 
 const detailMap = {
   baseInfo: BaseInfo,
@@ -110,7 +74,7 @@ const Detail = createWithRemoteLoader({
               />
             }
           >
-            <DetailInner data={data} />
+            <DetailInner record={data} />
           </StateBarPage>
         );
       }}
