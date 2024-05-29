@@ -118,5 +118,6 @@ export const getTenantOrgList = {
 };
 
 export const addTenantOrg = {
-  url: '/api/v1/account/admin/tenant/addOrg'
+  url: '/api/v1/account/admin/tenant/addOrg',
+  method: 'POST'
 };

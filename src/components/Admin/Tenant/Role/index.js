@@ -7,11 +7,11 @@ import { remoteTenantRole } from '../../../../apis/account';
 
 const Role = createWithRemoteLoader({
   modules: ['components-core:Table@TablePage', 'components-core:FormInfo@useFormModal', 'components-core:Global@usePreset']
-})(({ remoteModules, data }) => {
+})(({ remoteModules, record }) => {
   const [TablePage, useFormModal, usePreset] = remoteModules;
   const { ajax, apis } = usePreset();
   const formModal = useFormModal();
-  const tenantId = data.id;
+  const tenantId = record.id;
   const { message } = App.useApp();
   const ref = useRef(null);
   return (

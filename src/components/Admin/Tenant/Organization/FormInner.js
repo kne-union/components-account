@@ -2,10 +2,11 @@ import { createWithRemoteLoader } from '@kne/remote-loader';
 
 const FormInner = createWithRemoteLoader({
   modules: ['components-core:FormInfo', 'components-core:Global@usePreset']
-})(({ remoteModules, record = {} }) => {
+})(({ remoteModules, tenantId }) => {
   const [FormInfo, usePreset] = remoteModules;
   const { Input, TreeSelect } = FormInfo.fields;
   const { apis } = usePreset();
+
   return (
     <FormInfo
       column={1}
@@ -21,10 +22,9 @@ const FormInner = createWithRemoteLoader({
             label: 'name',
             children: 'children'
           }}
-          display={Number(record.pid) !== 0 || !record.id}
           showSearch
           treeNodeFilterProp="name"
-          params={{ tenantId: record.id }}
+          params={{ tenantId }}
           {...apis.account.getTenantOrgList}
         >
           {({ data }) => {
