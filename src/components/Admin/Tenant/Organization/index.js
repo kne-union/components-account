@@ -7,6 +7,10 @@ import get from 'lodash/get';
 
 import style from '../../style.module.scss';
 
+const getTreeData = (treeMap, pid) => {
+  return (get(treeMap, pid) || []).map(item => Object.assign({}, item, { children: getTreeData(treeMap, item.id) }));
+};
+
 const OrganizationInner = createWithRemoteLoader({
   modules: ['components-core:FormInfo@useFormModal', 'components-core:Global@usePreset']
 })(
@@ -17,7 +21,9 @@ const OrganizationInner = createWithRemoteLoader({
     const [expandedKeys, setExpandedKeys] = useState([]);
 
     const treeData = useMemo(() => {
-      return Array.isArray(data.pageData) ? data.pageData || [] : [data.pageData];
+      const tree = Array.isArray(data.pageData) ? data.pageData || [] : [data.pageData];
+      const treeMap = Object.groupBy(tree, item => item.pid);
+      return getTreeData(treeMap, '0');
     }, [data]);
 
     useEffect(() => {
