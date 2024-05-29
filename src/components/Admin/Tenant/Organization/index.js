@@ -23,6 +23,7 @@ const OrganizationInner = createWithRemoteLoader({
     useEffect(() => {
       setExpandedKeys([get(data.pageData, '[0].id')]);
     }, [data]);
+
     return (
       <Flex vertical gap={8} flex={1}>
         <Flex justify="space-between">
@@ -50,7 +51,7 @@ const OrganizationInner = createWithRemoteLoader({
                     }
                   },
                   size: 'small',
-                  children: <FormInner tenantId={tenantId} />
+                  children: <FormInner treeData={treeData} />
                 });
               }}
             >
