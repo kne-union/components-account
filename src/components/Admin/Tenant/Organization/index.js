@@ -7,6 +7,7 @@ import get from 'lodash/get';
 import merge from 'lodash/merge';
 
 import style from './style.module.scss';
+import { editTenantOrg } from '../../../../apis/account';
 
 const getTreeData = (treeMap, pid) => {
   return (get(treeMap, pid) || []).map(item => Object.assign({}, item, { children: getTreeData(treeMap, item.id) }));
@@ -89,6 +90,35 @@ const OrganizationInner = createWithRemoteLoader({
                   )}
                 </Space>
                 <Space size={24} className={style['tree-node-actions']}>
+                  <Typography.Text
+                    onClick={() => {
+                      const formApi = formModal({
+                        title: '编辑组织',
+                        formProps: {
+                          data: nodeData,
+                          onSubmit: async data => {
+                            const pid = data.pid || '0';
+                            const { data: resData } = await ajax(
+                              Object.assign({}, apis.account.editTenantOrg, {
+                                data: Object.assign({}, data, { tenantId, pid, id: nodeData.id })
+                              })
+                            );
+                            if (resData.code !== 0) {
+                              return;
+                            }
+                            message.success('组织编辑成功');
+                            formApi.close();
+                            reload();
+                          }
+                        },
+                        size: 'small',
+                        children: <FormInner treeData={treeData} record={nodeData} />
+                      });
+                    }}
+                  >
+                    编辑
+                    <Icon type="bianji" />
+                  </Typography.Text>
                   {nodeData.pid !== 0 && (
                     <ConfirmLink
                       onClick={() => {
