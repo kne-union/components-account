@@ -1,55 +1,17 @@
 import { createWithRemoteLoader } from '@kne/remote-loader';
-import { Button, Menu, App } from 'antd';
-import mockList from './mock/permission-list.json';
-import { useMemo, useState } from 'react';
-import style from './style.module.scss';
-import Detail from './Detail';
+import { App, Button } from 'antd';
+import { useRef } from 'react';
 import ApplicationFormInner from './ApplicationFormInner';
-import Fetch from '@kne/react-fetch';
-
-const ApplicationList = createWithRemoteLoader({
-  modules: ['components-core:Global@usePreset']
-})(({ remoteModules, current, onChange }) => {
-  const [usePreset] = remoteModules;
-  const { apis } = usePreset();
-  return (
-    <Fetch
-      {...Object.assign({}, apis.account.getApplicationList)}
-      render={({ data }) => {
-        return (
-          <Menu
-            items={data.map(item => {
-              return {
-                label: `${item.name}(${item.code})`,
-                key: item.code
-              };
-            })}
-            className={style['menu-outer']}
-            selectedKeys={current}
-            onClick={({ key }) => onChange(key)}
-          />
-        );
-      }}
-    />
-  );
-});
+import PermissionPanel from './PermissionPanel';
 
 const Permission = createWithRemoteLoader({
-  modules: ['components-core:Layout@Page', 'components-core:FormInfo@useFormModel', 'components-core:Global@usePreset']
-})(({ remoteModules }) => {
-  const [Page, useFormModel, usePreset] = remoteModules;
-  const [current, setCurrent] = useState('');
+  modules: ['components-core:Layout@Page', 'components-core:FormInfo@useFormModal', 'components-core:Global@usePreset']
+})(({ remoteModules, value, isEdit }) => {
+  const [Page, useFormModal, usePreset] = remoteModules;
   const { ajax, apis } = usePreset();
   const { message } = App.useApp();
-  const formModel = useFormModel();
-  const mockListData = useMemo(() => {
-    const list = (mockList.data || []).map(({ id, name }) => ({ key: id.toString(), label: name }));
-    if (list.length) {
-      setCurrent(list[0].key);
-    }
-    return list;
-  }, [mockList.data]);
-
+  const formModal = useFormModal();
+  const appRef = useRef(null);
   return (
     <Page
       title="应用权限管理"
@@ -57,8 +19,9 @@ const Permission = createWithRemoteLoader({
         <Button
           type="primary"
           onClick={() => {
-            formModel({
+            const formApi = formModal({
               title: '添加应用',
+              size: 'small',
               formProps: {
                 onSubmit: async data => {
                   const { data: resData } = await ajax(
@@ -70,6 +33,8 @@ const Permission = createWithRemoteLoader({
                     return;
                   }
                   message.success('添加应用成功');
+                  appRef.current.reload();
+                  formApi.close();
                 }
               },
               children: <ApplicationFormInner />
@@ -80,22 +45,7 @@ const Permission = createWithRemoteLoader({
         </Button>
       }
     >
-      <div className={style['flex-wrapper']}>
-        <ApplicationList current={current} onChange={setCurrent} />
-        <Detail
-          params={{ id: current }}
-          id={current}
-          onChange={changedCheckedList => {
-            console.log('配置checkedList', changedCheckedList);
-          }}
-          onEdit={item => {
-            console.log('edit...', item);
-          }}
-          onDelete={item => {
-            console.log('delete...', item);
-          }}
-        />
-      </div>
+      <PermissionPanel ref={appRef} isEdit={isEdit} value={value} />
     </Page>
   );
 });

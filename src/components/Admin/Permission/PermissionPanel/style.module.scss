@@ -22,6 +22,7 @@
 .name-action-wrap {
   width: 100%;
   justify-content: space-between;
+
   .name-action {
     visibility: hidden;
   }
@@ -35,9 +36,36 @@
   :global {
     .iconfont {
       cursor: pointer;
+
       &:hover {
         color: var(--primary-color);
       }
     }
   }
+}
+
+.application {
+  padding: 10px;
+}
+
+.lane {
+  border-radius: 2px;
+  :global {
+    .ant-card-body {
+      padding: 0;
+    }
+
+    .ant-list-item {
+      width: 260px;
+      padding: 12px;
+      height: 40px;
+      cursor: pointer;
+      border-radius: 2px;
+    }
+  }
+}
+
+.is-selected {
+  background-color: var(--primary-color-1);
+  color: var(--primary-color) !important;
 }

@@ -131,3 +131,53 @@ export const removeTenantOrg = {
   url: '/api/v1/account/admin/tenant/removeOrg',
   method: 'POST'
 };
+
+export const getApplicationList = {
+  url: '/api/v1/account/admin/getApplicationList',
+  method: 'GET'
+};
+
+export const addApplication = {
+  url: '/api/v1/account/admin/addApplication',
+  method: 'POST'
+};
+
+export const deleteApplication = {
+  url: '/api/v1/account/admin/deleteApplication',
+  method: 'POST'
+};
+
+export const saveApplication = {
+  url: '/api/v1/account/admin/saveApplication',
+  method: 'POST'
+};
+
+export const getPermissionList = {
+  url: '/api/v1/account/admin/getPermissionList',
+  method: 'GET'
+};
+
+export const addPermission = {
+  url: '/api/v1/account/admin/addPermission',
+  method: 'POST'
+};
+
+export const deletePermission = {
+  url: '/api/v1/account/admin/deletePermission',
+  method: 'POST'
+};
+
+export const savePermission = {
+  url: '/api/v1/account/admin/savePermission',
+  method: 'POST'
+};
+
+export const saveTenantPermissionList = {
+  url: '/api/v1/account/admin/saveTenantPermissionList',
+  method: 'POST'
+};
+
+export const getTenantPermissionList = {
+  url: '/api/v1/account/admin/getTenantPermissionList',
+  method: 'GET'
+};

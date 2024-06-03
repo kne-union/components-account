@@ -1,0 +1,236 @@
+import { createWithRemoteLoader } from '@kne/remote-loader';
+import { App, Button, List, Flex, Card, Space, Checkbox } from 'antd';
+import { useMemo, useState } from 'react';
+import style from './style.module.scss';
+import Fetch from '@kne/react-fetch';
+import FormInner from './FormInner';
+import groupBy from 'lodash/groupBy';
+import get from 'lodash/get';
+import difference from 'lodash/difference';
+import classnames from 'classnames';
+
+const PermissionLane = createWithRemoteLoader({
+  modules: ['components-core:Global@usePreset', 'components-core:Icon', 'components-core:FormInfo@useFormModal', 'components-core:ConfirmButton']
+})(({ remoteModules, applicationId, pid, reload, list, isEdit, value, onChecked, children, parentChecked }) => {
+  const [usePreset, Icon, useFormModal, ConfirmButton] = remoteModules;
+  const { ajax, apis } = usePreset();
+  const formModal = useFormModal();
+  const { message } = App.useApp();
+  const [current, setCurrent] = useState(get(list, '[0].id'));
+  const listMap = useMemo(() => {
+    return new Map(list && list.map(item => [item.id, item]));
+  }, [list]);
+
+  const onAdd = ({ pid }) => {
+    const formApi = formModal({
+      title: '添加权限',
+      size: 'small',
+      formProps: {
+        onSubmit: async data => {
+          const { data: resData } = await ajax(
+            Object.assign({}, apis.account.addPermission, {
+              data: Object.assign({}, data, { applicationId, pid })
+            })
+          );
+
+          if (resData.code !== 0) {
+            return;
+          }
+          message.success('权限添加成功');
+          reload();
+          formApi.close();
+        }
+      },
+      children: <FormInner />
+    });
+  };
+
+  return (
+    <>
+      <Card className={style['lane']}>
+        <List>
+          {list &&
+            list.map(item => {
+              return (
+                <List.Item
+                  key={item.id}
+                  className={classnames({
+                    [style['is-selected']]: item.id === current
+                  })}
+                  onClick={() => {
+                    setCurrent(item.id);
+                  }}
+                >
+                  <Space>
+                    {!isEdit &&
+                      (item.isMust === 1 ? (
+                        <Checkbox disabled checked={parentChecked} />
+                      ) : (
+                        <Checkbox
+                          checked={parentChecked && value.indexOf(item.id) > -1}
+                          disabled={!parentChecked}
+                          onChange={e => {
+                            const newValue = value.slice(0);
+                            if (e.target.checked) {
+                              newValue.push(item.id);
+                            } else {
+                              newValue.splice(newValue.indexOf(item.id), 1);
+                            }
+                            onChecked(newValue);
+                          }}
+                        />
+                      ))}
+                    <Icon type={item.isModule ? 'icon-wenjianjia' : 'icon-bitian'} />
+                    <div>
+                      {item.name}({item.code})
+                    </div>
+                    {isEdit && item.isMust === 1 ? <Icon type="icon-yisuoding" /> : ''}
+                  </Space>
+                  {isEdit && (
+                    <div
+                      onClick={e => {
+                        e.stopPropagation();
+                      }}
+                    >
+                      <Button
+                        type="link"
+                        className="btn-no-padding"
+                        onClick={() => {
+                          const formApi = formModal({
+                            title: '编辑权限',
+                            size: 'small',
+                            formProps: {
+                              data: Object.assign({}, item),
+                              onSubmit: async data => {
+                                const { data: resData } = await ajax(
+                                  Object.assign({}, apis.account.savePermission, {
+                                    data: Object.assign({}, data, { id: item.id })
+                                  })
+                                );
+
+                                if (resData.code !== 0) {
+                                  return;
+                                }
+                                message.success('权限保存成功');
+                                reload();
+                                formApi.close();
+                              }
+                            },
+                            children: <FormInner isEdit />
+                          });
+                        }}
+                      >
+                        <Icon type="icon-bianji" />
+                      </Button>
+                      <ConfirmButton
+                        type="link"
+                        className="btn-no-padding"
+                        onClick={async () => {
+                          const { data: resData } = await ajax(
+                            Object.assign({}, apis.account.deletePermission, {
+                              data: { id: item.id }
+                            })
+                          );
+                          if (resData.code !== 0) {
+                            return;
+                          }
+                          message.success('删除权限成功');
+                          reload();
+                        }}
+                      >
+                        <Icon type="icon-shanchu" />
+                      </ConfirmButton>
+                    </div>
+                  )}
+                </List.Item>
+              );
+            })}
+          {isEdit && (
+            <List.Item key="add">
+              <Button size="small" type="primary" onClick={() => onAdd({ pid })}>
+                <Icon type="icon-tianjia" />
+              </Button>
+            </List.Item>
+          )}
+        </List>
+      </Card>
+      {(() => {
+        if (!current) {
+          return null;
+        }
+
+        const currentItem = listMap.get(current);
+
+        if (!currentItem) {
+          return null;
+        }
+
+        if (!listMap.get(current).isModule) {
+          return null;
+        }
+
+        return true;
+      })() && children({ current })}
+    </>
+  );
+});
+
+const PermissionList = createWithRemoteLoader({
+  modules: ['components-core:Icon']
+})(({ remoteModules, applicationId, reload, data, isEdit, value, onChecked, parentChecked }) => {
+  const [Icon] = remoteModules;
+  const groupData = groupBy(data, 'pid');
+  const permissionMap = useMemo(() => {
+    return new Map(data.map(item => [item.id, item]));
+  }, [data]);
+  const render = ({ pid, parentChecked }) => {
+    const children = groupData[pid];
+    return (
+      <PermissionLane
+        key={pid}
+        applicationId={applicationId}
+        pid={pid}
+        reload={reload}
+        list={children}
+        value={value}
+        onChecked={permissions => {
+          onChecked(
+            (permissions || []).filter(id => {
+              const { paths } = permissionMap.get(id);
+              return difference(paths, permissions).length === 0;
+            })
+          );
+        }}
+        parentChecked={parentChecked}
+        isEdit={isEdit}
+      >
+        {({ current }) => {
+          return current && render({ pid: current, parentChecked: parentChecked && value.indexOf(current) > -1 });
+        }}
+      </PermissionLane>
+    );
+  };
+
+  return <Flex gap={8}>{render({ pid: 0, parentChecked })}</Flex>;
+});
+
+const Detail = createWithRemoteLoader({
+  modules: ['components-core:Global@usePreset']
+})(({ remoteModules, applicationId, isEdit, value, onChecked, parentChecked }) => {
+  const [usePreset] = remoteModules;
+  const { apis } = usePreset();
+  return (
+    <Fetch
+      {...Object.assign({}, apis.account.getPermissionList, { params: { applicationId } })}
+      render={({ data, reload }) => {
+        return (
+          <div className={style['permission-detail-right']}>
+            <PermissionList applicationId={applicationId} reload={reload} data={data} isEdit={isEdit} value={value} onChecked={onChecked} parentChecked={parentChecked} />
+          </div>
+        );
+      }}
+    />
+  );
+});
+
+export default Detail;

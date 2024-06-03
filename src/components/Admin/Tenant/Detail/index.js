@@ -5,11 +5,13 @@ import Fetch from '@kne/react-fetch';
 import BaseInfo from '../BaseInfo';
 import Role from '../Role';
 import Organization from '../Organization';
+import Permission from './Permission';
 
 const detailMap = {
   baseInfo: BaseInfo,
   role: Role,
-  org: Organization
+  org: Organization,
+  permission: Permission
 };
 
 const Detail = createWithRemoteLoader({
@@ -37,6 +39,7 @@ const Detail = createWithRemoteLoader({
               },
               stateOption: [
                 { tab: '租户信息', key: 'baseInfo' },
+                { tab: '租户权限', key: 'permission' },
                 {
                   tab: '角色权限',
                   key: 'role'
@@ -74,7 +77,7 @@ const Detail = createWithRemoteLoader({
               />
             }
           >
-            <DetailInner record={data} />
+            <DetailInner record={data} tenantId={data.id} />
           </StateBarPage>
         );
       }}
