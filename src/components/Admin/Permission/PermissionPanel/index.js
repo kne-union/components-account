@@ -10,14 +10,14 @@ import get from 'lodash/get';
 const ApplicationList = createWithRemoteLoader({
   modules: ['components-core:Global@usePreset', 'components-core:Image', 'components-core:Icon', 'components-core:ConfirmButton', 'components-core:FormInfo@useFormModal']
 })(
-  forwardRef(({ remoteModules, isEdit, current, onChange, value, onChecked }, ref) => {
+  forwardRef(({ remoteModules, isEdit, current, onChange, value, onChecked, tenantId }, ref) => {
     const [usePreset, Image, Icon, ConfirmButton, useFormModal] = remoteModules;
     const { apis, ajax } = usePreset();
     const formModal = useFormModal();
     const { message } = App.useApp();
     return (
       <Fetch
-        {...Object.assign({}, apis.account.getApplicationList)}
+        {...Object.assign({}, apis.account.getApplicationList, { params: { tenantId } })}
         ref={ref}
         render={({ data, reload }) => {
           return data && data.length > 0 ? (
@@ -118,7 +118,7 @@ const ApplicationList = createWithRemoteLoader({
   })
 );
 
-const PermissionPanel = forwardRef(({ isEdit, value, onChange }, ref) => {
+const PermissionPanel = forwardRef(({ isEdit, value, tenantId, onChange }, ref) => {
   const [current, setCurrent] = useState('');
   return (
     <div className={style['flex-wrapper']}>
@@ -128,6 +128,7 @@ const PermissionPanel = forwardRef(({ isEdit, value, onChange }, ref) => {
         onChange={setCurrent}
         isEdit={isEdit}
         value={get(value, 'applications', [])}
+        tenantId={tenantId}
         onChecked={applications => {
           onChange(
             Object.assign({}, value, {
@@ -140,6 +141,7 @@ const PermissionPanel = forwardRef(({ isEdit, value, onChange }, ref) => {
         <Detail
           applicationId={current}
           isEdit={isEdit}
+          tenantId={tenantId}
           value={get(value, 'permissions', [])}
           onChecked={permissions => {
             onChange(

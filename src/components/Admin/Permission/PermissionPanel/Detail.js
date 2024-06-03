@@ -175,10 +175,7 @@ const PermissionLane = createWithRemoteLoader({
   );
 });
 
-const PermissionList = createWithRemoteLoader({
-  modules: ['components-core:Icon']
-})(({ remoteModules, applicationId, reload, data, isEdit, value, onChecked, parentChecked }) => {
-  const [Icon] = remoteModules;
+const PermissionList = ({ applicationId, reload, data, isEdit, value, onChecked, parentChecked }) => {
   const groupData = groupBy(data, 'pid');
   const permissionMap = useMemo(() => {
     return new Map(data.map(item => [item.id, item]));
@@ -205,23 +202,29 @@ const PermissionList = createWithRemoteLoader({
         isEdit={isEdit}
       >
         {({ current }) => {
-          return current && render({ pid: current, parentChecked: parentChecked && value.indexOf(current) > -1 });
+          return (
+            current &&
+            render({
+              pid: current,
+              parentChecked: parentChecked && value.indexOf(current) > -1
+            })
+          );
         }}
       </PermissionLane>
     );
   };
 
   return <Flex gap={8}>{render({ pid: 0, parentChecked })}</Flex>;
-});
+};
 
 const Detail = createWithRemoteLoader({
   modules: ['components-core:Global@usePreset']
-})(({ remoteModules, applicationId, isEdit, value, onChecked, parentChecked }) => {
+})(({ remoteModules, applicationId, isEdit, value, onChecked, parentChecked, tenantId }) => {
   const [usePreset] = remoteModules;
   const { apis } = usePreset();
   return (
     <Fetch
-      {...Object.assign({}, apis.account.getPermissionList, { params: { applicationId } })}
+      {...Object.assign({}, apis.account.getPermissionList, { params: { applicationId, tenantId } })}
       render={({ data, reload }) => {
         return (
           <div className={style['permission-detail-right']}>
