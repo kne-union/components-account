@@ -26,7 +26,7 @@ const Admin = ({ baseUrl, ...props }) => {
         <Route path="tenant" element={<Tenant />} />
         <Route path="tenant/detail/:id" element={<TenantDetail />} />
         <Route path="user" element={<User />} />
-        <Route path="permission" element={<Permission />} />
+        <Route path="permission" element={<Permission isEdit />} />
       </Routes>
     </Provider>
   );

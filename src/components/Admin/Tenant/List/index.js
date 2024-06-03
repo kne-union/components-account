@@ -5,11 +5,12 @@ import getColumns from './getColumns';
 import FormInner from '../FormInner';
 import { useNavigate } from 'react-router-dom';
 import { useBaseUrl } from '@common/context';
+import Permission from '../Permission';
 
 const List = createWithRemoteLoader({
-  modules: ['components-core:Layout@TablePage', 'components-core:Filter', 'components-core:FormInfo@useFormModal', 'components-core:Global@usePreset']
+  modules: ['components-core:Layout@TablePage', 'components-core:Filter', 'components-core:FormInfo@useFormModal', 'components-core:Global@usePreset', 'components-core:Modal@useModal']
 })(({ remoteModules }) => {
-  const [TablePage, Filter, useFormModal, usePreset] = remoteModules;
+  const [TablePage, Filter, useFormModal, usePreset, useModal] = remoteModules;
   const { fields: filterFields, getFilterValue } = Filter;
   const [filter, setFilter] = useState([]);
   const { InputFilterItem } = filterFields;
@@ -19,6 +20,7 @@ const List = createWithRemoteLoader({
   const ref = useRef();
   const baseUrl = useBaseUrl();
   const navigate = useNavigate();
+  const modal = useModal();
   const navigateTo = ({ id }) => {
     return navigate(`${baseUrl}/tenant/detail/${id}`);
   };
@@ -69,7 +71,17 @@ const List = createWithRemoteLoader({
                 children: '添加用户'
               },
               {
-                children: '设置权限'
+                children: '设置权限',
+                onClick: () => {
+                  modal({
+                    title: '设置租户权限',
+                    size: 'large',
+                    children: ({ childrenRef }) => <Permission tenantId={item.id} ref={childrenRef} />,
+                    onConfirm: (e, { childrenRef }) => {
+                      return childrenRef.current.onSubmit();
+                    }
+                  });
+                }
               },
               {
                 children: '禁用'

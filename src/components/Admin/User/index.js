@@ -101,7 +101,7 @@ const User = createWithRemoteLoader({
                   const { data: resData } = await ajax(
                     Object.assign({}, apis.account.closeUser, {
                       data: {
-                        userId: item.id
+                        id: item.id
                       }
                     })
                   );
