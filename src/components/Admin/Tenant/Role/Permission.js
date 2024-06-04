@@ -25,7 +25,7 @@ const Permission = createWithRemoteLoader({
             );
 
             if (resData.code !== 0) {
-              return;
+              return false;
             }
             message.success('角色权限设置成功');
           }
