@@ -108,7 +108,7 @@ export const saveTenantRole = {
   method: 'POST'
 };
 
-export const remoteTenantRole = {
+export const removeTenantRole = {
   url: '/api/v1/account/admin/removeRole',
   method: 'POST'
 };
@@ -180,4 +180,14 @@ export const saveTenantPermissionList = {
 export const getTenantPermissionList = {
   url: '/api/v1/account/admin/getTenantPermissionList',
   method: 'GET'
+};
+
+export const getRolePermissionList = {
+  url: '/api/v1/account/admin/getRolePermissionList',
+  method: 'GET'
+};
+
+export const saveRolePermissionList = {
+  url: '/api/v1/account/admin/saveRolePermissionList',
+  method: 'POST'
 };

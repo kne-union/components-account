@@ -8,7 +8,7 @@ import get from 'lodash/get';
 const Permission = createWithRemoteLoader({
   modules: ['components-core:Global@usePreset']
 })(
-  forwardRef(({ remoteModules, tenantId }, ref) => {
+  forwardRef(({ remoteModules, roleId, tenantId }, ref) => {
     const [usePreset] = remoteModules;
     const { ajax, apis } = usePreset();
     const fetchRef = useRef(null);
@@ -19,24 +19,24 @@ const Permission = createWithRemoteLoader({
         return {
           onSubmit: async () => {
             const { data: resData } = await ajax(
-              Object.assign({}, apis.account.saveTenantPermissionList, {
-                data: Object.assign({}, { tenantId }, fetchRef.current.data)
+              Object.assign({}, apis.account.saveRolePermissionList, {
+                data: Object.assign({}, { roleId }, fetchRef.current.data)
               })
             );
 
             if (resData.code !== 0) {
               return;
             }
-            message.success('租户权限设置成功');
+            message.success('角色权限设置成功');
           }
         };
       },
-      [ajax, apis.account.saveTenantPermissionList, message, tenantId]
+      [ajax, apis.account.saveRolePermissionList, message, roleId]
     );
     return (
       <Fetch
-        {...Object.assign({}, apis.account.getTenantPermissionList, {
-          params: { tenantId }
+        {...Object.assign({}, apis.account.getRolePermissionList, {
+          params: { id: roleId }
         })}
         transformData={data => {
           return {
@@ -48,6 +48,7 @@ const Permission = createWithRemoteLoader({
         render={({ data, setData }) => {
           return (
             <PermissionPanel
+              tenantId={tenantId}
               value={data}
               onChange={({ applications, permissions }) => {
                 setData({ applications, permissions });

@@ -3,14 +3,15 @@ import getColumns from './getColumns';
 import { Space, Flex, Button, App } from 'antd';
 import FormInner from './FormInner';
 import { useRef } from 'react';
-import { remoteTenantRole } from '../../../../apis/account';
+import Permission from './Permission';
 
 const Role = createWithRemoteLoader({
-  modules: ['components-core:Table@TablePage', 'components-core:FormInfo@useFormModal', 'components-core:Global@usePreset']
+  modules: ['components-core:Table@TablePage', 'components-core:FormInfo@useFormModal', 'components-core:Global@usePreset', 'components-core:Modal@useModal']
 })(({ remoteModules, record }) => {
-  const [TablePage, useFormModal, usePreset] = remoteModules;
+  const [TablePage, useFormModal, usePreset, useModal] = remoteModules;
   const { ajax, apis } = usePreset();
   const formModal = useFormModal();
+  const modal = useModal();
   const tenantId = record.id;
   const { message } = App.useApp();
   const ref = useRef(null);
@@ -65,7 +66,17 @@ const Role = createWithRemoteLoader({
               valueOf: item => {
                 return [
                   {
-                    children: '权限管理'
+                    children: '权限管理',
+                    onClick: () => {
+                      modal({
+                        title: '设置角色权限',
+                        size: 'large',
+                        children: ({ childrenRef }) => <Permission roleId={item.id} tenantId={tenantId} ref={childrenRef} />,
+                        onConfirm: (e, { childrenRef }) => {
+                          return childrenRef.current.onSubmit();
+                        }
+                      });
+                    }
                   },
                   {
                     children: '编辑',
@@ -102,7 +113,7 @@ const Role = createWithRemoteLoader({
                     disabled: item.type === 1,
                     onClick: async () => {
                       await ajax(
-                        Object.assign({}, apis.account.remoteTenantRole, {
+                        Object.assign({}, apis.account.removeTenantRole, {
                           data: { id: item.id }
                         })
                       );
