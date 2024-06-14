@@ -1,10 +1,11 @@
 import { createWithRemoteLoader } from '@kne/remote-loader';
+import OrgTreeSelect from './OrgTreeSelect';
 
 const FormInner = createWithRemoteLoader({
   modules: ['components-core:FormInfo']
-})(({ remoteModules, treeData, record = {} }) => {
+})(({ remoteModules, tenantId, record = {} }) => {
   const [FormInfo] = remoteModules;
-  const { Input, TreeSelect } = FormInfo.fields;
+  const { Input } = FormInfo.fields;
 
   return (
     <FormInfo
@@ -12,25 +13,7 @@ const FormInner = createWithRemoteLoader({
       list={[
         <Input name="name" label="组织名称" rule="REQ LEN-0-50" />,
         <Input name="enName" label="组织英文名" rule="LEN-0-50" />,
-        <TreeSelect
-          name="pid"
-          label="上级组织"
-          rule="REQ"
-          fieldNames={{
-            value: 'id',
-            label: 'name',
-            children: 'children'
-          }}
-          treeData={treeData}
-          display={Number(record.pid) !== 0 || !record.id}
-          showSearch
-          treeNodeFilterProp="name"
-        >
-          {({ data }) => {
-            const { pageData } = data;
-            return { treeData: Array.isArray(pageData) ? pageData || [] : [pageData] };
-          }}
-        </TreeSelect>
+        <OrgTreeSelect tenantId={tenantId} name="pid" label="上级组织" rule="REQ" display={Number(record.pid) !== 0 || !record.id} />
       ]}
     />
   );

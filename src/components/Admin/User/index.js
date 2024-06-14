@@ -6,6 +6,7 @@ import FormInner from './FormInner';
 import ResetPasswordFormInner from './ResetPasswordFormInner';
 import md5 from 'md5';
 import get from 'lodash/get';
+import { Link } from 'react-router-dom';
 
 const User = createWithRemoteLoader({
   modules: ['components-core:Layout@TablePage', 'components-core:Filter@fields', 'components-core:FormInfo@useFormModal', 'components-core:Global@usePreset']
@@ -23,7 +24,24 @@ const User = createWithRemoteLoader({
       name="user-list"
       ref={ref}
       columns={[
-        ...getColumns(),
+        ...getColumns({
+          renderTenantList: tenants => {
+            return (
+              tenants &&
+              tenants.length > 0 && (
+                <Space size={0} split={','}>
+                  {tenants.map(tenant => {
+                    return (
+                      <Link key={tenant.id} to={`/admin/tenant/detail/${tenant.id}?tab=user`}>
+                        {tenant.name}
+                      </Link>
+                    );
+                  })}
+                </Space>
+              )
+            );
+          }
+        }),
         {
           name: 'options',
           title: '操作',
@@ -91,27 +109,55 @@ const User = createWithRemoteLoader({
                 : {
                     children: '取消超管'
                   },
-              {
-                isDelete: true,
-                confirm: true,
-                children: '关闭',
-                message: '确定要关闭该账号吗？',
-                okText: '确认',
-                onClick: async () => {
-                  const { data: resData } = await ajax(
-                    Object.assign({}, apis.account.closeUser, {
-                      data: {
-                        id: item.id
+              ...(() => {
+                const list = [];
+                if (item.status !== 0) {
+                  list.push({
+                    confirm: true,
+                    children: '设置为正常',
+                    message: '确定要设置账号为正常吗？',
+                    isDelete: false,
+                    onClick: async () => {
+                      const { data: resData } = await ajax(
+                        Object.assign({}, apis.account.openUser, {
+                          data: {
+                            id: item.id
+                          }
+                        })
+                      );
+                      if (resData.code !== 0) {
+                        return;
                       }
-                    })
-                  );
-                  if (resData.code !== 0) {
-                    return;
-                  }
-                  message.success('账号已关闭');
-                  ref.current.reload();
+                      message.success('账号已开启');
+                      ref.current.reload();
+                    }
+                  });
                 }
-              }
+                if (item.status !== 12) {
+                  list.push({
+                    isDelete: true,
+                    confirm: true,
+                    children: '关闭',
+                    message: '确定要关闭该账号吗？',
+                    okText: '确认',
+                    onClick: async () => {
+                      const { data: resData } = await ajax(
+                        Object.assign({}, apis.account.closeUser, {
+                          data: {
+                            id: item.id
+                          }
+                        })
+                      );
+                      if (resData.code !== 0) {
+                        return;
+                      }
+                      message.success('账号已关闭');
+                      ref.current.reload();
+                    }
+                  });
+                }
+                return list;
+              })()
             ];
           }
         }

@@ -27,6 +27,24 @@ const getColumns = ({ navigateTo }) => {
       name: 'description',
       title: '简介',
       type: 'description'
+    },
+    {
+      name: 'status',
+      title: '状态',
+      type: 'tag',
+      valueOf: (item, { name }) => {
+        if (item[name] === 0) {
+          return { type: 'success', text: '正常' };
+        }
+        if (item[name] === 11) {
+          return { type: 'danger', text: '已禁用' };
+        }
+        if (item[name] === 12) {
+          return { type: 'danger', text: '已关闭' };
+        }
+
+        return { text: '其他' };
+      }
     }
   ];
 };

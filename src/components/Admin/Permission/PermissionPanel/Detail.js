@@ -193,8 +193,8 @@ const PermissionList = ({ applicationId, reload, data, isEdit, value, onChecked,
         onChecked={permissions => {
           onChecked(
             (permissions || []).filter(id => {
-              const { paths } = permissionMap.get(id);
-              return difference(paths, permissions).length === 0;
+              const permission = permissionMap.get(id);
+              return permission && difference(permission.paths, permissions).length === 0;
             })
           );
         }}
