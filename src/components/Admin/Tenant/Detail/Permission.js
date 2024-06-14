@@ -1,5 +1,5 @@
 import PermissionInner from '../Permission';
-import { Flex, Button } from 'antd';
+import { Flex } from 'antd';
 import { createWithRemoteLoader } from '@kne/remote-loader';
 import { useRef } from 'react';
 
@@ -13,6 +13,7 @@ const Permission = createWithRemoteLoader({
       <Flex justify="space-between">
         <div></div>
         <ConfirmButton
+          size="small"
           type="primary"
           message="确定要修改该租户的权限配置吗?"
           isDelete={false}

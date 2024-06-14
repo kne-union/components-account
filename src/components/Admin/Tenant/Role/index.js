@@ -21,6 +21,7 @@ const Role = createWithRemoteLoader({
         <div></div>
         <Space>
           <Button
+            size="small"
             type="primary"
             onClick={() => {
               const formApi = formModal({
@@ -50,82 +51,80 @@ const Role = createWithRemoteLoader({
           </Button>
         </Space>
       </Flex>
-      <div style={{ flex: 1 }}>
-        <TablePage
-          {...Object.assign({}, apis.account.getTenantRoleList, {
-            params: { tenantId }
-          })}
-          ref={ref}
-          columns={[
-            ...getColumns(),
-            {
-              name: 'options',
-              title: '操作',
-              type: 'options',
-              fixed: 'right',
-              valueOf: item => {
-                return [
-                  {
-                    children: '权限管理',
-                    onClick: () => {
-                      modal({
-                        title: '设置角色权限',
-                        size: 'large',
-                        children: ({ childrenRef }) => <Permission roleId={item.id} tenantId={tenantId} ref={childrenRef} />,
-                        onConfirm: (e, { childrenRef }) => {
-                          return childrenRef.current.onSubmit();
-                        }
-                      });
-                    }
-                  },
-                  {
-                    children: '编辑',
-                    disabled: item.type === 1,
-                    onClick: () => {
-                      const formApi = formModal({
-                        title: '编辑角色',
-                        size: 'small',
-                        formProps: {
-                          data: Object.assign({}, item),
-                          onSubmit: async data => {
-                            const { data: resData } = await ajax(
-                              Object.assign({}, apis.account.saveTenantRole, {
-                                data: Object.assign({}, data, { tenantId, id: item.id })
-                              })
-                            );
-                            if (resData.code !== 0) {
-                              return;
-                            }
-
-                            message.success('角色保存成功');
-                            ref.current.reload();
-                            formApi.close();
-                          }
-                        },
-                        children: <FormInner />
-                      });
-                    }
-                  },
-                  {
-                    children: '删除',
-                    confirm: true,
-                    isDelete: true,
-                    disabled: item.type === 1,
-                    onClick: async () => {
-                      await ajax(
-                        Object.assign({}, apis.account.removeTenantRole, {
-                          data: { id: item.id }
-                        })
-                      );
-                      ref.current.reload();
-                    }
+      <TablePage
+        {...Object.assign({}, apis.account.getTenantRoleList, {
+          params: { tenantId }
+        })}
+        ref={ref}
+        columns={[
+          ...getColumns(),
+          {
+            name: 'options',
+            title: '操作',
+            type: 'options',
+            fixed: 'right',
+            valueOf: item => {
+              return [
+                {
+                  children: '权限管理',
+                  onClick: () => {
+                    modal({
+                      title: '设置角色权限',
+                      size: 'large',
+                      children: ({ childrenRef }) => <Permission roleId={item.id} tenantId={tenantId} ref={childrenRef} />,
+                      onConfirm: (e, { childrenRef }) => {
+                        return childrenRef.current.onSubmit();
+                      }
+                    });
                   }
-                ];
-              }
+                },
+                {
+                  children: '编辑',
+                  disabled: item.type === 1,
+                  onClick: () => {
+                    const formApi = formModal({
+                      title: '编辑角色',
+                      size: 'small',
+                      formProps: {
+                        data: Object.assign({}, item),
+                        onSubmit: async data => {
+                          const { data: resData } = await ajax(
+                            Object.assign({}, apis.account.saveTenantRole, {
+                              data: Object.assign({}, data, { tenantId, id: item.id })
+                            })
+                          );
+                          if (resData.code !== 0) {
+                            return;
+                          }
+
+                          message.success('角色保存成功');
+                          ref.current.reload();
+                          formApi.close();
+                        }
+                      },
+                      children: <FormInner />
+                    });
+                  }
+                },
+                {
+                  children: '删除',
+                  confirm: true,
+                  isDelete: true,
+                  disabled: item.type === 1,
+                  onClick: async () => {
+                    await ajax(
+                      Object.assign({}, apis.account.removeTenantRole, {
+                        data: { id: item.id }
+                      })
+                    );
+                    ref.current.reload();
+                  }
+                }
+              ];
             }
-          ]}
-        />
-      </div>
+          }
+        ]}
+      />
     </Flex>
   );
 });

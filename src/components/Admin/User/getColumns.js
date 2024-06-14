@@ -1,6 +1,7 @@
 import get from 'lodash/get';
 
-const getColumns = () => {
+const getColumns = options => {
+  const { renderTenantList } = options;
   return [
     {
       name: 'avatar',
@@ -26,7 +27,11 @@ const getColumns = () => {
     {
       name: 'tenant',
       title: '所在租户',
-      type: 'other'
+      type: 'description',
+      ellipsis: true,
+      valueOf: item => {
+        return renderTenantList(item.tenants);
+      }
     },
     {
       name: 'isSuperAdmin',

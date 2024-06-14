@@ -1,22 +1,26 @@
-.tree-node {
-  font-size: 12px;
-  .tree-node-actions {
-    visibility: hidden;
+.org {
+  :global {
+    .ant-tree .ant-tree-treenode,
+    .ant-tree .ant-tree-node-content-wrapper {
+      width: 100%;
+    }
+
+    .iconfont {
+      margin-left: 4px;
+    }
   }
 
-  &:hover {
+  :global(.ant-tree-node-content-wrapper):hover {
     .tree-node-actions {
       visibility: visible;
     }
   }
 }
 
-:global {
-  .ant-tree .ant-tree-treenode,
-  .ant-tree .ant-tree-node-content-wrapper {
-    width: 100%;
-  }
-  .iconfont {
-    margin-left: 4px;
+.tree-node {
+  font-size: 12px;
+
+  .tree-node-actions {
+    visibility: hidden;
   }
 }

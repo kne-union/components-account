@@ -2,7 +2,7 @@ import React from 'react';
 import { preset as fetchPreset } from '@kne/react-fetch';
 import { Spin, Empty, message } from 'antd';
 import axios from 'axios';
-import { preset as remoteLoaderPreset } from '@kne/remote-loader';
+import { preset as remoteLoaderPreset, loadModule } from '@kne/remote-loader';
 import * as apis from './apis';
 import transform from 'lodash/transform';
 import omit from 'lodash/omit';
@@ -130,22 +130,25 @@ export const globalInit = async () => {
   remoteLoaderPreset({
     remotes: remoteComponentsLoader
   });
-};
 
-export const globalPreset = {
-  ajax,
-  apis: Object.assign({}, apis, {
-    oss: {
-      url: '/api/static/file-url/{id}',
-      paramsType: 'urlParams',
-      ignoreSuccessState: true
-    },
-    ossUpload: async ({ file }) => {
-      return await axios.postForm('/api/static/upload', { file });
+  const getApis = (await loadModule('components-account:Apis@getApis')).default;
+
+  return {
+    ajax,
+    apis: Object.assign({}, apis, {
+      account: getApis(),
+      oss: {
+        url: '/api/static/file-url/{id}',
+        paramsType: 'urlParams',
+        ignoreSuccessState: true
+      },
+      ossUpload: async ({ file }) => {
+        return await axios.postForm('/api/static/upload', { file });
+      }
+    }),
+    themeToken: {
+      colorPrimary: '#4F185A',
+      colorPrimaryHover: '#702280'
     }
-  }),
-  themeToken: {
-    colorPrimary: '#4F185A',
-    colorPrimaryHover: '#702280'
-  }
+  };
 };
