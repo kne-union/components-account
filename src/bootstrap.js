@@ -1,16 +1,24 @@
-import { ajax } from "./preset";
-import React from "react";
-import ReactDOM from "react-dom/client";
-import App from "./App";
+import { HashRouter } from 'react-router-dom';
+import { globalInit } from './preset';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-
-const themeToken = {
-  colorPrimary: "#4F185A",
+const root = ReactDOM.createRoot(document.getElementById('root'));
+const renderRoot = async App => {
+  const globalPreset = await globalInit();
+  root.render(
+    <HashRouter>
+      <App themeToken={globalPreset.themeToken} globalPreset={globalPreset} />
+    </HashRouter>
+  );
 };
 
-root.render(
-    <React.StrictMode>
-      <App preset={{ ajax }} themeToken={themeToken} />
-    </React.StrictMode>
-);
+if (process.env.NODE_ENV === 'development') {
+  import('@kne/modules-dev/dist/create-entry.css');
+  import('@kne/modules-dev/dist/create-entry').then(module => {
+    renderRoot(module.default(({ globalPreset }) => <App globalPreset={globalPreset} />));
+  });
+} else {
+  renderRoot(App);
+}

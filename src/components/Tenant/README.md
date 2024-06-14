@@ -29,20 +29,26 @@
 - _Tenant(@components/Tenant),_LoginOuterContainer(@components/LoginOuterContainer),lodash(lodash)
 
 ```jsx
-const {default: Tenant} = _Tenant;
-const {default: LoginOuterContainer} = _LoginOuterContainer;
-const {range} = lodash;
+const { default: Tenant } = _Tenant;
+const { default: LoginOuterContainer } = _LoginOuterContainer;
+const { range } = lodash;
 const BaseExample = () => {
-    return <LoginOuterContainer className="outer">
-        <Tenant data={range(0, 20).map((key) => ({id: key, name: `测试公司${key + 1}`}))} onBack={() => {
-            console.log("返回");
-        }} onChange={({coid}) => {
-            console.log(coid);
-        }}/>
-    </LoginOuterContainer>;
+  return (
+    <LoginOuterContainer className="outer">
+      <Tenant
+        data={range(0, 20).map(key => ({ id: key, name: `测试公司${key + 1}` }))}
+        onBack={() => {
+          console.log('返回');
+        }}
+        onChange={({ coid }) => {
+          console.log(coid);
+        }}
+      />
+    </LoginOuterContainer>
+  );
 };
 
-render(<BaseExample/>);
+render(<BaseExample />);
 
 ```
 
@@ -51,19 +57,25 @@ render(<BaseExample/>);
 - _Tenant(@components/Tenant),_LoginOuterContainer(@components/LoginOuterContainer)
 
 ```jsx
-const {default: Tenant} = _Tenant;
-const {default: LoginOuterContainer} = _LoginOuterContainer;
+const { default: Tenant } = _Tenant;
+const { default: LoginOuterContainer } = _LoginOuterContainer;
 const BaseExample = () => {
-    return <LoginOuterContainer className="outer">
-        <Tenant data={[]} onBack={() => {
-            console.log("返回");
-        }} onChange={({coid}) => {
-            console.log(coid);
-        }}/>
-    </LoginOuterContainer>;
+  return (
+    <LoginOuterContainer className="outer">
+      <Tenant
+        data={[]}
+        onBack={() => {
+          console.log('返回');
+        }}
+        onChange={({ coid }) => {
+          console.log(coid);
+        }}
+      />
+    </LoginOuterContainer>
+  );
 };
 
-render(<BaseExample/>);
+render(<BaseExample />);
 
 ```
 

@@ -44,6 +44,9 @@ const Login = createWithRemoteLoader({
             </Checkbox>
           </Col>
           <Col>
+            <LinkButton className={style['forget-button']} type="link" size="small" to={`${baseUrl}/register`}>
+              {formatMessage({ id: 'registerAccount' })}
+            </LinkButton>
             <LinkButton className={style['forget-button']} type="link" size="small" to={`${baseUrl}/forget`}>
               {formatMessage({ id: 'forgotPassword' })}
             </LinkButton>
@@ -84,7 +87,7 @@ const Login = createWithRemoteLoader({
     ),
     formInner: () => (
       <>
-        <Input name="email" label={formatMessage({ id: 'emailAccount' })} rule="REQ EMAIL" />
+        <Input name="username" label={formatMessage({ id: 'emailAccount' })} rule="REQ EMAIL" />
         <Input.Password type="password" name="password" label={formatMessage({ id: 'password' })} rule="REQ LEN-6-50" />
       </>
     )

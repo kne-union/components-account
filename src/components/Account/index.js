@@ -8,6 +8,7 @@ import Login from './Login';
 import Forget from './Forget';
 import ResetPassword from './ResetPassword';
 import Modify from './Modify';
+import Register from './Register';
 
 const Layout = () => {
   return (
@@ -29,6 +30,7 @@ const Account = ({ className, baseUrl, ...props }) => {
           <Route element={<Layout />}>
             <Route index element={<Navigate to={`${baseUrl}/login`} />} />
             <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
             <Route path="forget" element={<Forget />} />
             <Route path="reset-password/:token" element={<ResetPassword />} />
             <Route path="modify/:email" element={<Modify />} />
@@ -41,9 +43,9 @@ const Account = ({ className, baseUrl, ...props }) => {
 
 Account.defaultProps = {
   baseUrl: '/',
-  headerKeys: {
+  isTenant: false,
+  storeKeys: {
     tenantId: 'X-Tenant-Id',
-    userId: 'X-User-Id',
     token: 'X-User-Token'
   }
 };
