@@ -11,7 +11,7 @@ const getApis = options => {
       method: 'POST'
     },
     sendEmailCode: {
-      url: `${prefix}/sendSMSCode`,
+      url: `${prefix}/sendEmailCode`,
       method: 'POST'
     },
     validateCode: {

@@ -33,7 +33,6 @@ const GlobalLayout = createWithRemoteLoader({
 });
 
 const MainLayout = props => {
-  console.log('MainLayout');
   return (
     <GlobalLayout {...props}>
       <Outlet />
