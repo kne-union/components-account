@@ -45,7 +45,6 @@ Account.defaultProps = {
   baseUrl: '/',
   isTenant: false,
   storeKeys: {
-    tenantId: 'X-Tenant-Id',
     token: 'X-User-Token'
   }
 };

@@ -42,27 +42,27 @@ const DoLogin = createWithRemoteLoader({
       if (referer) {
         const _referer = decodeURIComponent(referer);
         let obj = new URL(/http(s)?:/.test(_referer) ? _referer : window.location.origin + _referer);
-        Object.values(resData.data).forEach(key => obj.searchParams.delete(key.toUpperCase()));
+        Object.values(resData.data).forEach(key => key && obj.searchParams.delete(key.toUpperCase()));
         refererHref = obj.pathname + obj.search;
       }
-
-      if (!isTenant) {
+      if (!isTenant || resData.data.currentTenantId) {
         navigate(refererHref);
         return;
       }
-      /*const talentList = data.data || [];
-            if (talentList.length === 0) {
-              message.error(formatMessage({ id: 'noTenantErrorTips' }));
-              return;
-            }*/
 
-      callback && (await Promise.resolve(callback({ referer: refererHref })));
-
+      const { data: resTenantData } = await ajax(Object.assign({}, account.getUserTenant));
+      if (resTenantData.code !== 0) {
+        return;
+      }
+      const { tenantList } = resTenantData.data;
+      callback &&
+        (await Promise.resolve(
+          callback({
+            referer: refererHref,
+            tenantList
+          })
+        ));
       message.success(formatMessage({ id: 'loginSuccess' }));
-      //如果存在上次设置的租户id，跳转到referer
-      /*if (talentList.some(({ id }) => id.toString() === (getCookies(headerKeys['tenantId'])?.toString() || ''))) {
-              navigate(refererHref);
-            }*/
     }
   });
 });

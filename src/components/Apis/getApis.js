@@ -30,9 +30,17 @@ const getApis = options => {
       url: `${prefix}/getUserInfo`,
       method: 'GET'
     },
+    getTenantUserInfo: {
+      url: `${prefix}/tenant/getTenantUserInfo`,
+      method: 'GET'
+    },
     getUserTenant: {
       url: `${prefix}/tenant/getUserTenant`,
       method: 'GET'
+    },
+    setCurrentTenantId: {
+      url: `${prefix}/setCurrentTenantId`,
+      method: 'POST'
     },
     initSuperAdmin: {
       url: `${prefix}/initSuperAdmin`,

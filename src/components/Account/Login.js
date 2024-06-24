@@ -11,25 +11,41 @@ import { setCookies } from '../../common/cookies';
 import style from './style.module.scss';
 
 const Login = createWithRemoteLoader({
-  modules: ['component-core:Global@useGlobalContext']
+  modules: ['component-core:Global@useGlobalContext', 'component-core:Global@usePreset']
 })(({ remoteModules }) => {
-  const [useGlobalContext] = remoteModules;
+  const [useGlobalContext, usePreset] = remoteModules;
   const navigate = useNavigate();
-  const { storeKeys, language, baseUrl, isTenant } = useProps();
+  const { language, baseUrl, isTenant } = useProps();
   const refererRef = useRef(baseUrl);
   const [tenantList, setTenantList] = useState([]);
+  const { ajax, apis: presetApis } = usePreset();
+  const { apis, targetUrl, storeKeys } = useProps();
+  const account = Object.assign({}, presetApis?.account, apis);
   const { global: locale, setGlobal: setLocale } = useGlobalContext('locale');
   return (
     <LoginOuterContainer>
       <DoLogin>
         {({ login }) => {
           if (isTenant && tenantList.length > 0) {
+            const setCurrentTenant = async tenantId => {
+              const { data: resData } = await ajax(
+                Object.assign({}, account.setCurrentTenantId, {
+                  data: { tenantId }
+                })
+              );
+              if (resData.code !== 0) {
+                return;
+              }
+              navigate(refererRef.current ? refererRef.current : baseUrl);
+            };
+            if (tenantList.length === 1) {
+              setCurrentTenant(tenantList[0].id);
+            }
             return (
               <LoginTenant
                 data={tenantList}
                 onChange={({ tenantId }) => {
-                  setCookies(storeKeys['tenantId'], tenantId);
-                  navigate(refererRef.current ? refererRef.current : baseUrl);
+                  setCurrentTenant(tenantId);
                 }}
                 onBack={() => {
                   setTenantList([]);
@@ -58,9 +74,9 @@ const Login = createWithRemoteLoader({
                 });
               }}
               onSubmit={async formData => {
-                await login(Object.assign({}, formData, { isTenant }), ({ talentList, referer }) => {
+                await login(Object.assign({}, formData, { isTenant }), ({ tenantList, referer }) => {
                   refererRef.current = referer;
-                  isTenant && setTenantList(talentList);
+                  isTenant && setTenantList(tenantList);
                 });
               }}
             />

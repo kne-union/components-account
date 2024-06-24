@@ -38,3 +38,22 @@ export const SuperAdminInfo = createWithRemoteLoader({
     />
   );
 });
+
+export const TenantUserInfo = createWithRemoteLoader({
+  modules: ['components-core:Global@SetGlobal', 'components-core:Global@usePreset']
+})(({ remoteModules, children }) => {
+  const [SetGlobal, usePreset] = remoteModules;
+  const { apis } = usePreset();
+  return (
+    <Fetch
+      {...Object.assign({}, apis.account.getTenantUserInfo)}
+      render={({ data }) => {
+        return (
+          <SetGlobal globalKey="userInfo" value={data} needReady>
+            {children}
+          </SetGlobal>
+        );
+      }}
+    />
+  );
+});
