@@ -1,10 +1,10 @@
 
-# Apis
+# Authenticate
 
 
 ### 概述
 
-用于管理该模块的所有api
+提供权限验证
 
 
 ### 示例
@@ -13,12 +13,12 @@
 
 - 这里填写示例标题
 - 这里填写示例说明
-- _Apis(@components/Apis)
+- _Authenticate(@components/Authenticate)
 
 ```jsx
-const { default: Apis } = _Apis;
-const BaseExample = () => {
-  return <Apis />;
+const {default:Authenticate} = _Authenticate;
+const BaseExample = ()=>{
+    return <Authenticate />;
 };
 
 render(<BaseExample />);
