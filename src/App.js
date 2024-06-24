@@ -1,18 +1,22 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useSearchParams } from 'react-router-dom';
 import pages from './pages';
-import MainLayout, { BeforeLoginLayout, AfterUserLoginLayout, AfterAdminUserLoginLayout } from './MainLayout';
+import MainLayout, { BeforeLoginLayout, AfterUserLoginLayout, AfterAdminUserLoginLayout, AfterTenantUserLoginLayout } from './MainLayout';
 import './index.scss';
 
 const { Home, Account, Admin, InitAdmin, Error, NotFound } = pages;
 
 const App = ({ globalPreset }) => {
+  const [searchParams] = useSearchParams();
   return (
     <Routes>
       <Route path="account" element={<BeforeLoginLayout preset={globalPreset} themeToken={globalPreset.themeToken} />}>
-        <Route path="*" element={<Account baseUrl="/account" />} />
+        <Route path="*" element={<Account baseUrl="/account" isTenant={searchParams.get('isTenant') === 'true'} />} />
       </Route>
       <Route path="admin/initAdmin" element={<AfterUserLoginLayout preset={globalPreset} themeToken={globalPreset.themeToken} paths={[]} />}>
         <Route index element={<InitAdmin baseUrl="/admin" />} />
+      </Route>
+      <Route path="tenant" element={<AfterTenantUserLoginLayout preset={globalPreset} themeToken={globalPreset.themeToken} />}>
+        <Route index element={<Home />} />
       </Route>
       <Route
         path="admin"
