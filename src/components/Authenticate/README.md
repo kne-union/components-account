@@ -16,9 +16,9 @@
 - _Authenticate(@components/Authenticate)
 
 ```jsx
-const {default:Authenticate} = _Authenticate;
-const BaseExample = ()=>{
-    return <Authenticate />;
+const { default: Authenticate } = _Authenticate;
+const BaseExample = () => {
+  return <Authenticate />;
 };
 
 render(<BaseExample />);
