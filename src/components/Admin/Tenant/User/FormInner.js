@@ -2,7 +2,7 @@ import { createWithRemoteLoader } from '@kne/remote-loader';
 import importMessages, { moduleName } from '../../../../locale';
 import UserFormInner from '../../User/FormInner';
 import { App, Button } from 'antd';
-import OrgTreeSelect from '../Organization/OrgTreeSelect';
+import OrgTreeSelect from '@components/OrgTreeSelect';
 
 const FormInner = createWithRemoteLoader({
   modules: ['components-core:FormInfo', 'components-core:FormInfo@useFormContext', 'components-core:Global@usePreset', 'components-core:Intl@useIntl']

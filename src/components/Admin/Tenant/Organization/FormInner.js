@@ -1,5 +1,5 @@
 import { createWithRemoteLoader } from '@kne/remote-loader';
-import OrgTreeSelect from './OrgTreeSelect';
+import OrgTreeSelect from '@components/OrgTreeSelect';
 
 const FormInner = createWithRemoteLoader({
   modules: ['components-core:FormInfo']

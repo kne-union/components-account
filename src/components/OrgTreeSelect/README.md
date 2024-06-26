@@ -1,10 +1,10 @@
 
-# Authenticate
+# OrgTreeSelect
 
 
 ### 概述
 
-提供权限验证
+选择组织节点
 
 
 ### 示例
@@ -13,12 +13,12 @@
 
 - 这里填写示例标题
 - 这里填写示例说明
-- _Authenticate(@components/Authenticate)
+- _OrgTreeSelect(@components/OrgTreeSelect)
 
 ```jsx
-const { default: Authenticate } = _Authenticate;
-const BaseExample = () => {
-  return <Authenticate />;
+const {default:OrgTreeSelect} = _OrgTreeSelect;
+const BaseExample = ()=>{
+    return <OrgTreeSelect />;
 };
 
 render(<BaseExample />);

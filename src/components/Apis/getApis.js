@@ -38,6 +38,10 @@ const getApis = options => {
       url: `${prefix}/tenant/getUserTenant`,
       method: 'GET'
     },
+    getCurrentOrgList: {
+      url: '/api/v1/account/tenant/orgList',
+      method: 'GET'
+    },
     setCurrentTenantId: {
       url: `${prefix}/setCurrentTenantId`,
       method: 'POST'

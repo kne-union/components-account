@@ -1,6 +1,6 @@
 import { createWithRemoteLoader } from '@kne/remote-loader';
 import { Flex, Space, Button, App } from 'antd';
-import OrgTreeSelect from '../Organization/OrgTreeSelect';
+import OrgTreeSelect from '@components/OrgTreeSelect';
 import { useRef } from 'react';
 
 const InviteFormInner = createWithRemoteLoader({
