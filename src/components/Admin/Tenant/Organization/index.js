@@ -4,7 +4,7 @@ import FormInner from './FormInner';
 import { useEffect, useState } from 'react';
 import get from 'lodash/get';
 import merge from 'lodash/merge';
-import { OrgTreeData } from './OrgTreeSelect';
+import { OrgTreeData } from '@components/OrgTreeSelect';
 
 import style from './style.module.scss';
 
