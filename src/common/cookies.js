@@ -22,4 +22,6 @@ export const removeCookies = key => {
   return Cookies.remove(prefix + '_' + key.toUpperCase(), { domain: DOMAIN });
 };
 
-export default { setCookies, getCookies, removeCookies };
+const cookies = { setCookies, getCookies, removeCookies };
+
+export default cookies;
