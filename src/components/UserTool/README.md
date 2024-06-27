@@ -1,10 +1,10 @@
 
-# OrgTreeSelect
+# UserTool
 
 
 ### 概述
 
-选择组织节点
+导航栏最右边用户导航栏
 
 
 ### 示例
@@ -13,12 +13,12 @@
 
 - 这里填写示例标题
 - 这里填写示例说明
-- _OrgTreeSelect(@components/OrgTreeSelect)
+- _UserTool(@components/UserTool)
 
 ```jsx
-const { default: OrgTreeSelect } = _OrgTreeSelect;
-const BaseExample = () => {
-  return <OrgTreeSelect />;
+const {default:UserTool} = _UserTool;
+const BaseExample = ()=>{
+    return <UserTool />;
 };
 
 render(<BaseExample />);

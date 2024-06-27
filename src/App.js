@@ -1,6 +1,7 @@
-import { Routes, Route, Navigate, useSearchParams } from 'react-router-dom';
+import { Navigate, Route, Routes, useSearchParams } from 'react-router-dom';
 import pages from './pages';
-import MainLayout, { BeforeLoginLayout, AfterUserLoginLayout, AfterAdminUserLoginLayout, AfterTenantUserLoginLayout } from './MainLayout';
+import MainLayout, { AfterAdminUserLoginLayout, AfterTenantUserLoginLayout, AfterUserLoginLayout, BeforeLoginLayout } from './MainLayout';
+import RightOptions from './RightOptions';
 import './index.scss';
 
 const { Home, Account, Admin, InitAdmin, Error, NotFound } = pages;
@@ -15,7 +16,18 @@ const App = ({ globalPreset }) => {
       <Route path="admin/initAdmin" element={<AfterUserLoginLayout preset={globalPreset} themeToken={globalPreset.themeToken} paths={[]} />}>
         <Route index element={<InitAdmin baseUrl="/admin" />} />
       </Route>
-      <Route path="tenant" element={<AfterTenantUserLoginLayout preset={globalPreset} themeToken={globalPreset.themeToken} />}>
+      <Route
+        path="tenant"
+        element={
+          <AfterTenantUserLoginLayout
+            preset={globalPreset}
+            themeToken={globalPreset.themeToken}
+            navigation={{
+              rightOptions: <RightOptions />
+            }}
+          />
+        }
+      >
         <Route index element={<Home />} />
       </Route>
       <Route
@@ -48,7 +60,8 @@ const App = ({ globalPreset }) => {
                   title: '应用权限管理',
                   path: '/admin/permission'
                 }
-              ]
+              ],
+              rightOptions: <RightOptions />
             }}
           />
         }
@@ -56,7 +69,18 @@ const App = ({ globalPreset }) => {
         <Route index element={<Admin baseUrl="/admin" />} />
         <Route path="*" element={<Admin baseUrl="/admin" />} />
       </Route>
-      <Route element={<AfterUserLoginLayout preset={globalPreset} themeToken={globalPreset.themeToken} paths={[]} />}>
+      <Route
+        element={
+          <AfterUserLoginLayout
+            preset={globalPreset}
+            themeToken={globalPreset.themeToken}
+            paths={[]}
+            navigation={{
+              rightOptions: <RightOptions />
+            }}
+          />
+        }
+      >
         <Route index element={<Home />} />
         <Route path="admin/*" element={<InitAdmin baseUrl="/admin" />} />
       </Route>

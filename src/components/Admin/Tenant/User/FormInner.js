@@ -109,7 +109,7 @@ const FormInner = createWithRemoteLoader({
         column={1}
         title="组织角色"
         list={[
-          <OrgTreeSelect tenantId={tenantId} name="orgIds" label="所属组织" rule="REQ" multiple />,
+          <OrgTreeSelect tenantId={tenantId} name="orgIds" label="所属组织" rule="REQ" multiple hasRoot />,
           <AdvancedSelect
             name="roleIds"
             label="角色"

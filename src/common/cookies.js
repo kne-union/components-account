@@ -18,4 +18,8 @@ export const setCookies = (key, value) => {
   return Cookies.set(prefix + '_' + key.toUpperCase(), value, { domain: DOMAIN });
 };
 
-export default { setCookies, getCookies };
+export const removeCookies = key => {
+  return Cookies.remove(prefix + '_' + key.toUpperCase(), { domain: DOMAIN });
+};
+
+export default { setCookies, getCookies, removeCookies };
