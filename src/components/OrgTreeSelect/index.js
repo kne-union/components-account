@@ -6,16 +6,16 @@ export const getTreeData = (treeMap, pid) => {
   return (get(treeMap, pid) || []).map(item => Object.assign({}, item, { children: getTreeData(treeMap, item.id) }));
 };
 
-const treeDataRender = ({ fetchApi, children }) => {
+const treeDataRender = ({ fetchApi, hasRoot, children }) => {
   const tree = Array.isArray(fetchApi.data) ? fetchApi.data : [fetchApi.data];
   const treeMap = Object.groupBy(tree, item => item.pid);
   const treeData = getTreeData(treeMap, '0');
-  return children(Object.assign({}, fetchApi, { treeData }));
+  return children(Object.assign({}, fetchApi, { treeData: hasRoot ? treeData : get(treeData, '0.children') }));
 };
 
 export const OrgTreeData = createWithRemoteLoader({
   modules: ['components-core:Global@usePreset']
-})(({ remoteModules, tenantId, children }) => {
+})(({ remoteModules, tenantId, hasRoot, children }) => {
   const [usePreset] = remoteModules;
   const { apis } = usePreset();
   return (
@@ -24,7 +24,7 @@ export const OrgTreeData = createWithRemoteLoader({
         params: { tenantId }
       })}
       render={fetchApi => {
-        return treeDataRender({ fetchApi, children });
+        return treeDataRender({ fetchApi, hasRoot, children });
       }}
     />
   );
@@ -32,14 +32,14 @@ export const OrgTreeData = createWithRemoteLoader({
 
 export const OrgTenantTreeData = createWithRemoteLoader({
   modules: ['components-core:Global@usePreset']
-})(({ remoteModules, children }) => {
+})(({ remoteModules, hasRoot, children }) => {
   const [usePreset] = remoteModules;
   const { apis } = usePreset();
   return (
     <Fetch
       {...Object.assign({}, apis.account.getCurrentOrgList)}
       render={fetchApi => {
-        return treeDataRender({ fetchApi, children });
+        return treeDataRender({ fetchApi, hasRoot, children });
       }}
     />
   );
@@ -47,12 +47,12 @@ export const OrgTenantTreeData = createWithRemoteLoader({
 
 export const OrgTenantTreeSelect = createWithRemoteLoader({
   modules: ['components-core:FormInfo']
-})(({ remoteModules, ...props }) => {
+})(({ remoteModules, hasRoot, ...props }) => {
   const [FormInfo] = remoteModules;
   const { TreeSelect } = FormInfo.fields;
 
   return (
-    <OrgTenantTreeData>
+    <OrgTenantTreeData hasRoot={hasRoot}>
       {({ treeData }) => {
         return (
           <TreeSelect
@@ -74,12 +74,12 @@ export const OrgTenantTreeSelect = createWithRemoteLoader({
 
 const OrgTreeSelect = createWithRemoteLoader({
   modules: ['components-core:FormInfo']
-})(({ remoteModules, tenantId, ...props }) => {
+})(({ remoteModules, tenantId, hasRoot, ...props }) => {
   const [FormInfo] = remoteModules;
   const { TreeSelect } = FormInfo.fields;
 
   return (
-    <OrgTreeData tenantId={tenantId}>
+    <OrgTreeData tenantId={tenantId} hasRoot={hasRoot}>
       {({ treeData }) => {
         return (
           <TreeSelect
