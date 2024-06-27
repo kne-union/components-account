@@ -57,16 +57,16 @@ const UserTool = createWithRemoteLoader({
           <Space className={style['info']}>
             <Image.Avatar id={avatar} size={48} />
             <div>
-              <div>{name || '未命名'}</div>
-              <div>{email || '-'}</div>
+              <div className={style['line']}>{name || '未命名'}</div>
+              <div className={style['line']}>{email || '-'}</div>
             </div>
           </Space>
           {tenant && (
             <Row className={style['tenant']} align="middle">
               <Col flex={1}>
                 <Space direction={'vertical'}>
-                  <div>{tenant.name}</div>
-                  <div className={style['org']}>{orgName || '-'}</div>
+                  <div className={style['company']}>{tenant.name}</div>
+                  <div className={classnames(style['org'], style['company'])}>{orgName || '-'}</div>
                 </Space>
               </Col>
               <Col>
@@ -135,7 +135,7 @@ const UserTool = createWithRemoteLoader({
     >
       <Space className={style['user-tool']}>
         <Image.Avatar id={avatar} size={32} />
-        <div>{name || '未命名'}</div>
+        <div className={style['user-name']}>{name || '未命名'}</div>
         <Icon className={style['icon']} type="triangle-down" size={12} />
       </Space>
     </Popover>

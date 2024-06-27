@@ -1,7 +1,6 @@
 import { createWithRemoteLoader } from '@kne/remote-loader';
 import get from 'lodash/get';
 import { useState } from 'react';
-import style from './style.module.scss';
 
 const VerificationCodeButton = createWithRemoteLoader({
   modules: ['components-core:LoadingButton', 'components-core:FormInfo@useFormContext', 'components-core:FormInfo@formUtils']
