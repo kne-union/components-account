@@ -2,6 +2,7 @@ import style from './style.module.scss';
 import { createWithRemoteLoader } from '@kne/remote-loader';
 import importMessages, { moduleName } from '../../locale';
 import { Provider } from '../../common/context';
+import { getCookies } from '../../common/cookies';
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import classnames from 'classnames';
 import Login from './Login';
@@ -47,6 +48,10 @@ Account.defaultProps = {
   storeKeys: {
     token: 'X-User-Token'
   }
+};
+
+export const getToken = (tokenKey = 'X-User-Token') => {
+  return getCookies('X-User-Token');
 };
 
 export default createWithRemoteLoader({
