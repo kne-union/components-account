@@ -1,5 +1,6 @@
 import { createWithRemoteLoader } from '@kne/remote-loader';
 import get from 'lodash/get';
+import groupBy from 'lodash/groupBy';
 import Fetch from '@kne/react-fetch';
 
 export const getTreeData = (treeMap, pid) => {
@@ -8,7 +9,7 @@ export const getTreeData = (treeMap, pid) => {
 
 const treeDataRender = ({ fetchApi, hasRoot, children }) => {
   const tree = Array.isArray(fetchApi.data) ? fetchApi.data : [fetchApi.data];
-  const treeMap = Object.groupBy(tree, item => item.pid);
+  const treeMap = groupBy(tree, item => item.pid);
   const treeData = getTreeData(treeMap, '0');
   return children(Object.assign({}, fetchApi, { treeData: hasRoot ? treeData : get(treeData, '0.children') }));
 };
