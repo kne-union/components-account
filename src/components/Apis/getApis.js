@@ -50,6 +50,10 @@ const getApis = options => {
       url: `${prefix}/initSuperAdmin`,
       method: 'POST'
     },
+    setSuperAdmin: {
+      url: `${prefix}/admin/setSuperAdmin`,
+      method: 'POST'
+    },
     addUser: {
       url: `${prefix}/admin/addUser`,
       method: 'POST'
@@ -182,6 +186,10 @@ const getApis = options => {
       method: 'POST'
     },
     getTenantUserList: {
+      url: `${prefix}/tenant/getTenantUserList`,
+      method: 'GET'
+    },
+    getTenantUserListByAdmin: {
       url: `${prefix}/admin/getTenantUserList`,
       method: 'GET'
     },

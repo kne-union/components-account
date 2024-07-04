@@ -104,10 +104,38 @@ const User = createWithRemoteLoader({
               },
               get(item, 'adminRole.role') !== 'SuperAdmin'
                 ? {
-                    children: '设置超管'
+                    children: '设置超管',
+                    message: '确定要设置账号为超管吗？',
+                    isDelete: false,
+                    onClick: async () => {
+                      const { data: resData } = await ajax(
+                        Object.assign({}, apis.account.setSuperAdmin, {
+                          data: { status: true, userId: item.id }
+                        })
+                      );
+                      if (resData.code !== 0) {
+                        return;
+                      }
+                      message.success('设置成功');
+                      ref.current.reload();
+                    }
                   }
                 : {
-                    children: '取消超管'
+                    children: '取消超管',
+                    message: '确定要取消账号的超管权限吗？',
+                    isDelete: false,
+                    onClick: async () => {
+                      const { data: resData } = await ajax(
+                        Object.assign({}, apis.account.setSuperAdmin, {
+                          data: { status: false, userId: item.id }
+                        })
+                      );
+                      if (resData.code !== 0) {
+                        return;
+                      }
+                      message.success('设置成功');
+                      ref.current.reload();
+                    }
                   },
               ...(() => {
                 const list = [];
