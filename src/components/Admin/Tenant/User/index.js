@@ -62,7 +62,7 @@ const User = createWithRemoteLoader({
         </Space>
       </Flex>
       <TablePage
-        {...Object.assign({}, apis.account.getTenantUserList, {
+        {...Object.assign({}, apis.account.getTenantUserListByAdmin, {
           params: { tenantId }
         })}
         ref={ref}

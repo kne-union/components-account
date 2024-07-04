@@ -24,7 +24,7 @@ const InitAdmin = createWithRemoteLoader({
 
   useEffect(() => {
     initAdmin();
-  }, []);
+  }, [initAdmin]);
   return (
     <Page>
       <Result status="warning" title="初始化系统" subTitle="当前用户将被初始化为系统的超级管理员，本操作只能执行一次，执行完成后由该用户来执行其他的管理操作。" />
