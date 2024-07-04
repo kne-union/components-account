@@ -7,7 +7,6 @@ import Language from '@components/Language';
 import { useProps } from '../../common/context';
 import useNavigate from '../../common/useNavigate';
 import { createWithRemoteLoader } from '@kne/remote-loader';
-import { setCookies } from '../../common/cookies';
 import style from './style.module.scss';
 
 const Login = createWithRemoteLoader({
@@ -19,7 +18,7 @@ const Login = createWithRemoteLoader({
   const refererRef = useRef(baseUrl);
   const [tenantList, setTenantList] = useState([]);
   const { ajax, apis: presetApis } = usePreset();
-  const { apis, targetUrl, storeKeys } = useProps();
+  const { apis } = useProps();
   const account = Object.assign({}, presetApis?.account, apis);
   const { global: locale, setGlobal: setLocale } = useGlobalContext('locale');
   return (
