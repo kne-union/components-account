@@ -45,6 +45,7 @@ const Account = ({ className, baseUrl, ...props }) => {
 Account.defaultProps = {
   baseUrl: '/',
   isTenant: false,
+  openRegister: true,
   storeKeys: {
     token: 'X-User-Token'
   }

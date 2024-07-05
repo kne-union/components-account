@@ -27,6 +27,7 @@ export const SuperAdminInfo = createWithRemoteLoader({
   const { apis } = usePreset();
   return (
     <Fetch
+      cache="super-admin-info"
       {...Object.assign({}, apis.account.getSuperAdminInfo)}
       render={({ data }) => {
         return (

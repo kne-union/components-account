@@ -2,69 +2,122 @@ import { createWithRemoteLoader } from '@kne/remote-loader';
 import getColumns from './getColumns';
 import { Space, Flex, Button, App } from 'antd';
 import FormInner from './FormInner';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import InviteList from './InviteList';
 
 const User = createWithRemoteLoader({
-  modules: ['components-core:Table@TablePage', 'components-core:FormInfo@useFormModal', 'components-core:Global@usePreset', 'components-core:Modal@useModal']
+  modules: ['components-core:Table@TablePage', 'components-core:FormInfo@useFormModal', 'components-core:Global@usePreset', 'components-core:Modal@useModal', 'components-core:Filter']
 })(({ remoteModules, record }) => {
-  const [TablePage, useFormModal, usePreset, useModal] = remoteModules;
+  const [TablePage, useFormModal, usePreset, useModal, Filter] = remoteModules;
   const { ajax, apis } = usePreset();
   const formModal = useFormModal();
   const modal = useModal();
   const tenantId = record.id;
   const { message } = App.useApp();
   const ref = useRef(null);
+
+  const { fields: filterFields, getFilterValue, SearchInput } = Filter;
+  const [filter, setFilter] = useState([]);
+  const { InputFilterItem, AdvancedSelectFilterItem } = filterFields;
+
   return (
     <Flex vertical gap={8} flex={1}>
-      <Flex justify="space-between">
-        <div></div>
-        <Space>
-          <Button
-            size="small"
-            type="primary"
-            onClick={() => {
-              const formApi = formModal({
-                title: '添加租户用户',
-                size: 'small',
-                formProps: {
-                  onSubmit: async data => {
-                    const { data: resData } = await ajax(
-                      Object.assign({}, apis.account.addTenantUser, {
-                        data: Object.assign({}, data, { tenantId })
-                      })
-                    );
-                    if (resData.code !== 0) {
-                      return;
+      <Filter
+        value={filter}
+        onChange={setFilter}
+        className="page-filter"
+        list={[
+          [
+            <InputFilterItem label="邮箱" name="email" />,
+            <InputFilterItem label="电话" name="phone" />,
+            <AdvancedSelectFilterItem
+              label="状态"
+              name="status"
+              single
+              api={{
+                loader: () => {
+                  return {
+                    pageData: [
+                      { label: '正常', value: 0 },
+                      {
+                        label: '初始化未激活',
+                        value: 10
+                      },
+                      { label: '已关闭', value: 12 }
+                    ]
+                  };
+                }
+              }}
+            />,
+            <AdvancedSelectFilterItem
+              label="是否管理员"
+              name="isSuperAdmin"
+              single
+              api={{
+                loader: () => {
+                  return {
+                    pageData: [
+                      { label: '是', value: true },
+                      { label: '否', value: false }
+                    ]
+                  };
+                }
+              }}
+            />
+          ]
+        ]}
+        extra={
+          <Space>
+            <Flex>
+              <SearchInput size="small" name="name" label="姓名" />
+            </Flex>
+            <Button
+              size="small"
+              type="primary"
+              onClick={() => {
+                const formApi = formModal({
+                  title: '添加租户用户',
+                  size: 'small',
+                  formProps: {
+                    onSubmit: async data => {
+                      const { data: resData } = await ajax(
+                        Object.assign({}, apis.account.addTenantUser, {
+                          data: Object.assign({}, data, { tenantId })
+                        })
+                      );
+                      if (resData.code !== 0) {
+                        return;
+                      }
+                      message.success('添加成功');
+                      formApi.close();
+                      ref.current.reload();
                     }
-                    message.success('添加成功');
-                    formApi.close();
-                    ref.current.reload();
-                  }
-                },
-                children: <FormInner tenantId={tenantId} />
-              });
-            }}
-          >
-            添加租户用户
-          </Button>
-          <Button
-            size="small"
-            onClick={() => {
-              modal({
-                title: '管理邀请链接',
-                children: <InviteList tenantId={tenantId} />
-              });
-            }}
-          >
-            管理邀请链接
-          </Button>
-        </Space>
-      </Flex>
+                  },
+                  children: <FormInner tenantId={tenantId} />
+                });
+              }}
+            >
+              添加租户用户
+            </Button>
+            <Button
+              size="small"
+              onClick={() => {
+                modal({
+                  title: '管理邀请链接',
+                  children: <InviteList tenantId={tenantId} />
+                });
+              }}
+            >
+              管理邀请链接
+            </Button>
+          </Space>
+        }
+      />
       <TablePage
         {...Object.assign({}, apis.account.getTenantUserListByAdmin, {
-          params: { tenantId }
+          params: Object.assign({}, { tenantId, filter: getFilterValue(filter) })
         })}
+        pagination={{ paramsType: 'params' }}
         ref={ref}
         columns={[
           ...getColumns(),
