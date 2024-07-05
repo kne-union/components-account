@@ -117,6 +117,7 @@ const User = createWithRemoteLoader({
         {...Object.assign({}, apis.account.getTenantUserListByAdmin, {
           params: Object.assign({}, { tenantId, filter: getFilterValue(filter) })
         })}
+        name="tenant-user-list"
         pagination={{ paramsType: 'params' }}
         ref={ref}
         columns={[

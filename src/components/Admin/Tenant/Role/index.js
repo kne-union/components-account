@@ -55,6 +55,7 @@ const Role = createWithRemoteLoader({
         {...Object.assign({}, apis.account.getTenantRoleList, {
           params: { tenantId }
         })}
+        name="role-list"
         pagination={{ paramsType: 'params' }}
         ref={ref}
         columns={[
