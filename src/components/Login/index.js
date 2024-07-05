@@ -3,7 +3,7 @@ import { Checkbox, Col, Row, Space } from 'antd';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import LinkButton from '../../common/LinkButton';
 import { createWithRemoteLoader } from '@kne/remote-loader';
-import { useBaseUrl } from '../../common/context';
+import { useBaseUrl, useProps } from '../../common/context';
 import importMessages, { moduleName } from '../../locale';
 import commonStyle from '../../common/common.module.scss';
 
@@ -15,6 +15,7 @@ const Login = createWithRemoteLoader({
   const [formModule, useIntl] = remoteModules;
   const { Form, Input, SubmitButton } = formModule;
   const baseUrl = useBaseUrl(baseUrlProp);
+  const { loginTitle, openRegister } = useProps();
   const [rememberUser, setRememberUser] = useState(false);
   const formRef = useRef(null);
   const localEmail = useMemo(() => window.localStorage.getItem(LOGIN_REMEMBER_ACCOUNT), []);
@@ -26,7 +27,7 @@ const Login = createWithRemoteLoader({
   }, [localEmail]);
 
   const { footer, formOuter, formInner, title } = render({
-    title: () => formatMessage({ id: 'login' }),
+    title: () => loginTitle || formatMessage({ id: 'login' }),
     footer: () => (
       <>
         <SubmitButton block size="large">
@@ -44,9 +45,11 @@ const Login = createWithRemoteLoader({
             </Checkbox>
           </Col>
           <Col>
-            <LinkButton className={style['forget-button']} type="link" size="small" to={`${baseUrl}/register`}>
-              {formatMessage({ id: 'registerAccount' })}
-            </LinkButton>
+            {openRegister && (
+              <LinkButton className={style['forget-button']} type="link" size="small" to={`${baseUrl}/register`}>
+                {formatMessage({ id: 'registerAccount' })}
+              </LinkButton>
+            )}
             <LinkButton className={style['forget-button']} type="link" size="small" to={`${baseUrl}/forget`}>
               {formatMessage({ id: 'forgotPassword' })}
             </LinkButton>

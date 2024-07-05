@@ -9,18 +9,21 @@ import get from 'lodash/get';
 import { Link } from 'react-router-dom';
 
 const User = createWithRemoteLoader({
-  modules: ['components-core:Layout@TablePage', 'components-core:Filter@fields', 'components-core:FormInfo@useFormModal', 'components-core:Global@usePreset']
+  modules: ['components-core:Layout@TablePage', 'components-core:Filter', 'components-core:FormInfo@useFormModal', 'components-core:Global@usePreset']
 })(({ remoteModules }) => {
-  const [TablePage, filterFields, useFormModal, usePreset] = remoteModules;
+  const [TablePage, Filter, useFormModal, usePreset] = remoteModules;
   const [filter, setFilter] = useState([]);
-  const { InputFilterItem } = filterFields;
+  const { SearchInput, getFilterValue, fields: filterFields } = Filter;
+  const { InputFilterItem, AdvancedSelectFilterItem } = filterFields;
   const { ajax, apis } = usePreset();
   const formModal = useFormModal();
   const { message } = App.useApp();
   const ref = useRef(null);
+  const filterValue = getFilterValue(filter);
   return (
     <TablePage
-      {...apis.account.getAllUserList}
+      {...Object.assign({}, apis.account.getAllUserList, { params: { filter: filterValue } })}
+      pagination={{ paramsType: 'params' }}
       name="user-list"
       ref={ref}
       columns={[
@@ -194,10 +197,50 @@ const User = createWithRemoteLoader({
         filter: {
           value: filter,
           onChange: setFilter,
-          list: [[<InputFilterItem label="用户名" name="text" />]]
+          list: [
+            [
+              <InputFilterItem label="邮箱" name="email" />,
+              <InputFilterItem label="电话" name="phone" />,
+              <AdvancedSelectFilterItem
+                label="状态"
+                name="status"
+                single
+                api={{
+                  loader: () => {
+                    return {
+                      pageData: [
+                        { label: '正常', value: 0 },
+                        {
+                          label: '初始化未激活',
+                          value: 10
+                        },
+                        { label: '已关闭', value: 12 }
+                      ]
+                    };
+                  }
+                }}
+              />,
+              <AdvancedSelectFilterItem
+                label="是否管理员"
+                name="isSuperAdmin"
+                single
+                api={{
+                  loader: () => {
+                    return {
+                      pageData: [
+                        { label: '是', value: true },
+                        { label: '否', value: false }
+                      ]
+                    };
+                  }
+                }}
+              />
+            ]
+          ]
         },
         titleExtra: (
           <Space align="center">
+            <SearchInput name="nickname" label="昵称" />
             <Button
               type="primary"
               onClick={() => {

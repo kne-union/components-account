@@ -1,5 +1,5 @@
 import { createWithRemoteLoader } from '@kne/remote-loader';
-import { Button, Flex, Space, message, Tree } from 'antd';
+import { Button, Flex, Space, message, Tree, Empty } from 'antd';
 import FormInner from './FormInner';
 import { useEffect, useState } from 'react';
 import get from 'lodash/get';
@@ -19,6 +19,10 @@ const OrganizationInner = createWithRemoteLoader({
   useEffect(() => {
     setExpandedKeys([get(data.pageData, '[0].id')]);
   }, [data]);
+
+  if (!(treeData && treeData.length > 0)) {
+    return <Empty />;
+  }
 
   return (
     <Flex className={style['org']} vertical gap={8} flex={1}>

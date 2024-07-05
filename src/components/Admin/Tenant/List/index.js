@@ -12,9 +12,9 @@ const List = createWithRemoteLoader({
   modules: ['components-core:Layout@TablePage', 'components-core:Filter', 'components-core:FormInfo@useFormModal', 'components-core:Global@usePreset', 'components-core:Modal@useModal']
 })(({ remoteModules }) => {
   const [TablePage, Filter, useFormModal, usePreset, useModal] = remoteModules;
-  const { fields: filterFields, getFilterValue } = Filter;
+  const { fields: filterFields, getFilterValue, SearchInput } = Filter;
   const [filter, setFilter] = useState([]);
-  const { InputFilterItem } = filterFields;
+  const { AdvancedSelectFilterItem } = filterFields;
   const { apis, ajax } = usePreset();
   const formModal = useFormModal();
   const { message } = App.useApp();
@@ -152,10 +152,29 @@ const List = createWithRemoteLoader({
         filter: {
           value: filter,
           onChange: setFilter,
-          list: [[<InputFilterItem label="租户名" name="name" />]]
+          list: [
+            [
+              <AdvancedSelectFilterItem
+                label="状态"
+                name="status"
+                single
+                api={{
+                  loader: () => {
+                    return {
+                      pageData: [
+                        { label: '正常', value: 0 },
+                        { label: '已关闭', value: 12 }
+                      ]
+                    };
+                  }
+                }}
+              />
+            ]
+          ]
         },
         titleExtra: (
           <Space align="center">
+            <SearchInput name="name" label="租户名称" />
             <Button
               type="primary"
               onClick={() => {
