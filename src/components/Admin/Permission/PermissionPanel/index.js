@@ -118,7 +118,7 @@ const ApplicationList = createWithRemoteLoader({
   })
 );
 
-const PermissionPanel = forwardRef(({ isEdit, value, tenantId, onChange }, ref) => {
+const PermissionPanel = forwardRef(({ isEdit, value, mustLocked, tenantId, onChange }, ref) => {
   const [current, setCurrent] = useState('');
   return (
     <div className={style['flex-wrapper']}>
@@ -143,6 +143,7 @@ const PermissionPanel = forwardRef(({ isEdit, value, tenantId, onChange }, ref) 
           isEdit={isEdit}
           tenantId={tenantId}
           value={get(value, 'permissions', [])}
+          mustLocked={mustLocked}
           onChecked={permissions => {
             onChange(
               Object.assign({}, value, {

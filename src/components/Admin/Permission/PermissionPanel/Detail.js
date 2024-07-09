@@ -11,7 +11,7 @@ import classnames from 'classnames';
 
 const PermissionLane = createWithRemoteLoader({
   modules: ['components-core:Global@usePreset', 'components-core:Icon', 'components-core:FormInfo@useFormModal', 'components-core:ConfirmButton']
-})(({ remoteModules, applicationId, pid, reload, list, isEdit, value, onChecked, children, parentChecked }) => {
+})(({ remoteModules, applicationId, pid, reload, list, isEdit, mustLocked, value, onChecked, children, parentChecked }) => {
   const [usePreset, Icon, useFormModal, ConfirmButton] = remoteModules;
   const { ajax, apis } = usePreset();
   const formModal = useFormModal();
@@ -62,24 +62,21 @@ const PermissionLane = createWithRemoteLoader({
                   }}
                 >
                   <Space>
-                    {!isEdit &&
-                      (item.isMust === 1 ? (
-                        <Checkbox disabled checked={parentChecked} />
-                      ) : (
-                        <Checkbox
-                          checked={parentChecked && value.indexOf(item.id) > -1}
-                          disabled={!parentChecked}
-                          onChange={e => {
-                            const newValue = value.slice(0);
-                            if (e.target.checked) {
-                              newValue.push(item.id);
-                            } else {
-                              newValue.splice(newValue.indexOf(item.id), 1);
-                            }
-                            onChecked(newValue);
-                          }}
-                        />
-                      ))}
+                    {!isEdit && (
+                      <Checkbox
+                        checked={parentChecked && ((item.isMust === 1 && mustLocked) || value.indexOf(item.id) > -1)}
+                        disabled={(item.isMust === 1 && mustLocked) || !parentChecked}
+                        onChange={e => {
+                          const newValue = value.slice(0);
+                          if (e.target.checked) {
+                            newValue.push(item.id);
+                          } else {
+                            newValue.splice(newValue.indexOf(item.id), 1);
+                          }
+                          onChecked(newValue);
+                        }}
+                      />
+                    )}
                     <Icon type={item.isModule ? 'icon-wenjianjia' : 'icon-bitian'} />
                     <div>
                       {item.name}({item.code})
@@ -175,7 +172,7 @@ const PermissionLane = createWithRemoteLoader({
   );
 });
 
-const PermissionList = ({ applicationId, reload, data, isEdit, value, onChecked, parentChecked }) => {
+const PermissionList = ({ applicationId, reload, data, isEdit, mustLocked, value, onChecked, parentChecked }) => {
   const groupData = groupBy(data, 'pid');
   const permissionMap = useMemo(() => {
     return new Map(data.map(item => [item.id, item]));
@@ -190,6 +187,7 @@ const PermissionList = ({ applicationId, reload, data, isEdit, value, onChecked,
         reload={reload}
         list={children}
         value={value}
+        mustLocked={mustLocked}
         onChecked={permissions => {
           onChecked(
             (permissions || []).filter(id => {
@@ -219,7 +217,7 @@ const PermissionList = ({ applicationId, reload, data, isEdit, value, onChecked,
 
 const Detail = createWithRemoteLoader({
   modules: ['components-core:Global@usePreset']
-})(({ remoteModules, applicationId, isEdit, value, onChecked, parentChecked, tenantId }) => {
+})(({ remoteModules, applicationId, isEdit, mustLocked, value, onChecked, parentChecked, tenantId }) => {
   const [usePreset] = remoteModules;
   const { apis } = usePreset();
   return (
@@ -228,7 +226,7 @@ const Detail = createWithRemoteLoader({
       render={({ data, reload }) => {
         return (
           <div className={style['permission-detail-right']}>
-            <PermissionList applicationId={applicationId} reload={reload} data={data} isEdit={isEdit} value={value} onChecked={onChecked} parentChecked={parentChecked} />
+            <PermissionList applicationId={applicationId} reload={reload} data={data} isEdit={isEdit} mustLocked={mustLocked} value={value} onChecked={onChecked} parentChecked={parentChecked} />
           </div>
         );
       }}
