@@ -49,6 +49,7 @@ const Permission = createWithRemoteLoader({
           return (
             <PermissionPanel
               value={data}
+              mustLocked
               onChange={({ applications, permissions }) => {
                 setData({ applications, permissions });
               }}
