@@ -1,6 +1,7 @@
 .flex-wrapper {
   display: flex;
   flex: 1;
+  overflow: scroll;
 
   .menu-outer {
     width: 150px;
