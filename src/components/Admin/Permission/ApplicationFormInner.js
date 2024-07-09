@@ -13,7 +13,7 @@ const ApplicationFormInner = createWithRemoteLoader({
         <Input name="name" label="应用名称" rule="REQ" />,
         <Input name="code" label="Code" tips="一般为应用名称得英文缩写" rule="REQ" />,
         <Input name="url" label="应用主页" />,
-        <TextArea name="description" />
+        <TextArea name="description" label="应用描述" />
       ]}
     />
   );
