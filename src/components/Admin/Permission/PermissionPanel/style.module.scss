@@ -70,3 +70,17 @@
   background-color: var(--primary-color-1);
   color: var(--primary-color) !important;
 }
+
+.app-name {
+  flex: 1;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.permission-name {
+  max-width: 172px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

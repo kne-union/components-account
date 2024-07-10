@@ -92,6 +92,7 @@ const UserTool = createWithRemoteLoader({
                         }
                         setGlobal(userResData.data);
                         message.success('切换租户成功');
+                        window.location.reload();
                       },
                       children: ({ childrenRef }) => (
                         <Fetch

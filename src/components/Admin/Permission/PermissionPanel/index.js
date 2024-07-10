@@ -42,7 +42,7 @@ const ApplicationList = createWithRemoteLoader({
                         />
                       )}
                       <Image.Avatar id={item.avatar} size={32} />
-                      <div style={{ flex: 1 }}>
+                      <div className={style['app-name']} title={`${item.name}(${item.code})`}>
                         {item.name}({item.code})
                       </div>
                       {isEdit && (
@@ -89,6 +89,7 @@ const ApplicationList = createWithRemoteLoader({
                                 return;
                               }
                               message.success('删除应用成功');
+                              onChange(data?.length ? data[0].id : '');
                               reload();
                             }}
                           >

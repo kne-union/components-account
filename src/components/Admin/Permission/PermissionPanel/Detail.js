@@ -61,7 +61,7 @@ const PermissionLane = createWithRemoteLoader({
                     setCurrent(item.id);
                   }}
                 >
-                  <Space>
+                  <Space flex={1}>
                     {!isEdit && (
                       <Checkbox
                         checked={parentChecked && ((item.isMust === 1 && mustLocked) || value.indexOf(item.id) > -1)}
@@ -78,7 +78,7 @@ const PermissionLane = createWithRemoteLoader({
                       />
                     )}
                     <Icon type={item.isModule ? 'icon-wenjianjia' : 'icon-bitian'} />
-                    <div>
+                    <div className={style['permission-name']} title={`${item.name}(${item.code})`}>
                       {item.name}({item.code})
                     </div>
                     {isEdit && item.isMust === 1 ? <Icon type="icon-yisuoding" /> : ''}
