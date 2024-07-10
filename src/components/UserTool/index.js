@@ -42,7 +42,7 @@ const TenantList = createWithRemoteLoader({
 
 const UserTool = createWithRemoteLoader({
   modules: ['components-core:Image', 'components-core:Icon', 'components-core:Global@usePreset', 'components-core:Modal@useModal', 'components-core:Global@useGlobalContext']
-})(({ remoteModules, avatar, name, email, tenant, orgName, storeKeys }) => {
+})(({ remoteModules, avatar, name, email, tenant, orgName, storeKeys, domain }) => {
   const [Image, Icon, usePreset, useModal, useGlobalContext] = remoteModules;
   const { ajax, apis } = usePreset();
   const modal = useModal();
@@ -118,7 +118,7 @@ const UserTool = createWithRemoteLoader({
               className={style['options-list-item']}
               onClick={() => {
                 Object.values(storeKeys).forEach(tokenKey => {
-                  removeCookies(tokenKey);
+                  removeCookies(tokenKey, domain);
                 });
                 ajax(Object.assign({}, apis.account.getUserInfo));
               }}
