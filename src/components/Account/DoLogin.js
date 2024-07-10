@@ -13,7 +13,7 @@ const DoLogin = createWithRemoteLoader({
 })(({ remoteModules, children }) => {
   const [usePreset, useIntl] = remoteModules;
   const { apis: presetApis, ajax } = usePreset();
-  const { apis, targetUrl, storeKeys } = useProps();
+  const { apis, targetUrl, storeKeys, domain } = useProps();
   const { formatMessage } = useIntl({ moduleName });
   const account = Object.assign({}, presetApis?.account, apis);
   const { message } = App.useApp();
@@ -36,7 +36,7 @@ const DoLogin = createWithRemoteLoader({
       let refererHref = targetUrl || '/';
 
       Object.keys(storeKeys).forEach(key => {
-        resData.data[key] && setCookies(storeKeys[key], resData.data[key]);
+        resData.data[key] && setCookies(storeKeys[key], resData.data[key], domain);
       });
 
       if (referer) {

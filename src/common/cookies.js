@@ -14,12 +14,12 @@ export const getCookies = key => {
   return Cookies.get(prefix + '_' + key.toUpperCase());
 };
 
-export const setCookies = (key, value) => {
-  return Cookies.set(prefix + '_' + key.toUpperCase(), value, { domain: DOMAIN });
+export const setCookies = (key, value, domain) => {
+  return Cookies.set(prefix + '_' + key.toUpperCase(), value, { domain: domain || DOMAIN });
 };
 
-export const removeCookies = key => {
-  return Cookies.remove(prefix + '_' + key.toUpperCase(), { domain: DOMAIN });
+export const removeCookies = (key, domain) => {
+  return Cookies.remove(prefix + '_' + key.toUpperCase(), { domain: domain || DOMAIN });
 };
 
 const cookies = { setCookies, getCookies, removeCookies };
