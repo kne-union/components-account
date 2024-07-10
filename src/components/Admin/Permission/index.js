@@ -58,7 +58,6 @@ const Permission = createWithRemoteLoader({
                 size: 'small',
                 formProps: {
                   onSubmit: async data => {
-                    console.log(data);
                     const { data: resData } = await ajax(
                       Object.assign({}, apis.account.exportPermissionList, {
                         data
