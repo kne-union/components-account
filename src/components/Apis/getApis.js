@@ -169,6 +169,10 @@ const getApis = options => {
       url: `${prefix}/admin/savePermission`,
       method: 'POST'
     },
+    parsePermissionList: {
+      url: `${prefix}/admin/parsePermissionList`,
+      method: 'POST'
+    },
     exportPermissionList: {
       url: `${prefix}/admin/exportPermissionList`,
       method: 'POST'
