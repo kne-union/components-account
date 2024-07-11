@@ -5,7 +5,6 @@ import ApplicationFormInner from './ApplicationFormInner';
 import PermissionPanel from './PermissionPanel';
 import SelectApplication from './FormInner/SelectApplication';
 import saveJSON from '../../../common/saveJSON';
-import axios from 'axios';
 
 import style from './style.module.scss';
 import uniqueId from 'lodash/uniqueId';
@@ -14,7 +13,7 @@ const Permission = createWithRemoteLoader({
   modules: ['components-core:Layout@Page', 'components-core:FormInfo@useFormModal', 'components-core:Global@usePreset', 'components-core:FormInfo']
 })(({ remoteModules, value, isEdit }) => {
   const [Page, useFormModal, usePreset, FormInfo] = remoteModules;
-  const { ajax, apis } = usePreset();
+  const { ajax, ajaxPostForm, apis } = usePreset();
   const { message } = App.useApp();
   const formModal = useFormModal();
   const { Upload } = FormInfo.fields;
@@ -38,7 +37,7 @@ const Permission = createWithRemoteLoader({
               renderTips={() => null}
               accept={['.json']}
               ossUpload={async ({ file }) => {
-                const { data: resData } = await axios.postForm(apis.account.parsePermissionList.url, { file });
+                const { data: resData } = await ajaxPostForm(apis.account.parsePermissionList.url, { file });
                 if (resData.code !== 0) {
                   message.error('文件解析错误');
                   return;
