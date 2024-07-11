@@ -132,9 +132,12 @@ export const globalInit = async () => {
   });
 
   const getApis = (await loadModule('components-account:Apis@getApis')).default;
-
+  const ajaxPostForm = (url, data, options) => {
+    return axios.postForm(url, data, options);
+  };
   return {
     ajax,
+    ajaxPostForm,
     apis: Object.assign({}, apis, {
       account: getApis(),
       oss: {
@@ -142,8 +145,8 @@ export const globalInit = async () => {
         paramsType: 'urlParams',
         ignoreSuccessState: true
       },
-      ossUpload: async ({ file }) => {
-        return await axios.postForm('/api/static/upload', { file });
+      ossUpload: ({ file }) => {
+        return ajaxPostForm('/api/static/upload', { file });
       }
     }),
     themeToken: {
