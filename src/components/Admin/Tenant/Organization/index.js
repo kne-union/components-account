@@ -20,10 +20,6 @@ const OrganizationInner = createWithRemoteLoader({
     setExpandedKeys([get(data.pageData, '[0].id')]);
   }, [data]);
 
-  if (!(treeData && treeData.length > 0)) {
-    return <Empty />;
-  }
-
   return (
     <Flex className={style['org']} vertical gap={8} flex={1}>
       <Flex justify="space-between">
@@ -60,132 +56,136 @@ const OrganizationInner = createWithRemoteLoader({
           </Button>
         </Space>
       </Flex>
-      <Tree
-        showLine
-        showIcon
-        selectable={false}
-        expandedKeys={expandedKeys}
-        fieldNames={{ title: 'name', key: 'id', children: 'children' }}
-        treeData={treeData}
-        onExpand={expandedKeys => {
-          setExpandedKeys(expandedKeys);
-        }}
-        titleRender={nodeData => {
-          return (
-            <Space size={36} className={style['tree-node']}>
-              <Space>
-                {nodeData.parentId !== 0 ? (
-                  <>
-                    <span>{nodeData.name} </span>
-                    {nodeData.enName && <span>{nodeData.enName}</span>}
-                  </>
-                ) : (
-                  get(data, 'name') + ` ${nodeData.enName || ''}`
-                )}
-              </Space>
-              <Space size={24} className={style['tree-node-actions']}>
-                <Button
-                  type="link"
-                  className="btn-no-padding"
-                  onClick={() => {
-                    const formApi = formModal({
-                      title: '新增子级组织',
-                      formProps: {
-                        data: {
-                          pid: nodeData.id
-                        },
-                        onSubmit: async data => {
-                          const { data: resData } = await ajax(
-                            Object.assign({}, apis.account.addTenantOrg, {
-                              data: Object.assign({}, data, { tenantId })
-                            })
-                          );
-                          if (resData.code !== 0) {
-                            return;
-                          }
-                          message.success('子级组织新增成功');
-                          formApi.close();
-                          reload();
-                        }
-                      },
-                      size: 'small',
-                      children: <FormInner treeData={treeData} tenantId={tenantId} />
-                    });
-                  }}
-                >
-                  <Icon type="tianjia" />
-                  新增子级组织
-                </Button>
-                {nodeData.pid !== 0 && (
+      {treeData && treeData.length > 0 ? (
+        <Tree
+          showLine
+          showIcon
+          selectable={false}
+          expandedKeys={expandedKeys}
+          fieldNames={{ title: 'name', key: 'id', children: 'children' }}
+          treeData={treeData}
+          onExpand={expandedKeys => {
+            setExpandedKeys(expandedKeys);
+          }}
+          titleRender={nodeData => {
+            return (
+              <Space size={36} className={style['tree-node']}>
+                <Space>
+                  {nodeData.parentId !== 0 ? (
+                    <>
+                      <span>{nodeData.name} </span>
+                      {nodeData.enName && <span>{nodeData.enName}</span>}
+                    </>
+                  ) : (
+                    get(data, 'name') + ` ${nodeData.enName || ''}`
+                  )}
+                </Space>
+                <Space size={24} className={style['tree-node-actions']}>
                   <Button
                     type="link"
                     className="btn-no-padding"
                     onClick={() => {
                       const formApi = formModal({
-                        title: '编辑组织',
+                        title: '新增子级组织',
                         formProps: {
-                          data: nodeData,
+                          data: {
+                            pid: nodeData.id
+                          },
                           onSubmit: async data => {
-                            const pid = data.pid || '0';
                             const { data: resData } = await ajax(
-                              Object.assign({}, apis.account.editTenantOrg, {
-                                data: Object.assign({}, data, {
-                                  tenantId,
-                                  pid,
-                                  id: nodeData.id
-                                })
+                              Object.assign({}, apis.account.addTenantOrg, {
+                                data: Object.assign({}, data, { tenantId })
                               })
                             );
                             if (resData.code !== 0) {
                               return;
                             }
-                            message.success('组织编辑成功');
+                            message.success('子级组织新增成功');
                             formApi.close();
                             reload();
                           }
                         },
                         size: 'small',
-                        children: <FormInner tenantId={tenantId} record={nodeData} />
+                        children: <FormInner treeData={treeData} tenantId={tenantId} />
                       });
                     }}
                   >
-                    <Icon type="bianji" />
-                    编辑
+                    <Icon type="tianjia" />
+                    新增子级组织
                   </Button>
-                )}
-                {nodeData.pid !== 0 && (
-                  <ConfirmButton
-                    type="link"
-                    className="btn-no-padding"
-                    onClick={() => {
-                      ajax(
-                        merge({}, apis.account.removeTenantOrg, {
-                          data: {
-                            tenantId,
-                            id: nodeData.id
+                  {nodeData.pid !== 0 && (
+                    <Button
+                      type="link"
+                      className="btn-no-padding"
+                      onClick={() => {
+                        const formApi = formModal({
+                          title: '编辑组织',
+                          formProps: {
+                            data: nodeData,
+                            onSubmit: async data => {
+                              const pid = data.pid || '0';
+                              const { data: resData } = await ajax(
+                                Object.assign({}, apis.account.editTenantOrg, {
+                                  data: Object.assign({}, data, {
+                                    tenantId,
+                                    pid,
+                                    id: nodeData.id
+                                  })
+                                })
+                              );
+                              if (resData.code !== 0) {
+                                return;
+                              }
+                              message.success('组织编辑成功');
+                              formApi.close();
+                              reload();
+                            }
+                          },
+                          size: 'small',
+                          children: <FormInner tenantId={tenantId} record={nodeData} />
+                        });
+                      }}
+                    >
+                      <Icon type="bianji" />
+                      编辑
+                    </Button>
+                  )}
+                  {nodeData.pid !== 0 && (
+                    <ConfirmButton
+                      type="link"
+                      className="btn-no-padding"
+                      onClick={() => {
+                        ajax(
+                          merge({}, apis.account.removeTenantOrg, {
+                            data: {
+                              tenantId,
+                              id: nodeData.id
+                            }
+                          })
+                        ).then(({ data }) => {
+                          if (data.code === 0) {
+                            message.success('删除组织成功！');
+                            reload();
                           }
-                        })
-                      ).then(({ data }) => {
-                        if (data.code === 0) {
-                          message.success('删除组织成功！');
-                          reload();
-                        }
-                      });
-                    }}
-                    okText="删除"
-                    danger
-                    isModal
-                    message={`您确定要删除该组织吗？`}
-                  >
-                    <Icon type="shanchu" />
-                    删除
-                  </ConfirmButton>
-                )}
+                        });
+                      }}
+                      okText="删除"
+                      danger
+                      isModal
+                      message={`您确定要删除该组织吗？`}
+                    >
+                      <Icon type="shanchu" />
+                      删除
+                    </ConfirmButton>
+                  )}
+                </Space>
               </Space>
-            </Space>
-          );
-        }}
-      />
+            );
+          }}
+        />
+      ) : (
+        <Empty />
+      )}
     </Flex>
   );
 });
