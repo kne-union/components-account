@@ -39,7 +39,7 @@ const getApis = options => {
       method: 'GET'
     },
     getCurrentOrgList: {
-      url: '/api/v1/account/tenant/orgList',
+      url: `${prefix}/account/tenant/orgList`,
       method: 'GET'
     },
     setCurrentTenantId: {
