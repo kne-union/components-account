@@ -14,6 +14,22 @@ const getApis = options => {
       url: `${prefix}/sendEmailCode`,
       method: 'POST'
     },
+    modifyPassword: {
+      url: `${prefix}/modifyPassword`,
+      method: 'POST'
+    },
+    forgetPwd: {
+      url: `${prefix}/forgetPwd`,
+      method: 'POST'
+    },
+    parseResetToken: {
+      url: `${prefix}/parseResetToken`,
+      method: 'POST'
+    },
+    resetPassword: {
+      url: `${prefix}/resetPassword`,
+      method: 'POST'
+    },
     validateCode: {
       url: `${prefix}/validateCode`,
       method: 'POST'

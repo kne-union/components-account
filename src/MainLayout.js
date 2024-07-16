@@ -45,7 +45,7 @@ export const AfterUserLoginLayout = props => {
   console.log('AfterUserLoginLayout');
   return (
     <GlobalLayout {...props}>
-      <UserInfo>
+      <UserInfo baseUrl="/account">
         <Outlet />
       </UserInfo>
     </GlobalLayout>
@@ -74,7 +74,7 @@ export const BeforeLoginLayout = props => {
 export const AfterTenantUserLoginLayout = props => {
   return (
     <GlobalLayout {...props}>
-      <TenantUserInfo>
+      <TenantUserInfo baseUrl="/account">
         <Outlet />
       </TenantUserInfo>
     </GlobalLayout>
