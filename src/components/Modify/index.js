@@ -7,7 +7,7 @@ import importMessages, { moduleName } from '../../locale';
 
 const Modify = createWithRemoteLoader({
   modules: ['FormInfo@formModule', 'components-core:Intl@useIntl']
-})(({ remoteModules, email, onSubmit, className, render }) => {
+})(({ remoteModules, email, isReset, onSubmit, className, render }) => {
   const [formModule, useIntl] = remoteModules;
   const { Form, Input, SubmitButton } = formModule;
   const { formatMessage } = useIntl({ moduleName });
@@ -22,7 +22,7 @@ const Modify = createWithRemoteLoader({
     formInner: () => (
       <>
         <Input name="email" label={formatMessage({ id: 'emailAccount' })} disabled value={email && decodeURIComponent(email)} />
-        <Input.Password name="oldPwd" label={formatMessage({ id: 'originalPassword' })} rule="REQ LEN-6-50" />
+        {isReset ? null : <Input.Password name="oldPwd" label={formatMessage({ id: 'originalPassword' })} rule="REQ LEN-6-50" />}
         <Input.Password name="newPwd" label={formatMessage({ id: 'newPassword' })} rule="REQ LEN-6-50" />
         <Input.Password name="repeatNewPwd" label={formatMessage({ id: 'repeatNewPassword' })} rule="REQ LEN-6-50 REPEAT-newPwd" />
       </>
@@ -46,7 +46,15 @@ const Modify = createWithRemoteLoader({
   const footerComponent = footer(),
     formInnerComponent = formInner(),
     titleComponent = title();
-  return <div className={classnames(commonStyle['out-container'], className)}>{formOuter({ title: titleComponent, formInner: formInnerComponent, footer: footerComponent })}</div>;
+  return (
+    <div className={classnames(commonStyle['out-container'], className)}>
+      {formOuter({
+        title: titleComponent,
+        formInner: formInnerComponent,
+        footer: footerComponent
+      })}
+    </div>
+  );
 });
 
 Modify.defaultProps = {

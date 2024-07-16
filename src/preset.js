@@ -1,11 +1,10 @@
 import React from 'react';
-import { preset as fetchPreset } from '@kne/react-fetch';
+import { preset as fetchPreset, request } from '@kne/react-fetch';
 import { Spin, Empty, message } from 'antd';
 import axios from 'axios';
 import { preset as remoteLoaderPreset, loadModule } from '@kne/remote-loader';
 import * as apis from './apis';
 import transform from 'lodash/transform';
-import omit from 'lodash/omit';
 import { getCookies } from '@common/cookies';
 
 if (window.runtimePublicUrl) {
@@ -53,22 +52,7 @@ export const ajax = (() => {
     }
   );
 
-  return params => {
-    if (params.hasOwnProperty('loader') && typeof params.loader === 'function') {
-      return Promise.resolve(params.loader(omit(params, ['loader'])))
-        .then(data => ({
-          data: {
-            code: 0,
-            data
-          }
-        }))
-        .catch(err => {
-          message.error(err.message || '请求发生错误');
-          return { data: { code: 500, msg: err.message } };
-        });
-    }
-    return instance(params);
-  };
+  return instance;
 })();
 
 export const globalInit = async () => {
@@ -136,7 +120,7 @@ export const globalInit = async () => {
     return axios.postForm(url, data, options);
   };
   return {
-    ajax,
+    ajax: request,
     ajaxPostForm,
     apis: Object.assign({}, apis, {
       account: getApis(),

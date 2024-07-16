@@ -10,13 +10,13 @@ const Forget = createWithRemoteLoader({
   const [usePreset] = remoteModules;
   const { apis: presetApis, ajax } = usePreset();
   const { apis } = useProps();
-  const account = Object.assign({}, presetApis?.account, apis);
+  const account = merge({}, presetApis?.account, apis);
   return (
     <LoginOuterContainer>
       <ForgetComponent
         onSubmit={(formData, success) => {
           return ajax(
-            merge({}, account, {
+            merge({}, account.forgetPwd, {
               data: { email: formData.email }
             })
           ).then(({ data }) => {
