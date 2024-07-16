@@ -16,7 +16,7 @@ const NavigateToLogin = () => {
 const EmailFormToken = createWithFetch({
   error: () => <NavigateToLogin />
 })(({ data, children }) => {
-  return children({ email: data.email });
+  return children(data);
 });
 
 const ResetPassword = createWithRemoteLoader({
@@ -32,23 +32,23 @@ const ResetPassword = createWithRemoteLoader({
   const { token } = useParams();
   return (
     <EmailFormToken
-      {...merge({}, account.parseResetEmailToken, {
+      {...merge({}, account.parseResetToken, {
         data: {
           token: decodeURIComponent(token)
         }
       })}
     >
-      {({ email }) => {
+      {({ name }) => {
         return (
           <ResetPasswordComponent
-            email={email}
+            email={name}
             onSubmit={async formData => {
               const newPwd = md5(formData.newPwd);
               const { data: resData } = await ajax(
                 merge({}, account.resetPassword, {
                   data: {
+                    token,
                     email: formData.email,
-                    oldPwd: md5(formData.oldPwd),
                     newPwd: newPwd,
                     confirmPwd: newPwd
                   }

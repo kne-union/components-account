@@ -16,6 +16,7 @@ const ResetPassword = createWithRemoteLoader({
   return (
     <Modify
       {...props}
+      isReset
       render={components => {
         return render(
           Object.assign({}, components, {
