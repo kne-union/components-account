@@ -73,6 +73,11 @@ const App = ({ globalPreset }) => {
                   key: 'permission',
                   title: '应用权限管理',
                   path: '/admin/permission'
+                },
+                {
+                  key: 'log',
+                  title: '操作日志',
+                  path: '/admin/log'
                 }
               ],
               rightOptions: <RightOptions />

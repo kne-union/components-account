@@ -16,9 +16,9 @@
 - _Setting(@components/Setting)
 
 ```jsx
-const {default:Setting} = _Setting;
-const BaseExample = ()=>{
-    return <Setting />;
+const { default: Setting } = _Setting;
+const BaseExample = () => {
+  return <Setting />;
 };
 
 render(<BaseExample />);
