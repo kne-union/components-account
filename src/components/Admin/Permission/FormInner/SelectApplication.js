@@ -14,7 +14,7 @@ const SelectApplication = createWithRemoteLoader({
           name="applicationIds"
           label="应用"
           rule="REQ"
-          api={apis.account.getApplicationList}
+          api={apis.account.admin.getApplicationList}
           dataFormat={data => ({
             list: (data || []).map(item => ({
               value: item.id,

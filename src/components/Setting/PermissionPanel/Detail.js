@@ -11,9 +11,9 @@ import classnames from 'classnames';
 
 const PermissionLane = createWithRemoteLoader({
   modules: ['components-core:Global@usePreset', 'components-core:Icon', 'components-core:FormInfo@useFormModal', 'components-core:ConfirmButton']
-})(({ remoteModules, applicationId, pid, reload, list, isEdit, mustLocked, value, onChecked, children, parentChecked }) => {
+})(({ remoteModules, apis, applicationId, pid, reload, list, isEdit, mustLocked, value, onChecked, children, parentChecked }) => {
   const [usePreset, Icon, useFormModal, ConfirmButton] = remoteModules;
-  const { ajax, apis } = usePreset();
+  const { ajax } = usePreset();
   const formModal = useFormModal();
   const { message } = App.useApp();
   const [current, setCurrent] = useState(get(list, '[0].id'));
@@ -28,7 +28,7 @@ const PermissionLane = createWithRemoteLoader({
       formProps: {
         onSubmit: async data => {
           const { data: resData } = await ajax(
-            Object.assign({}, apis.account.addPermission, {
+            Object.assign({}, apis.addPermission, {
               data: Object.assign({}, data, { applicationId, pid })
             })
           );
@@ -100,7 +100,7 @@ const PermissionLane = createWithRemoteLoader({
                               data: Object.assign({}, item),
                               onSubmit: async data => {
                                 const { data: resData } = await ajax(
-                                  Object.assign({}, apis.account.savePermission, {
+                                  Object.assign({}, apis.savePermission, {
                                     data: Object.assign({}, data, { id: item.id })
                                   })
                                 );
@@ -124,7 +124,7 @@ const PermissionLane = createWithRemoteLoader({
                         className="btn-no-padding"
                         onClick={async () => {
                           const { data: resData } = await ajax(
-                            Object.assign({}, apis.account.deletePermission, {
+                            Object.assign({}, apis.deletePermission, {
                               data: { id: item.id }
                             })
                           );
@@ -172,7 +172,7 @@ const PermissionLane = createWithRemoteLoader({
   );
 });
 
-const PermissionList = ({ applicationId, reload, data, isEdit, mustLocked, value, onChecked, parentChecked }) => {
+const PermissionList = ({ apis, applicationId, reload, data, isEdit, mustLocked, value, onChecked, parentChecked }) => {
   const groupData = groupBy(data, 'pid');
   const permissionMap = useMemo(() => {
     return new Map(data.map(item => [item.id, item]));
@@ -181,6 +181,7 @@ const PermissionList = ({ applicationId, reload, data, isEdit, mustLocked, value
     const children = groupData[pid];
     return (
       <PermissionLane
+        apis={apis}
         key={pid}
         applicationId={applicationId}
         pid={pid}
@@ -215,23 +216,19 @@ const PermissionList = ({ applicationId, reload, data, isEdit, mustLocked, value
   return <Flex gap={8}>{render({ pid: 0, parentChecked })}</Flex>;
 };
 
-const Detail = createWithRemoteLoader({
-  modules: ['components-core:Global@usePreset']
-})(({ remoteModules, applicationId, isEdit, mustLocked, value, onChecked, parentChecked, tenantId }) => {
-  const [usePreset] = remoteModules;
-  const { apis } = usePreset();
+const Detail = ({ apis, applicationId, isEdit, mustLocked, value, onChecked, parentChecked, tenantId }) => {
   return (
     <Fetch
-      {...Object.assign({}, apis.account.getPermissionList, { params: { applicationId, tenantId } })}
+      {...Object.assign({}, apis.getPermissionList, { params: { applicationId, tenantId } })}
       render={({ data, reload }) => {
         return (
           <div className={style['permission-detail-right']}>
-            <PermissionList applicationId={applicationId} reload={reload} data={data} isEdit={isEdit} mustLocked={mustLocked} value={value} onChecked={onChecked} parentChecked={parentChecked} />
+            <PermissionList apis={apis} applicationId={applicationId} reload={reload} data={data} isEdit={isEdit} mustLocked={mustLocked} value={value} onChecked={onChecked} parentChecked={parentChecked} />
           </div>
         );
       }}
     />
   );
-});
+};
 
 export default Detail;

@@ -27,7 +27,7 @@ const List = createWithRemoteLoader({
   };
   return (
     <TablePage
-      {...Object.assign({}, apis.account.getAllTenantList, {
+      {...Object.assign({}, apis.account.admin.getAllTenantList, {
         params: getFilterValue(filter)
       })}
       pagination={{ paramsType: 'params' }}
@@ -53,7 +53,7 @@ const List = createWithRemoteLoader({
                       data: Object.assign({}, item),
                       onSubmit: async data => {
                         const { data: resData } = await ajax(
-                          Object.assign({}, apis.account.saveTenant, {
+                          Object.assign({}, apis.account.admin.saveTenant, {
                             data: Object.assign({}, data, { id: item.id })
                           })
                         );
@@ -90,7 +90,7 @@ const List = createWithRemoteLoader({
                     formProps: {
                       onSubmit: async data => {
                         const { data: resData } = await ajax(
-                          Object.assign({}, apis.account.addTenantUser, {
+                          Object.assign({}, apis.account.admin.addTenantUser, {
                             data: Object.assign({}, data, { tenantId: item.id })
                           })
                         );
@@ -115,7 +115,7 @@ const List = createWithRemoteLoader({
                     okText: '关闭',
                     onClick: async () => {
                       const { data: resData } = await ajax(
-                        Object.assign({}, apis.account.closeTenant, {
+                        Object.assign({}, apis.account.admin.closeTenant, {
                           data: Object.assign({}, { tenantId: item.id })
                         })
                       );
@@ -133,7 +133,7 @@ const List = createWithRemoteLoader({
                     children: '开启',
                     onClick: async () => {
                       const { data: resData } = await ajax(
-                        Object.assign({}, apis.account.openTenant, {
+                        Object.assign({}, apis.account.admin.openTenant, {
                           data: Object.assign({}, { tenantId: item.id })
                         })
                       );
@@ -185,7 +185,7 @@ const List = createWithRemoteLoader({
                   formProps: {
                     onSubmit: async data => {
                       console.log(data);
-                      const { data: resData } = await ajax(Object.assign({}, apis.account.addTenant, { data }));
+                      const { data: resData } = await ajax(Object.assign({}, apis.account.admin.addTenant, { data }));
                       if (resData.code !== 0) {
                         return;
                       }

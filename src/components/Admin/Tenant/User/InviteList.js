@@ -18,7 +18,7 @@ const InviteFormInner = createWithRemoteLoader({
         <AdvancedSelect
           name="roleIds"
           label="角色"
-          api={Object.assign({}, apis.account.getTenantRoleList, {
+          api={Object.assign({}, apis.account.admin.getTenantRoleList, {
             params: { tenantId, filter: { type: 0 } },
             transformData: data => {
               return Object.assign({}, data, {
@@ -63,7 +63,7 @@ const InviteList = createWithRemoteLoader({
                 formProps: {
                   onSubmit: async data => {
                     const { data: resData } = await ajax(
-                      Object.assign({}, apis.account.addInviteToken, {
+                      Object.assign({}, apis.account.admin.addInviteToken, {
                         data: Object.assign({}, { tenantId, info: data })
                       })
                     );
@@ -85,7 +85,7 @@ const InviteList = createWithRemoteLoader({
         </Space>
       </Flex>
       <TablePage
-        {...Object.assign({}, apis.account.getInviteList, {
+        {...Object.assign({}, apis.account.admin.getInviteList, {
           params: { tenantId }
         })}
         columns={[
@@ -125,7 +125,7 @@ const InviteList = createWithRemoteLoader({
                   isDelete: true,
                   onClick: async () => {
                     const { data: resData } = await ajax(
-                      Object.assign({}, apis.account.deleteInviteToken, {
+                      Object.assign({}, apis.account.admin.deleteInviteToken, {
                         data: { id: item.id }
                       })
                     );

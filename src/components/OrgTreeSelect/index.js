@@ -21,7 +21,7 @@ export const OrgTreeData = createWithRemoteLoader({
   const { apis } = usePreset();
   return (
     <Fetch
-      {...Object.assign({}, apis.account.getTenantOrgList, {
+      {...Object.assign({}, apis.account.admin.getTenantOrgList, {
         params: { tenantId }
       })}
       render={fetchApi => {
@@ -38,7 +38,7 @@ export const OrgTenantTreeData = createWithRemoteLoader({
   const { apis } = usePreset();
   return (
     <Fetch
-      {...Object.assign({}, apis.account.getCurrentOrgList)}
+      {...Object.assign({}, apis.account.tenant.getTenantOrgList)}
       render={fetchApi => {
         return treeDataRender({ fetchApi, hasRoot, children });
       }}

@@ -30,7 +30,7 @@ const Detail = createWithRemoteLoader({
   const DetailInner = detailMap[activeKey];
   const { message } = App.useApp();
   const renderWithTenantInfo = children => {
-    return <Fetch cache="tenant-info" {...Object.assign({}, apis.account.getTenantInfo, { params: { id } })} render={({ data: tenant, reload }) => children({ tenant, reload })} />;
+    return <Fetch cache="tenant-info" {...Object.assign({}, apis.account.admin.getTenantInfo, { params: { id } })} render={({ data: tenant, reload }) => children({ tenant, reload })} />;
   };
   return (
     <StateBarPage
@@ -72,7 +72,7 @@ const Detail = createWithRemoteLoader({
                       data: Object.assign({}, tenant),
                       onSubmit: async data => {
                         const { data: resData } = await ajax(
-                          Object.assign({}, apis.account.saveTenant, {
+                          Object.assign({}, apis.account.admin.saveTenant, {
                             data: Object.assign({}, data, { id: tenant.id })
                           })
                         );
@@ -96,7 +96,7 @@ const Detail = createWithRemoteLoader({
                     formProps: {
                       onSubmit: async data => {
                         const { data: resData } = await ajax(
-                          Object.assign({}, apis.account.addTenantUser, {
+                          Object.assign({}, apis.account.admin.addTenantUser, {
                             data: Object.assign({}, data, { tenantId: tenant.id })
                           })
                         );
