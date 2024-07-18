@@ -5,6 +5,7 @@ import HomePage from './HomePage';
 import Tenant, { Detail as TenantDetail } from './Tenant';
 import User from './User';
 import Permission from './Permission';
+import OperationLog from './OperationLog';
 
 export const InitAdmin = ({ baseUrl, ...props }) => {
   return (
@@ -27,6 +28,7 @@ const Admin = ({ baseUrl, ...props }) => {
         <Route path="tenant/detail/:id" element={<TenantDetail />} />
         <Route path="user" element={<User />} />
         <Route path="permission" element={<Permission isEdit />} />
+        <Route path="log" element={<OperationLog />} />
       </Routes>
     </Provider>
   );
