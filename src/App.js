@@ -4,7 +4,7 @@ import MainLayout, { AfterAdminUserLoginLayout, AfterTenantUserLoginLayout, Afte
 import RightOptions from './RightOptions';
 import './index.scss';
 
-const { Home, Account, Admin, InitAdmin, Error, NotFound } = pages;
+const { Home, Account, Admin, InitAdmin, TenantSetting, Error, NotFound } = pages;
 
 const App = ({ globalPreset }) => {
   const [searchParams] = useSearchParams();
@@ -23,12 +23,26 @@ const App = ({ globalPreset }) => {
             preset={globalPreset}
             themeToken={globalPreset.themeToken}
             navigation={{
-              rightOptions: <RightOptions />
+              rightOptions: <RightOptions />,
+              base: '/tenant',
+              showIndex: false,
+              list: [
+                {
+                  key: 'home',
+                  title: '首页',
+                  path: '/tenant'
+                },
+                { key: 'setting', title: '设置', path: '/tenant/setting' }
+              ]
             }}
           />
         }
       >
         <Route index element={<Home />} />
+        <Route path="setting">
+          <Route index element={<TenantSetting baseUrl="/tenant/setting" />} />
+          <Route path="*" element={<TenantSetting baseUrl="/tenant/setting" />} />
+        </Route>
       </Route>
       <Route
         path="admin"

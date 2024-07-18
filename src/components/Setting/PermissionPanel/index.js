@@ -10,14 +10,14 @@ import get from 'lodash/get';
 const ApplicationList = createWithRemoteLoader({
   modules: ['components-core:Global@usePreset', 'components-core:Image', 'components-core:Icon', 'components-core:ConfirmButton', 'components-core:FormInfo@useFormModal']
 })(
-  forwardRef(({ remoteModules, isEdit, current, onChange, value, onChecked, tenantId }, ref) => {
+  forwardRef(({ remoteModules, apis, isEdit, current, onChange, value, onChecked, tenantId }, ref) => {
     const [usePreset, Image, Icon, ConfirmButton, useFormModal] = remoteModules;
-    const { apis, ajax } = usePreset();
+    const { ajax } = usePreset();
     const formModal = useFormModal();
     const { message } = App.useApp();
     return (
       <Fetch
-        {...Object.assign({}, apis.account.getApplicationList, { params: { tenantId } })}
+        {...Object.assign({}, apis.getApplicationList, { params: { tenantId } })}
         ref={ref}
         render={({ data, reload }) => {
           return data && data.length > 0 ? (
@@ -58,7 +58,7 @@ const ApplicationList = createWithRemoteLoader({
                                   data: Object.assign({}, item),
                                   onSubmit: async data => {
                                     const { data: resData } = await ajax(
-                                      Object.assign({}, apis.account.saveApplication, {
+                                      Object.assign({}, apis.saveApplication, {
                                         data: Object.assign({}, data, { id: item.id })
                                       })
                                     );
@@ -81,7 +81,7 @@ const ApplicationList = createWithRemoteLoader({
                             className="btn-no-padding"
                             onClick={async () => {
                               const { data: resData } = await ajax(
-                                Object.assign({}, apis.account.deleteApplication, {
+                                Object.assign({}, apis.deleteApplication, {
                                   data: { id: item.id }
                                 })
                               );
@@ -119,11 +119,12 @@ const ApplicationList = createWithRemoteLoader({
   })
 );
 
-const PermissionPanel = forwardRef(({ isEdit, value, mustLocked, tenantId, onChange }, ref) => {
+const PermissionPanel = forwardRef(({ isEdit, apis, value, mustLocked, tenantId, onChange }, ref) => {
   const [current, setCurrent] = useState('');
   return (
     <div className={style['flex-wrapper']}>
       <ApplicationList
+        apis={apis}
         ref={ref}
         current={current}
         onChange={setCurrent}
@@ -140,6 +141,7 @@ const PermissionPanel = forwardRef(({ isEdit, value, mustLocked, tenantId, onCha
       />
       {current && (
         <Detail
+          apis={apis}
           applicationId={current}
           isEdit={isEdit}
           tenantId={tenantId}
