@@ -1,12 +1,11 @@
 import { createWithRemoteLoader } from '@kne/remote-loader';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import merge from 'lodash/merge';
 import { App } from 'antd';
-import { moduleName } from '../../locale';
+import { moduleName } from '@root/locale';
 import md5 from 'md5';
-import { useProps } from '../../common/context';
-import { setCookies } from '../../common/cookies';
-import useNavigate from '../../common/useNavigate';
+import { useProps } from '@root/common/context';
+import { setCookies } from '@root/common/cookies';
 
 const DoLogin = createWithRemoteLoader({
   modules: ['component-core:Global@usePreset', 'components-core:Intl@useIntl']
@@ -42,10 +41,12 @@ const DoLogin = createWithRemoteLoader({
       if (referer) {
         const _referer = decodeURIComponent(referer);
         let obj = new URL(/http(s)?:/.test(_referer) ? _referer : window.location.origin + _referer);
+        obj.searchParams.delete('referer');
         Object.values(resData.data).forEach(key => key && obj.searchParams.delete(key.toUpperCase()));
         refererHref = obj.pathname + obj.search;
       }
-      if (!isTenant || resData.data.currentTenantId) {
+
+      if (!isTenant) {
         navigate(refererHref);
         return;
       }
@@ -55,6 +56,16 @@ const DoLogin = createWithRemoteLoader({
         return;
       }
       const { tenantList } = resTenantData.data;
+
+      if (!(tenantList && tenantList.length > 0)) {
+        message.error('没有可用权限租户');
+      }
+
+      if (resData.data.currentTenantId && tenantList && tenantList.some(({ id }) => id === resData.data.currentTenantId)) {
+        navigate(refererHref);
+        return;
+      }
+
       callback &&
         (await Promise.resolve(
           callback({

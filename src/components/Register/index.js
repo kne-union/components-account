@@ -78,7 +78,7 @@ const Register = createWithRemoteLoader({
             return await validateCode({
               code: value,
               name: type === 'phone' ? formData.phone : formData.email,
-              type: type === 'phone' ? 0 : 1
+              type: 0
             });
           }
         })}

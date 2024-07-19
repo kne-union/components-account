@@ -32,9 +32,9 @@ export const ajax = (() => {
   instance.interceptors.response.use(response => {
     if (response.status === 401 || response.data.code === 401) {
       const searchParams = new URLSearchParams(window.location.search);
-      const referer = encodeURIComponent(window.location.pathname + window.location.search);
-      searchParams.append('referer', referer);
-      window.location.href = '/account/login?' + searchParams.toString();
+      searchParams.delete('referer');
+      const referer = encodeURIComponent(`${window.location.pathname}?${searchParams.toString()}`);
+      window.location.href = '/account/login?referer=' + referer;
       response.showError = false;
     }
     return response;
