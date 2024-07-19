@@ -22,7 +22,7 @@ const User = createWithRemoteLoader({
   const filterValue = getFilterValue(filter);
   return (
     <TablePage
-      {...Object.assign({}, apis.account.getAllUserList, { params: { filter: filterValue } })}
+      {...Object.assign({}, apis.account.admin.getAllUserList, { params: { filter: filterValue } })}
       pagination={{ paramsType: 'params' }}
       name="user-list"
       ref={ref}
@@ -63,7 +63,7 @@ const User = createWithRemoteLoader({
                       data: Object.assign({}, item),
                       onSubmit: async data => {
                         const { data: resData } = await ajax(
-                          Object.assign({}, apis.account.saveUser, {
+                          Object.assign({}, apis.account.admin.saveUser, {
                             data: Object.assign({}, data, { id: item.id })
                           })
                         );
@@ -88,7 +88,7 @@ const User = createWithRemoteLoader({
                     formProps: {
                       onSubmit: async data => {
                         const { data: resData } = await ajax(
-                          Object.assign({}, apis.account.resetUserPassword, {
+                          Object.assign({}, apis.account.admin.resetUserPassword, {
                             data: {
                               password: md5(data.password),
                               userId: item.id
@@ -112,7 +112,7 @@ const User = createWithRemoteLoader({
                     isDelete: false,
                     onClick: async () => {
                       const { data: resData } = await ajax(
-                        Object.assign({}, apis.account.setSuperAdmin, {
+                        Object.assign({}, apis.account.admin.setSuperAdmin, {
                           data: { status: true, userId: item.id }
                         })
                       );
@@ -129,7 +129,7 @@ const User = createWithRemoteLoader({
                     isDelete: false,
                     onClick: async () => {
                       const { data: resData } = await ajax(
-                        Object.assign({}, apis.account.setSuperAdmin, {
+                        Object.assign({}, apis.account.admin.setSuperAdmin, {
                           data: { status: false, userId: item.id }
                         })
                       );
@@ -150,7 +150,7 @@ const User = createWithRemoteLoader({
                     isDelete: false,
                     onClick: async () => {
                       const { data: resData } = await ajax(
-                        Object.assign({}, apis.account.openUser, {
+                        Object.assign({}, apis.account.admin.openUser, {
                           data: {
                             id: item.id
                           }
@@ -173,7 +173,7 @@ const User = createWithRemoteLoader({
                     okText: '确认',
                     onClick: async () => {
                       const { data: resData } = await ajax(
-                        Object.assign({}, apis.account.closeUser, {
+                        Object.assign({}, apis.account.admin.closeUser, {
                           data: {
                             id: item.id
                           }
@@ -251,7 +251,7 @@ const User = createWithRemoteLoader({
                   formProps: {
                     onSubmit: async data => {
                       const { data: resData } = await ajax(
-                        Object.assign({}, apis.account.addUser, {
+                        Object.assign({}, apis.account.admin.addUser, {
                           data: Object.assign({}, data)
                         })
                       );

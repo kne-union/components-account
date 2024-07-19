@@ -1,0 +1,26 @@
+.org {
+  :global {
+    .ant-tree .ant-tree-treenode,
+    .ant-tree .ant-tree-node-content-wrapper {
+      width: 100%;
+    }
+
+    .iconfont {
+      margin-left: 4px;
+    }
+  }
+
+  :global(.ant-tree-node-content-wrapper):hover {
+    .tree-node-actions {
+      visibility: visible;
+    }
+  }
+}
+
+.tree-node {
+  font-size: 12px;
+
+  .tree-node-actions {
+    visibility: hidden;
+  }
+}

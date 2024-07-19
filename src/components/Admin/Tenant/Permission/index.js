@@ -1,5 +1,5 @@
 import { createWithRemoteLoader } from '@kne/remote-loader';
-import PermissionPanel from '../../Permission/PermissionPanel';
+import { PermissionPanel } from '@components/Setting';
 import Fetch from '@kne/react-fetch';
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 import { App } from 'antd';
@@ -19,7 +19,7 @@ const Permission = createWithRemoteLoader({
         return {
           onSubmit: async () => {
             const { data: resData } = await ajax(
-              Object.assign({}, apis.account.saveTenantPermissionList, {
+              Object.assign({}, apis.account.admin.saveTenantPermissionList, {
                 data: Object.assign({}, { tenantId }, fetchRef.current.data)
               })
             );
@@ -31,11 +31,11 @@ const Permission = createWithRemoteLoader({
           }
         };
       },
-      [ajax, apis.account.saveTenantPermissionList, message, tenantId]
+      [ajax, apis.account.admin.saveTenantPermissionList, message, tenantId]
     );
     return (
       <Fetch
-        {...Object.assign({}, apis.account.getTenantPermissionList, {
+        {...Object.assign({}, apis.account.admin.getTenantPermissionList, {
           params: { tenantId }
         })}
         transformData={data => {
@@ -48,6 +48,7 @@ const Permission = createWithRemoteLoader({
         render={({ data, setData }) => {
           return (
             <PermissionPanel
+              apis={apis.account.admin}
               value={data}
               mustLocked
               onChange={({ applications, permissions }) => {

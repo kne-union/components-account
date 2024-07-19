@@ -1,8 +1,7 @@
 import { createWithRemoteLoader } from '@kne/remote-loader';
 import { App, Button, Space } from 'antd';
 import { useRef } from 'react';
-import ApplicationFormInner from './ApplicationFormInner';
-import PermissionPanel from './PermissionPanel';
+import { PermissionPanel, ApplicationFormInner } from '@components/Setting';
 import SelectApplication from './FormInner/SelectApplication';
 import saveJSON from '../../../common/saveJSON';
 
@@ -37,7 +36,7 @@ const Permission = createWithRemoteLoader({
               renderTips={() => null}
               accept={['.json']}
               ossUpload={async ({ file }) => {
-                const { data: resData } = await ajaxPostForm(apis.account.parsePermissionList.url, { file });
+                const { data: resData } = await ajaxPostForm(apis.account.admin.parsePermissionList.url, { file });
                 if (resData.code !== 0) {
                   message.error('文件解析错误');
                   return;
@@ -58,7 +57,7 @@ const Permission = createWithRemoteLoader({
                 formProps: {
                   onSubmit: async data => {
                     const { data: resData } = await ajax(
-                      Object.assign({}, apis.account.exportPermissionList, {
+                      Object.assign({}, apis.account.admin.exportPermissionList, {
                         data
                       })
                     );
@@ -84,7 +83,7 @@ const Permission = createWithRemoteLoader({
                 formProps: {
                   onSubmit: async data => {
                     const { data: resData } = await ajax(
-                      Object.assign({}, apis.account.addApplication, {
+                      Object.assign({}, apis.account.admin.addApplication, {
                         data
                       })
                     );
@@ -105,7 +104,7 @@ const Permission = createWithRemoteLoader({
         </Space>
       }
     >
-      <PermissionPanel ref={appRef} isEdit={isEdit} value={value} />
+      <PermissionPanel ref={appRef} isEdit={isEdit} value={value} apis={apis.account.admin} />
     </Page>
   );
 });
