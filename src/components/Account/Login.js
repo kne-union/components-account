@@ -25,7 +25,7 @@ const Login = createWithRemoteLoader({
     <LoginOuterContainer>
       <DoLogin>
         {({ login }) => {
-          if (isTenant && tenantList.length > 0) {
+          if (isTenant && tenantList && tenantList.length > 0) {
             const setCurrentTenant = async tenantId => {
               const { data: resData } = await ajax(
                 Object.assign({}, account.setCurrentTenantId, {
