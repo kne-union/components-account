@@ -2,7 +2,8 @@ import { createWithRemoteLoader } from '@kne/remote-loader';
 import { App, Button, Empty, Flex, Menu, Checkbox } from 'antd';
 import Fetch from '@kne/react-fetch';
 import ApplicationFormInner from '../ApplicationFormInner';
-import { forwardRef, useState } from 'react';
+import SelectApplicationFormInner from '../SelectApplicationFormInner';
+import { forwardRef, useState, useRef } from 'react';
 import style from './style.module.scss';
 import Detail from './Detail';
 import get from 'lodash/get';
@@ -10,7 +11,7 @@ import get from 'lodash/get';
 const ApplicationList = createWithRemoteLoader({
   modules: ['components-core:Global@usePreset', 'components-core:Image', 'components-core:Icon', 'components-core:ConfirmButton', 'components-core:FormInfo@useFormModal']
 })(
-  forwardRef(({ remoteModules, apis, isEdit, current, onChange, value, onChecked, tenantId }, ref) => {
+  forwardRef(({ remoteModules, apis, isEdit, current, onChange, value, onChecked, tenantId, detailRef }, ref) => {
     const [usePreset, Image, Icon, ConfirmButton, useFormModal] = remoteModules;
     const { ajax } = usePreset();
     const formModal = useFormModal();
@@ -47,6 +48,35 @@ const ApplicationList = createWithRemoteLoader({
                       </div>
                       {isEdit && (
                         <div onClick={e => e.stopPropagation()}>
+                          <Button
+                            type="text"
+                            className="btn-no-padding"
+                            onClick={() => {
+                              const formModalApi = formModal({
+                                title: '复制权限',
+                                size: 'small',
+                                formProps: {
+                                  onSubmit: async data => {
+                                    const { data: resData } = await ajax(
+                                      Object.assign({}, apis.copyPermissions, {
+                                        data: Object.assign({}, data, {
+                                          originApplicationId: item.id
+                                        })
+                                      })
+                                    );
+                                    if (resData.code !== 0) {
+                                      return;
+                                    }
+                                    message.success('复制操作成功');
+                                    formModalApi.close();
+                                  }
+                                },
+                                children: <SelectApplicationFormInner single apis={apis} />
+                              });
+                            }}
+                          >
+                            <Icon type="icon-shangchuan" />
+                          </Button>
                           <Button
                             type="text"
                             className="btn-no-padding"
@@ -113,6 +143,7 @@ const ApplicationList = createWithRemoteLoader({
           if (!current && data && data.length > 0) {
             onChange(data[0].id);
           }
+          detailRef.current && detailRef.current.reload();
         }}
       />
     );
@@ -121,12 +152,14 @@ const ApplicationList = createWithRemoteLoader({
 
 const PermissionPanel = forwardRef(({ isEdit, apis, value, mustLocked, tenantId, onChange }, ref) => {
   const [current, setCurrent] = useState('');
+  const detailRef = useRef(null);
   return (
     <div className={style['flex-wrapper']}>
       <ApplicationList
         apis={apis}
         ref={ref}
         current={current}
+        detailRef={detailRef}
         onChange={setCurrent}
         isEdit={isEdit}
         value={get(value, 'applications', [])}
@@ -141,6 +174,7 @@ const PermissionPanel = forwardRef(({ isEdit, apis, value, mustLocked, tenantId,
       />
       {current && (
         <Detail
+          ref={detailRef}
           apis={apis}
           applicationId={current}
           isEdit={isEdit}

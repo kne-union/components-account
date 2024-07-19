@@ -250,6 +250,10 @@ const getApis = options => {
         url: `${prefix}/admin/saveApplication`,
         method: 'POST'
       },
+      copyPermissions: {
+        url: `${prefix}/admin/copyPermissions`,
+        method: 'POST'
+      },
       getPermissionList: {
         url: `${prefix}/admin/getPermissionList`,
         method: 'GET'
