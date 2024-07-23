@@ -313,6 +313,10 @@ const getApis = options => {
       deleteInviteToken: {
         url: `${prefix}/admin/deleteInviteToken`,
         method: 'POST'
+      },
+      getOperationLogList: {
+        url: `${prefix}/admin/getOperationLogList`,
+        method: 'POST'
       }
     }
   };
