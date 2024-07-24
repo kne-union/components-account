@@ -136,6 +136,10 @@ const getApis = options => {
       openTenantUser: {
         url: `${prefix}/tenant/openTenantUser`,
         method: 'POST'
+      },
+      getOperationLogList: {
+        url: `${prefix}/admin/getTenantOperationLogList`,
+        method: 'POST'
       }
     },
     admin: {
@@ -315,7 +319,7 @@ const getApis = options => {
         method: 'POST'
       },
       getOperationLogList: {
-        url: `${prefix}/admin/getOperationLogList`,
+        url: `${prefix}/admin/getAllOperationLogList`,
         method: 'POST'
       }
     }

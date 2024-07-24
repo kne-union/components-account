@@ -16,13 +16,13 @@ const OperationLog = createWithRemoteLoader({
         getApplicationList: apis.account.admin.getApplicationList
       }}
       searchMap={{
-        userId: 'nickname'
+        userId: { label: 'nickname', value: 'id' }
       }}
     >
       {({ ref, filter }) => {
         return (
           <TablePage
-            {...Object.assign({}, apis.account.admin.getOperationLogList, { data: { filter: Object.assign({}, getFilterValue(filter.value), { type: currentSelectedKey }) } })}
+            {...Object.assign({}, apis.account.admin.getOperationLogList, { data: { type: currentSelectedKey, filter: getFilterValue(filter.value) } })}
             ref={ref}
             name="log"
             columns={[...getOperationLogListColumns()]}

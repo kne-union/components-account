@@ -22,11 +22,11 @@ const ListOptions = createWithRemoteLoader({
             name="userId"
             api={Object.assign({}, apis.getUserList, { params: { tenantId } })}
             single
-            getSearchProps={value => ({ params: { tenantId, filter: { [searchMap.userId]: value } } })}
+            getSearchProps={value => ({ params: { tenantId, filter: { [searchMap.userId.label]: value } } })}
             dataFormat={({ pageData = [], totalCount }) => ({
               list: (pageData || []).map(item => ({
-                label: item[searchMap.userId],
-                value: item?.id
+                label: item[searchMap.userId.label],
+                value: item[searchMap.userId.value]
               })),
               total: totalCount
             })}
