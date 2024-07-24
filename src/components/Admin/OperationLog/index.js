@@ -10,7 +10,15 @@ const OperationLog = createWithRemoteLoader({
   const [currentSelectedKey, setCurrentSelectedKey] = useState('user');
 
   return (
-    <OperationLogListOptions>
+    <OperationLogListOptions
+      apis={{
+        getUserList: apis.account.admin.getAllUserList,
+        getApplicationList: apis.account.admin.getApplicationList
+      }}
+      searchMap={{
+        userId: 'nickname'
+      }}
+    >
       {({ ref, filter }) => {
         return (
           <TablePage
@@ -36,9 +44,7 @@ const OperationLog = createWithRemoteLoader({
                 onChange={setCurrentSelectedKey}
               />
             }
-          >
-            操作日志
-          </TablePage>
+          />
         );
       }}
     </OperationLogListOptions>
