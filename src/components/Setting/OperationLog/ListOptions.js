@@ -1,6 +1,5 @@
 import { createWithRemoteLoader } from '@kne/remote-loader';
 import { useRef, useState } from 'react';
-import { Button, Flex, Space } from 'antd';
 
 const ListOptions = createWithRemoteLoader({
   modules: ['components-core:Filter']
