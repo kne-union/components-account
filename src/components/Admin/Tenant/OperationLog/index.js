@@ -17,14 +17,19 @@ const OperationLog = createWithRemoteLoader({
         getApplicationList: apis.account.admin.getApplicationList
       }}
       searchMap={{
-        userId: 'name'
+        userId: { label: 'name', value: 'id' }
       }}
     >
       {({ ref, filter }) => {
         return (
           <Flex vertical gap={8} flex={1}>
             <Filter {...filter} className="page-filter" />
-            <TablePage {...Object.assign({}, apis.account.admin.getOperationLogList, { data: { tenantId, filter: getFilterValue(filter.value) } })} name="tenant-user-log" ref={ref} columns={[...getOperationLogListColumns()]} />
+            <TablePage
+              {...Object.assign({}, apis.account.admin.getOperationLogList, { data: { tenantId, type: 'tenant', filter: getFilterValue(filter.value) } })}
+              name="tenant-user-log"
+              ref={ref}
+              columns={[...getOperationLogListColumns()]}
+            />
           </Flex>
         );
       }}
