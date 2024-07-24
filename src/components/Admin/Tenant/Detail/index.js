@@ -9,10 +9,12 @@ import Permission from './Permission';
 import FormInner from '../FormInner';
 import User from '../User';
 import OperationLog from '../OperationLog';
+import CompanyInfo from '../CompanyInfo';
 import UserFormInner from '../User/FormInner';
 
 const detailMap = {
   baseInfo: BaseInfo,
+  companyInfo: CompanyInfo,
   role: Role,
   org: Organization,
   permission: Permission,
@@ -44,6 +46,7 @@ const Detail = createWithRemoteLoader({
         },
         stateOption: [
           { tab: '租户信息', key: 'baseInfo' },
+          { tab: '公司信息', key: 'companyInfo' },
           { tab: '租户权限', key: 'permission' },
           { tab: '角色权限', key: 'role' },
           { tab: '组织架构', key: 'org' } /*, {tab: '共享组', key: 'shareGroup'}*/,
