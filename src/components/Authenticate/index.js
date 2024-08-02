@@ -17,7 +17,7 @@ const CheckAccountIsInit = createWithRemoteLoader({
 
   useEffect(() => {
     if (get(data, 'companyInfo.themeColor') && get(data, 'companyInfo.themeColor') !== get(global, 'colorPrimary')) {
-      setGlobal(Object.assign({}, global, { colorPrimary: get(data, 'companyInfo.themeColor') }));
+      setGlobal(themeToken => Object.assign({}, themeToken, { colorPrimary: get(data, 'companyInfo.themeColor') }));
     }
   }, []);
 
