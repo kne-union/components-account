@@ -64,6 +64,7 @@
     "@kne/modules-dev": "^2.0.6",
     "@kne/react-fetch": "^1.5.4",
     "@kne/remote-loader": "^1.2.3",
+    "@kne/use-click-outside": "^0.2.1",
     "antd": "^5.14.1",
     "axios": "^1.6.7",
     "classnames": "^2.5.1",
