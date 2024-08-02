@@ -136,8 +136,8 @@ const InfoInner = createWithRemoteLoader({
                 interceptor="photo-string"
                 dropModalSize="default"
                 border={50}
-                width={960}
-                height={540}
+                width={1140}
+                height={320}
                 block
                 labelHidden
                 onChange={async ({ id }) => {
