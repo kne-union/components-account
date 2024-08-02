@@ -140,6 +140,14 @@ const getApis = options => {
       getOperationLogList: {
         url: `${prefix}/admin/getTenantOperationLogList`,
         method: 'POST'
+      },
+      getCompanyInfo: {
+        url: `${prefix}/tenant/getCompanyInfo`,
+        method: 'GET'
+      },
+      saveCompanyInfo: {
+        url: `${prefix}/tenant/saveCompanyInfo`,
+        method: 'POST'
       }
     },
     admin: {

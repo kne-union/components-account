@@ -3,18 +3,23 @@ import { get } from 'lodash';
 import { Button, ColorPicker, Space } from 'antd';
 import useClickOutside from '@kne/use-click-outside';
 import { useCallback, useRef, useState } from 'react';
+import { withFetch } from '@kne/react-fetch';
 
 import style from './style.module.scss';
 
-const onSubmit = async data => {
-  console.log(data);
+const onSubmit = async ({ data, reload, apis, ajax }) => {
+  const { data: resData } = await ajax(Object.assign({}, apis.account.tenant.saveCompanyInfo, { data }));
+  if (resData.code === 0) {
+    reload?.();
+  }
 };
 
 export const Edit = createWithRemoteLoader({
-  modules: ['components-core:Icon', 'components-core:FormInfo', 'components-core:FormInfo@useFormModal']
-})(({ remoteModules, id, reload, company, list, ...props }) => {
-  const [Icon, FormInfo, useFormModal] = remoteModules;
+  modules: ['components-core:Icon', 'components-core:FormInfo', 'components-core:FormInfo@useFormModal', 'component-core:Global@usePreset']
+})(({ remoteModules, reload, company, list, ...props }) => {
+  const [Icon, FormInfo, useFormModal, usePreset] = remoteModules;
   const formModal = useFormModal();
+  const { apis, ajax } = usePreset();
 
   return (
     <Icon
@@ -28,8 +33,7 @@ export const Edit = createWithRemoteLoader({
             type: 'inner',
             data: company,
             onSubmit: async data => {
-              console.log(data);
-              await onSubmit(data, id, reload);
+              await onSubmit({ data, reload, apis, ajax });
               api?.close();
             }
           },
@@ -40,49 +44,51 @@ export const Edit = createWithRemoteLoader({
   );
 });
 
-const Info = createWithRemoteLoader({
-  modules: ['components-core:Layout@Page', 'components-core:FormInfo', 'components-core:FormInfo@Avatar', 'component-core:Global@useGlobalContext']
-})(({ remoteModules, menu }) => {
-  const [Page, FormInfo, Avatar, useGlobalContext] = remoteModules;
-  const { Input, TextArea } = FormInfo.fields;
-  const { global, setGlobal } = useGlobalContext('themeToken');
+const InfoInner = createWithRemoteLoader({
+  modules: ['components-core:FormInfo', 'components-core:FormInfo@Avatar', 'component-core:Global@useGlobalContext', 'component-core:Global@usePreset']
+})(
+  withFetch(({ remoteModules, reload, data }) => {
+    const [FormInfo, Avatar, useGlobalContext, usePreset] = remoteModules;
+    const { Input, TextArea } = FormInfo.fields;
+    const { global, setGlobal } = useGlobalContext('themeToken');
+    const { apis, ajax } = usePreset();
 
-  const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(false);
 
-  const close = useCallback(() => {
-    setOpen(false);
-  }, []);
+    const close = useCallback(() => {
+      setOpen(false);
+    }, []);
 
-  const colorPickerOuterRef = useRef(null);
-  const colorPickerRef = useClickOutside(e => {
-    if (!colorPickerOuterRef.current) {
-      return;
-    }
-    if (colorPickerOuterRef.current.contains(e.target) || e.target === colorPickerOuterRef.current) {
-      return;
-    }
-    close();
-  });
+    const colorPickerOuterRef = useRef(null);
+    const colorPickerRef = useClickOutside(e => {
+      if (!colorPickerOuterRef.current) {
+        return;
+      }
+      if (colorPickerOuterRef.current.contains(e.target) || e.target === colorPickerOuterRef.current) {
+        return;
+      }
+      setGlobal(Object.assign({}, global, { colorPrimary: get(data, 'themeColor') || '#4F185A' }));
+      close();
+    });
 
-  return (
-    <Page name="setting-info" title="公司信息" menu={menu}>
+    return (
       <div className={style['company-info']}>
         <Space direction="vertical" size={10}>
           <Space>
             <span className={style['label']}>公司名称：</span>
             <Space className={style['value']} size={20}>
-              <span>{'-'}</span>
+              <span>{get(data, 'name') || '-'}</span>
               <span className={style['edit']}>
-                <Edit list={[<Input name="name" label="公司名称" />]} />
+                <Edit list={[<Input name="name" label="公司名称" />]} reload={reload} company={data} />
               </span>
             </Space>
           </Space>
           <Space align="center">
             <span className={style['label']}>公司简称：</span>
             <Space className={style['value']} size={20}>
-              <span>{'-'}</span>
+              <span>{get(data, 'shortName') || '-'}</span>
               <span className={style['edit']}>
-                <Edit list={[<Input name="shortName" label="公司简称" />]} />
+                <Edit list={[<Input name="shortName" label="公司简称" />]} reload={reload} company={data} />
               </span>
             </Space>
           </Space>
@@ -105,7 +111,8 @@ const Info = createWithRemoteLoader({
                       <Picker />
                       <Button
                         type={'primary'}
-                        onClick={() => {
+                        onClick={async () => {
+                          await onSubmit({ data: { themeColor: get(global, 'colorPrimary') }, reload, apis, ajax });
                           close();
                         }}
                       >
@@ -121,7 +128,7 @@ const Info = createWithRemoteLoader({
             <span className={style['label']}>公司logo：</span>
             <div className={style['logo-wrap']}>
               <Avatar.Field
-                // value={{ id: get(company, 'logo') }}
+                value={{ id: get(data, 'logo') }}
                 name="logo"
                 label="公司logo"
                 interceptor="photo-string"
@@ -131,8 +138,8 @@ const Info = createWithRemoteLoader({
                 height={540}
                 block
                 labelHidden
-                onChange={({ id }) => {
-                  console.log({ logo: id });
+                onChange={async ({ id }) => {
+                  await onSubmit({ data: { logo: id }, reload, apis, ajax });
                 }}
               />
               <div className={style['logo-edit-mask']}>编辑</div>
@@ -141,14 +148,27 @@ const Info = createWithRemoteLoader({
           <Space align="center">
             <span className={style['label']}>公司简介：</span>
             <Space className={style['value']} size={20}>
-              <span>{'-'}</span>
+              <span>{get(data, 'description') || '-'}</span>
               <span className={style['edit']}>
-                <Edit list={[<TextArea name="description" label="公司简介" />]} />
+                <Edit list={[<TextArea name="description" label="公司简介" />]} reload={reload} company={data} />
               </span>
             </Space>
           </Space>
         </Space>
       </div>
+    );
+  })
+);
+
+const Info = createWithRemoteLoader({
+  modules: ['components-core:Layout@Page', 'component-core:Global@usePreset']
+})(({ remoteModules, menu }) => {
+  const [Page, usePreset] = remoteModules;
+  const { apis } = usePreset();
+
+  return (
+    <Page name="setting-info" title="公司信息" menu={menu}>
+      <InfoInner {...apis.account.tenant.getCompanyInfo} />
     </Page>
   );
 });

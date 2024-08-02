@@ -1,15 +1,28 @@
 import { createWithRemoteLoader } from '@kne/remote-loader';
 import { Navigate, useLocation } from 'react-router-dom';
 import Fetch from '@kne/react-fetch';
+import { get } from 'lodash';
+import { useEffect } from 'react';
 
-const CheckAccountIsInit = ({ data, baseUrl, children }) => {
+const CheckAccountIsInit = createWithRemoteLoader({
+  modules: ['component-core:Global@useGlobalContext']
+})(({ remoteModules, data, baseUrl, children }) => {
+  const [useGlobalContext] = remoteModules;
+  const { global, setGlobal } = useGlobalContext('themeToken');
+
   const location = useLocation();
   if (data.userInfo.status === 1) {
     return <Navigate to={`${baseUrl || ''}/modify/${encodeURIComponent(data.userInfo.email)}?referer=${encodeURIComponent(location.pathname + location.search)}`} replace />;
   }
 
+  useEffect(() => {
+    if (get(data, 'companyInfo.themeColor') && get(data, 'companyInfo.themeColor') !== get(global, 'colorPrimary')) {
+      setGlobal(Object.assign({}, global, { colorPrimary: get(data, 'companyInfo.themeColor') }));
+    }
+  }, []);
+
   return children;
-};
+});
 
 export const UserInfo = createWithRemoteLoader({
   modules: ['components-core:Global@SetGlobal', 'components-core:Global@usePreset']
