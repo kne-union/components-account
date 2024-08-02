@@ -73,10 +73,10 @@ export const TenantUserInfo = createWithRemoteLoader({
   return (
     <Fetch
       {...Object.assign({}, apis.account.getTenantUserInfo)}
-      render={({ data }) => {
+      render={({ data, reload }) => {
         return (
-          <CheckAccountIsInit baseUrl={baseUrl} data={data}>
-            <SetGlobal globalKey="userInfo" value={data} needReady>
+          <CheckAccountIsInit baseUrl={baseUrl} data={Object.assign({}, data, { reload })}>
+            <SetGlobal globalKey="userInfo" value={Object.assign({}, data, { reload })} needReady>
               {children}
             </SetGlobal>
           </CheckAccountIsInit>

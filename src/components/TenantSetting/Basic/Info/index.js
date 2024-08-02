@@ -7,10 +7,11 @@ import { withFetch } from '@kne/react-fetch';
 
 import style from './style.module.scss';
 
-const onSubmit = async ({ data, reload, apis, ajax }) => {
+const onSubmit = async ({ data, reload, apis, ajax, onSuccess }) => {
   const { data: resData } = await ajax(Object.assign({}, apis.account.tenant.saveCompanyInfo, { data }));
   if (resData.code === 0) {
     reload?.();
+    onSuccess?.();
   }
 };
 
@@ -51,6 +52,7 @@ const InfoInner = createWithRemoteLoader({
     const [FormInfo, Avatar, useGlobalContext, usePreset] = remoteModules;
     const { Input, TextArea } = FormInfo.fields;
     const { global, setGlobal } = useGlobalContext('themeToken');
+    const { global: userInfo } = useGlobalContext('userInfo');
     const { apis, ajax } = usePreset();
 
     const [open, setOpen] = useState(false);
@@ -139,7 +141,13 @@ const InfoInner = createWithRemoteLoader({
                 block
                 labelHidden
                 onChange={async ({ id }) => {
-                  await onSubmit({ data: { logo: id }, reload, apis, ajax });
+                  await onSubmit({
+                    data: { logo: id },
+                    reload,
+                    apis,
+                    ajax,
+                    onSuccess: () => userInfo?.reload?.()
+                  });
                 }}
               />
               <div className={style['logo-edit-mask']}>编辑</div>

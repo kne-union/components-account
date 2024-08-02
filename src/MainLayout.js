@@ -1,6 +1,7 @@
 import { createWithRemoteLoader } from '@kne/remote-loader';
 import { Outlet } from 'react-router-dom';
 import { SuperAdminInfo, UserInfo, TenantUserInfo } from '@components/Authenticate';
+import { get } from 'lodash';
 
 const Global = createWithRemoteLoader({
   modules: ['components-core:Global']
@@ -13,20 +14,39 @@ const Global = createWithRemoteLoader({
   );
 });
 
+const GlobalLayoutInner = createWithRemoteLoader({
+  modules: ['components-core:Layout', 'components-core:Global@useGlobalContext']
+})(({ remoteModules, navigation, title, children }) => {
+  const [Layout, useGlobalContext] = remoteModules;
+  const { global } = useGlobalContext('userInfo');
+
+  return (
+    <Layout
+      navigation={{
+        defaultTitle: title,
+        ...Object.assign(
+          {},
+          navigation,
+          get(global, 'companyInfo.logo')
+            ? {
+                headerLogo: { id: get(global, 'companyInfo.logo'), src: null }
+              }
+            : {}
+        )
+      }}
+    >
+      {children}
+    </Layout>
+  );
+});
+
 const GlobalLayout = createWithRemoteLoader({
-  modules: ['components-core:Layout', 'components-core:Global']
+  modules: ['components-core:Global']
 })(({ remoteModules, navigation, title, preset, children, ...props }) => {
-  const [Layout, Global] = remoteModules;
+  const [Global] = remoteModules;
   return (
     <Global {...props} preset={preset}>
-      <Layout
-        navigation={{
-          defaultTitle: title,
-          ...navigation
-        }}
-      >
-        {children}
-      </Layout>
+      <GlobalLayoutInner {...{ navigation, title, children }} />
     </Global>
   );
 });
