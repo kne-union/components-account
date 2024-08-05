@@ -34,7 +34,7 @@ export const Edit = createWithRemoteLoader({
             type: 'inner',
             data: company,
             onSubmit: async data => {
-              await onSubmit({ data: Object.assign({}, data, { tenantId }), reload, apis, ajax });
+              await onSubmit({ data: Object.assign({}, data, { tenantId, id: get(company, 'id') }), reload, apis, ajax });
               api?.close();
             }
           },
@@ -114,7 +114,7 @@ const CompanyInfo = createWithRemoteLoader({
                       <Button
                         type={'primary'}
                         onClick={async () => {
-                          await onSubmit({ data: { themeColor: get(global, 'colorPrimary'), tenantId }, reload, apis, ajax });
+                          await onSubmit({ data: { themeColor: get(global, 'colorPrimary'), tenantId, id: get(data, 'id') }, reload, apis, ajax });
                           if (tenantId) {
                             setTimeout(() => {
                               setGlobal(Object.assign({}, global, { colorPrimary: get(themeToken, 'colorPrimary') || '#4F185A' }));
@@ -147,7 +147,7 @@ const CompanyInfo = createWithRemoteLoader({
                 labelHidden
                 onChange={async ({ id }) => {
                   await onSubmit({
-                    data: { logo: id, tenantId },
+                    data: { logo: id, tenantId, id: get(data, 'id') },
                     reload,
                     apis,
                     ajax,
