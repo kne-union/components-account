@@ -1,13 +1,23 @@
 import { createWithRemoteLoader } from '@kne/remote-loader';
+import { CompanyInfo as CompanyInfoInner } from '@components/Setting';
 
 const CompanyInfo = createWithRemoteLoader({
-  modules: ['components-core:Layout@Page']
-})(({ remoteModules, menu }) => {
-  const [Page] = remoteModules;
+  modules: ['components-core:InfoPage', 'component-core:Global@usePreset']
+})(({ remoteModules, tenantId }) => {
+  const [InfoPage, usePreset] = remoteModules;
+  const { apis } = usePreset();
+  console.log(tenantId);
   return (
-    <Page name="log" title="公司信息" menu={menu}>
-      公司信息
-    </Page>
+    <InfoPage>
+      <CompanyInfoInner
+        {...apis.account.admin.getCompanyInfo}
+        params={{ tenantId }}
+        tenantId={tenantId}
+        apis={{
+          saveCompanyInfo: apis.account.admin.saveCompanyInfo
+        }}
+      />
+    </InfoPage>
   );
 });
 

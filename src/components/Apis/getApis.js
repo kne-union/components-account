@@ -329,6 +329,14 @@ const getApis = options => {
       getOperationLogList: {
         url: `${prefix}/admin/getAllOperationLogList`,
         method: 'POST'
+      },
+      getCompanyInfo: {
+        url: `${prefix}/admin/getCompanyInfo`,
+        method: 'GET'
+      },
+      saveCompanyInfo: {
+        url: `${prefix}/admin/saveCompanyInfo`,
+        method: 'POST'
       }
     }
   };
