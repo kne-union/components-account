@@ -17,7 +17,7 @@ const onSubmit = async ({ data, reload, apis, ajax, onSuccess }) => {
 
 export const Edit = createWithRemoteLoader({
   modules: ['components-core:Icon', 'components-core:FormInfo', 'components-core:FormInfo@useFormModal', 'component-core:Global@usePreset']
-})(({ remoteModules, reload, company, list, ...props }) => {
+})(({ remoteModules, reload, company, list, tenantId, ...props }) => {
   const [Icon, FormInfo, useFormModal, usePreset] = remoteModules;
   const formModal = useFormModal();
   const { apis, ajax } = usePreset();
@@ -34,7 +34,7 @@ export const Edit = createWithRemoteLoader({
             type: 'inner',
             data: company,
             onSubmit: async data => {
-              await onSubmit({ data, reload, apis, ajax });
+              await onSubmit({ data: Object.assign({}, data, { tenantId }), reload, apis, ajax });
               api?.close();
             }
           },
@@ -53,7 +53,7 @@ const CompanyInfo = createWithRemoteLoader({
     const { Input, TextArea } = FormInfo.fields;
     const { global, setGlobal } = useGlobalContext('themeToken');
     const { global: userInfo } = useGlobalContext('userInfo');
-    const { ajax } = usePreset();
+    const { ajax, themeToken } = usePreset();
 
     const [open, setOpen] = useState(false);
 
@@ -69,7 +69,7 @@ const CompanyInfo = createWithRemoteLoader({
       if (colorPickerOuterRef.current.contains(e.target) || e.target === colorPickerOuterRef.current) {
         return;
       }
-      setGlobal(Object.assign({}, global, { colorPrimary: get(data, 'themeColor') || '#4F185A' }));
+      setGlobal(Object.assign({}, global, { colorPrimary: tenantId ? get(themeToken, 'colorPrimary') : get(data, 'themeColor') || '#4F185A' }));
       close();
     });
 
@@ -81,7 +81,7 @@ const CompanyInfo = createWithRemoteLoader({
             <Space className={style['value']} size={20}>
               <span>{get(data, 'name') || '-'}</span>
               <span className={style['edit']}>
-                <Edit list={[<Input name="name" label="公司名称" />]} reload={reload} company={data} />
+                <Edit list={[<Input name="name" label="公司名称" />]} reload={reload} company={data} tenantId={tenantId} />
               </span>
             </Space>
           </Space>
@@ -90,7 +90,7 @@ const CompanyInfo = createWithRemoteLoader({
             <Space className={style['value']} size={20}>
               <span>{get(data, 'shortName') || '-'}</span>
               <span className={style['edit']}>
-                <Edit list={[<Input name="shortName" label="公司简称" />]} reload={reload} company={data} />
+                <Edit list={[<Input name="shortName" label="公司简称" />]} reload={reload} company={data} tenantId={tenantId} />
               </span>
             </Space>
           </Space>
@@ -102,7 +102,7 @@ const CompanyInfo = createWithRemoteLoader({
                 onClick={() => {
                   setOpen(true);
                 }}
-                value={get(global, 'colorPrimary') || '#4F185A'}
+                value={tenantId ? get(data, 'themeColor') : get(global, 'colorPrimary') || '#4F185A'}
                 onChange={color => {
                   setGlobal(Object.assign({}, global, { colorPrimary: color?.toHexString() }));
                 }}
@@ -114,7 +114,12 @@ const CompanyInfo = createWithRemoteLoader({
                       <Button
                         type={'primary'}
                         onClick={async () => {
-                          await onSubmit({ data: { themeColor: get(global, 'colorPrimary') }, reload, apis, ajax });
+                          await onSubmit({ data: { themeColor: get(global, 'colorPrimary'), tenantId }, reload, apis, ajax });
+                          if (tenantId) {
+                            setTimeout(() => {
+                              setGlobal(Object.assign({}, global, { colorPrimary: get(themeToken, 'colorPrimary') || '#4F185A' }));
+                            }, 100);
+                          }
                           close();
                         }}
                       >
@@ -142,7 +147,7 @@ const CompanyInfo = createWithRemoteLoader({
                 labelHidden
                 onChange={async ({ id }) => {
                   await onSubmit({
-                    data: { logo: id },
+                    data: { logo: id, tenantId },
                     reload,
                     apis,
                     ajax,
@@ -158,7 +163,7 @@ const CompanyInfo = createWithRemoteLoader({
             <Space className={style['value']} size={20}>
               <span>{get(data, 'description') || '-'}</span>
               <span className={style['edit']}>
-                <Edit list={[<TextArea name="description" label="公司简介" />]} reload={reload} company={data} />
+                <Edit list={[<TextArea name="description" label="公司简介" />]} reload={reload} company={data} tenantId={tenantId} />
               </span>
             </Space>
           </Space>
