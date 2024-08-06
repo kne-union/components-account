@@ -8,14 +8,18 @@ import Organization from '../Organization';
 import Permission from './Permission';
 import FormInner from '../FormInner';
 import User from '../User';
+import OperationLog from '../OperationLog';
+import CompanyInfo from '../CompanyInfo';
 import UserFormInner from '../User/FormInner';
 
 const detailMap = {
   baseInfo: BaseInfo,
+  companyInfo: CompanyInfo,
   role: Role,
   org: Organization,
   permission: Permission,
-  user: User
+  user: User,
+  operationLog: OperationLog
 };
 
 const Detail = createWithRemoteLoader({
@@ -42,16 +46,12 @@ const Detail = createWithRemoteLoader({
         },
         stateOption: [
           { tab: '租户信息', key: 'baseInfo' },
+          { tab: '公司信息', key: 'companyInfo' },
           { tab: '租户权限', key: 'permission' },
-          {
-            tab: '角色权限',
-            key: 'role'
-          },
+          { tab: '角色权限', key: 'role' },
           { tab: '组织架构', key: 'org' } /*, {tab: '共享组', key: 'shareGroup'}*/,
-          {
-            tab: '租户用户',
-            key: 'user'
-          }
+          { tab: '租户用户', key: 'user' },
+          { tab: '操作日志', key: 'operationLog' }
         ]
       }}
       header={renderWithTenantInfo(({ tenant, reload }) => (

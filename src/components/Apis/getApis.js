@@ -136,6 +136,18 @@ const getApis = options => {
       openTenantUser: {
         url: `${prefix}/tenant/openTenantUser`,
         method: 'POST'
+      },
+      getOperationLogList: {
+        url: `${prefix}/admin/getTenantOperationLogList`,
+        method: 'POST'
+      },
+      getCompanyInfo: {
+        url: `${prefix}/tenant/getCompanyInfo`,
+        method: 'GET'
+      },
+      saveCompanyInfo: {
+        url: `${prefix}/tenant/saveCompanyInfo`,
+        method: 'POST'
       }
     },
     admin: {
@@ -312,6 +324,18 @@ const getApis = options => {
       },
       deleteInviteToken: {
         url: `${prefix}/admin/deleteInviteToken`,
+        method: 'POST'
+      },
+      getOperationLogList: {
+        url: `${prefix}/admin/getAllOperationLogList`,
+        method: 'POST'
+      },
+      getCompanyInfo: {
+        url: `${prefix}/admin/getCompanyInfo`,
+        method: 'GET'
+      },
+      saveCompanyInfo: {
+        url: `${prefix}/admin/saveCompanyInfo`,
         method: 'POST'
       }
     }

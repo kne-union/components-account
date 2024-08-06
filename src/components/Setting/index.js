@@ -5,3 +5,5 @@ export { Permission as RolePermission, getColumns as getRoleColumns, FormInner a
 export { ListOptions as OrgListOptions } from './Org';
 
 export { ListOptions as UserListOptions, getColumns as getUserColumns, FormInner as UserFormInner } from './User';
+export { ListOptions as OperationLogListOptions, getColumns as getOperationLogListColumns } from './OperationLog';
+export { default as CompanyInfo } from './CompanyInfo';

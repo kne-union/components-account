@@ -1,16 +1,20 @@
 import { createWithRemoteLoader } from '@kne/remote-loader';
+import { CompanyInfo } from '@components/Setting';
 
 const Info = createWithRemoteLoader({
-  modules: ['components-core:Layout@Page']
+  modules: ['components-core:Layout@Page', 'component-core:Global@usePreset']
 })(({ remoteModules, menu }) => {
-  const [Page] = remoteModules;
+  const [Page, usePreset] = remoteModules;
+  const { apis } = usePreset();
+
   return (
     <Page name="setting-info" title="公司信息" menu={menu}>
-      <div>公司名称</div>
-      <div>公司简称</div>
-      <div>主题色</div>
-      <div>logo</div>
-      <div>公司简介</div>
+      <CompanyInfo
+        {...apis.account.tenant.getCompanyInfo}
+        apis={{
+          saveCompanyInfo: apis.account.tenant.saveCompanyInfo
+        }}
+      />
     </Page>
   );
 });

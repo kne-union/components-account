@@ -1,13 +1,53 @@
 import { createWithRemoteLoader } from '@kne/remote-loader';
+import { getOperationLogListColumns, OperationLogListOptions } from '@components/Setting';
+import { useState } from 'react';
 
 const OperationLog = createWithRemoteLoader({
-  modules: ['components-core:Layout@Page']
+  modules: ['components-core:Layout@TablePage', 'components-core:Global@usePreset', 'components-core:Filter@getFilterValue', 'components-core:StateBar']
 })(({ remoteModules, menu }) => {
-  const [Page] = remoteModules;
+  const [TablePage, usePreset, getFilterValue, StateBar] = remoteModules;
+  const { apis } = usePreset();
+  const [currentSelectedKey, setCurrentSelectedKey] = useState('user');
+
   return (
-    <Page name="log" title="操作日志" menu={menu}>
-      操作日志
-    </Page>
+    <OperationLogListOptions
+      apis={{
+        getUserList: apis.account.admin.getAllUserList,
+        getApplicationList: apis.account.admin.getApplicationList
+      }}
+      searchMap={{
+        userId: { label: 'nickname', value: 'id' }
+      }}
+    >
+      {({ ref, filter }) => {
+        return (
+          <TablePage
+            {...Object.assign({}, apis.account.admin.getOperationLogList, { data: { type: currentSelectedKey, filter: getFilterValue(filter.value) } })}
+            ref={ref}
+            name="log"
+            columns={[...getOperationLogListColumns()]}
+            page={{
+              title: '操作日志',
+              filter,
+              menu
+            }}
+            topArea={
+              <StateBar
+                type="radio"
+                size="small"
+                activeKey={currentSelectedKey}
+                stateOption={[
+                  { key: 'user', tab: '用户' },
+                  { key: 'tenant', tab: '租户' },
+                  { key: 'admin', tab: '管理员' }
+                ]}
+                onChange={setCurrentSelectedKey}
+              />
+            }
+          />
+        );
+      }}
+    </OperationLogListOptions>
   );
 });
 

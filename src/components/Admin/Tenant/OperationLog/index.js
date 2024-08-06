@@ -13,11 +13,11 @@ const OperationLog = createWithRemoteLoader({
     <OperationLogListOptions
       tenantId={tenantId}
       apis={{
-        getUserList: apis.account.tenant.getTenantUserList,
-        getApplicationList: apis.account.tenant.getApplicationList
+        getUserList: apis.account.admin.getTenantUserList,
+        getApplicationList: apis.account.admin.getApplicationList
       }}
       searchMap={{
-        userId: { label: 'name', value: 'userId' }
+        userId: { label: 'name', value: 'id' }
       }}
     >
       {({ ref, filter }) => {
@@ -25,7 +25,7 @@ const OperationLog = createWithRemoteLoader({
           <Flex vertical gap={8} flex={1}>
             <Filter {...filter} className="page-filter" />
             <TablePage
-              {...Object.assign({}, apis.account.tenant.getOperationLogList, { data: { tenantId, type: 'tenant', filter: getFilterValue(filter.value) } })}
+              {...Object.assign({}, apis.account.admin.getOperationLogList, { data: { tenantId, type: 'tenant', filter: getFilterValue(filter.value) } })}
               name="tenant-user-log"
               ref={ref}
               columns={[...getOperationLogListColumns()]}
