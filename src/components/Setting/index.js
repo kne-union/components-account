@@ -1,4 +1,5 @@
 export { default as ApplicationFormInner } from './ApplicationFormInner';
+export { default as SelectApplicationFormInner } from './SelectApplicationFormInner';
 export { default as PermissionPanel } from './PermissionPanel';
 export { Permission as RolePermission, getColumns as getRoleColumns, FormInner as RoleFormInner, ListOptions as RoleListOptions } from './Role';
 

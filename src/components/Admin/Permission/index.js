@@ -1,11 +1,8 @@
 import { createWithRemoteLoader } from '@kne/remote-loader';
 import { App, Button, Space } from 'antd';
 import { useRef } from 'react';
-import { PermissionPanel, ApplicationFormInner } from '@components/Setting';
-import SelectApplication from './FormInner/SelectApplication';
-import saveJSON from '../../../common/saveJSON';
-
-import style from './style.module.scss';
+import { PermissionPanel, ApplicationFormInner, SelectApplicationFormInner as SelectApplication } from '@components/Setting';
+import saveJSON from '@root/common/saveJSON';
 import uniqueId from 'lodash/uniqueId';
 
 const Permission = createWithRemoteLoader({
@@ -22,7 +19,7 @@ const Permission = createWithRemoteLoader({
       title="应用权限管理"
       titleExtra={
         <Space>
-          <div className={style['upload-btn']}>
+          <div>
             <Upload.Field
               block
               showUploadList={false}
@@ -68,7 +65,7 @@ const Permission = createWithRemoteLoader({
                     formApi.close();
                   }
                 },
-                children: <SelectApplication />
+                children: <SelectApplication apis={apis.account.admin} />
               });
             }}
           >
