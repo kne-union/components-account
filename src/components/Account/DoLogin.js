@@ -62,11 +62,8 @@ const DoLogin = createWithRemoteLoader({
       }
 
       if (resData.data.currentTenantId && tenantList && tenantList.some(({ id }) => id === resData.data.currentTenantId)) {
-        const { data: resData } = await ajax(Object.assign({}, account.getTenantUserInfo));
-        if (resData.code === 0) {
-          navigate(refererHref);
-          return;
-        }
+        navigate(refererHref);
+        return;
       }
 
       callback &&
