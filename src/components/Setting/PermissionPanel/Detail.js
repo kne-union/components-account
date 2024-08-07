@@ -1,6 +1,6 @@
 import { createWithRemoteLoader } from '@kne/remote-loader';
 import { App, Button, List, Flex, Card, Space, Checkbox } from 'antd';
-import { useMemo, useState } from 'react';
+import { forwardRef, useMemo, useState } from 'react';
 import style from './style.module.scss';
 import Fetch from '@kne/react-fetch';
 import FormInner from './FormInner';
@@ -216,10 +216,11 @@ const PermissionList = ({ apis, applicationId, reload, data, isEdit, mustLocked,
   return <Flex gap={8}>{render({ pid: 0, parentChecked })}</Flex>;
 };
 
-const Detail = ({ apis, applicationId, isEdit, mustLocked, value, onChecked, parentChecked, tenantId }) => {
+const Detail = forwardRef(({ apis, applicationId, isEdit, mustLocked, value, onChecked, parentChecked, tenantId }, ref) => {
   return (
     <Fetch
       {...Object.assign({}, apis.getPermissionList, { params: { applicationId, tenantId } })}
+      ref={ref}
       render={({ data, reload }) => {
         return (
           <div className={style['permission-detail-right']}>
@@ -229,6 +230,6 @@ const Detail = ({ apis, applicationId, isEdit, mustLocked, value, onChecked, par
       }}
     />
   );
-};
+});
 
 export default Detail;

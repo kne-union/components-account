@@ -138,7 +138,7 @@ const getApis = options => {
         method: 'POST'
       },
       getOperationLogList: {
-        url: `${prefix}/admin/getTenantOperationLogList`,
+        url: `${prefix}/tenant/getTenantOperationLogList`,
         method: 'POST'
       },
       getCompanyInfo: {
@@ -248,6 +248,10 @@ const getApis = options => {
       },
       saveApplication: {
         url: `${prefix}/admin/saveApplication`,
+        method: 'POST'
+      },
+      copyPermissions: {
+        url: `${prefix}/admin/copyPermissions`,
         method: 'POST'
       },
       getPermissionList: {
