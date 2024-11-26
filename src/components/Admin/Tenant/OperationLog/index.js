@@ -17,7 +17,7 @@ const OperationLog = createWithRemoteLoader({
         getApplicationList: apis.account.admin.getApplicationList
       }}
       searchMap={{
-        userId: { label: 'name', value: 'id' }
+        userId: { label: 'name', value: 'userId' }
       }}
     >
       {({ ref, filter }) => {
