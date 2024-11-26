@@ -1,9 +1,11 @@
-import { useState, useRef } from 'react';
+import { useRef, useState } from 'react';
 import { createWithRemoteLoader } from '@kne/remote-loader';
-import { Space, Button, App } from 'antd';
+import { App, Button, Space } from 'antd';
+import get from 'lodash/get';
 import getColumns from './getColumns';
 import FormInner from '../FormInner';
 import UserFormInner from '../User/FormInner';
+import { UserFormInner as SettingUserFormInner } from '@components/Setting';
 import { useNavigate } from 'react-router-dom';
 import { useBaseUrl } from '@common/context';
 import Permission from '../Permission';
@@ -102,7 +104,12 @@ const List = createWithRemoteLoader({
                         ref.current.reload();
                       }
                     },
-                    children: <UserFormInner tenantId={item.id} />
+                    children: (
+                      <>
+                        <UserFormInner />
+                        <SettingUserFormInner tenantId={get(item, 'id')} apis={apis.account.admin} />
+                      </>
+                    )
                   });
                 }
               },

@@ -56,6 +56,21 @@ export const ajax = (() => {
   return instance;
 })();
 
+const componentsCoreRemote =
+  process.env.NODE_ENV === 'development'
+    ? {
+        remote: 'components-core',
+        url: 'https://uc.fatalent.cn',
+        tpl: '{{url}}/packages/@kne-components/{{remote}}/{{version}}/build',
+        defaultVersion: '0.2.71'
+      }
+    : {
+        remote: 'components-core',
+        url: 'http://localhost:3002',
+        tpl: '{{url}}',
+        // url: 'https://uc.fatalent.cn',
+        defaultVersion: '0.2.39'
+      };
 export const globalInit = async () => {
   fetchPreset({
     ajax,
@@ -101,9 +116,10 @@ export const globalInit = async () => {
     {}
   );
 
-  remoteComponentsLoader.default = remoteComponentsLoader['components-core'];
+  remoteComponentsLoader.default = componentsCoreRemote;
 
   if (process.env.NODE_ENV === 'development') {
+    remoteComponentsLoader['components-core'] = componentsCoreRemote;
     remoteComponentsLoader['components-account'] = {
       remote: 'components-account',
       url: '/',
