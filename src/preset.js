@@ -65,7 +65,6 @@ const componentsCoreRemote = {
   tpl: '{{url}}/packages/@kne-components/{{remote}}/{{version}}/build',
   defaultVersion: '0.2.77'
 };
-
 export const globalInit = async () => {
   fetchPreset({
     ajax,
@@ -136,13 +135,15 @@ export const globalInit = async () => {
     ajaxPostForm,
     apis: Object.assign({}, apis, {
       account: getApis(),
-      oss: {
-        url: '/api/static/file-url/{id}',
-        paramsType: 'urlParams',
-        ignoreSuccessState: true
-      },
-      ossUpload: ({ file }) => {
-        return ajaxPostForm('/api/static/upload', { file });
+      file: {
+        upload: ({ file }) => {
+          return ajaxPostForm('/api/static/upload', { file });
+        },
+        getUrl: {
+          url: '/api/static/file-url/{id}',
+          paramsType: 'urlParams',
+          ignoreSuccessState: true
+        }
       }
     }),
     themeToken: {
