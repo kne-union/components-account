@@ -33,8 +33,9 @@ export const ajax = (() => {
     if (response.status === 401 || response.data.code === 401) {
       const searchParams = new URLSearchParams(window.location.search);
       searchParams.delete('referer');
+      const isTenant = searchParams.get('isTenant') || /^\/tenant/.test(window.location.pathname);
       const referer = encodeURIComponent(`${window.location.pathname}?${searchParams.toString()}`);
-      window.location.href = '/account/login?referer=' + referer;
+      window.location.href = `/account/login?referer=${referer}${isTenant ? '&isTenant=true' : ''}`;
       response.showError = false;
     }
     return response;
