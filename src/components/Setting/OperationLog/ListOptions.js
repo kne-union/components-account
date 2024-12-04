@@ -25,7 +25,7 @@ const ListOptions = createWithRemoteLoader({
             getSearchProps={value => ({ params: { tenantId, filter: { [searchMap.userId.label]: value } } })}
             dataFormat={({ pageData = [], totalCount }) => ({
               list: (pageData || []).map(item => ({
-                label: item[searchMap.userId.label],
+                label: item[searchMap.userId.label] || item.email || item.phone || '-',
                 value: item[searchMap.userId.value]
               })),
               total: totalCount
