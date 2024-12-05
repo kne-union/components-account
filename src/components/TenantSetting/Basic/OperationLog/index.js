@@ -3,12 +3,11 @@ import { getOperationLogListColumns, OperationLogListOptions } from '@components
 import { Flex } from 'antd';
 
 const OperationLog = createWithRemoteLoader({
-  modules: ['components-core:Table@TablePage', 'components-core:Global@usePreset', 'components-core:Filter']
-})(({ remoteModules, tenantId }) => {
+  modules: ['components-core:Layout@TablePage', 'components-core:Global@usePreset', 'components-core:Filter']
+})(({ remoteModules, menu, tenantId }) => {
   const [TablePage, usePreset, Filter] = remoteModules;
   const { apis } = usePreset();
   const { getFilterValue } = Filter;
-
   return (
     <OperationLogListOptions
       tenantId={tenantId}
@@ -22,15 +21,23 @@ const OperationLog = createWithRemoteLoader({
     >
       {({ ref, filter }) => {
         return (
-          <Flex vertical gap={8} flex={1}>
-            <Filter {...filter} className="page-filter" />
-            <TablePage
-              {...Object.assign({}, apis.account.tenant.getOperationLogList, { data: { tenantId, type: 'tenant', filter: getFilterValue(filter.value) } })}
-              name="tenant-user-log"
-              ref={ref}
-              columns={[...getOperationLogListColumns()]}
-            />
-          </Flex>
+          <TablePage
+            {...Object.assign({}, apis.account.tenant.getOperationLogList, {
+              data: {
+                tenantId,
+                type: 'tenant',
+                filter: getFilterValue(filter.value)
+              }
+            })}
+            name="tenant-user-log"
+            ref={ref}
+            columns={[...getOperationLogListColumns()]}
+            page={{
+              title: '操作日志',
+              filter,
+              menu
+            }}
+          />
         );
       }}
     </OperationLogListOptions>
