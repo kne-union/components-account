@@ -82,7 +82,7 @@ const User = createWithRemoteLoader({
                     />,
                     <AdvancedSelectFilterItem
                       label="角色"
-                      name="tenantRoles"
+                      name="roleIds"
                       api={Object.assign({}, apis.account.admin.getTenantRoleList, {
                         params: { tenantId, withoutDefaultRole: true }
                       })}
