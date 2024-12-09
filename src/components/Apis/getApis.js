@@ -91,6 +91,13 @@ const getApis = options => {
         headers: Object.assign({}, headers, { 'X-APP-NAME': appName })
       }
     },
+    getTenantInfo: {
+      url: `${prefix}/tenant/getTenantInfo`,
+      method: 'GET',
+      options: {
+        headers: Object.assign({}, headers, { 'X-APP-NAME': appName })
+      }
+    },
     getSuperAdminInfo: {
       url: `${prefix}/admin/getSuperAdminInfo`,
       method: 'GET',

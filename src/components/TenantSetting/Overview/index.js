@@ -19,19 +19,20 @@ const Overview = createWithRemoteLoader({
     <Page name="setting-overview" title="总览" menu={menu}>
       {tenant.id ? (
         <Fetch
-          {...Object.assign({}, apis.account.getUserTenant)}
+          {...Object.assign({}, apis.account.getTenantInfo)}
           params={{ id: tenant.id }}
-          render={({ data: { currentTenant, tenantUserList }, reload }) => {
+          render={({ data, reload }) => {
+            // console.log(data);
             return (
               <div className={style['overview-page']}>
                 <Flex vertical gap={24}>
                   {[
-                    { label: '租户名称', value: get(currentTenant, 'name') },
-                    { label: '租户服务时间', value: dayjs(get(currentTenant, 'serviceStartTime')).format('YYYY-MM-DD') + ' ~ ' + dayjs(get(currentTenant, 'serviceEndTime')).format('YYYY-MM-DD') },
-                    { label: '租户人数', value: get(currentTenant, 'accountNumber') + '人' },
-                    { label: '当前人数', value: get(tenantUserList, 'length') + '人' }
+                    { label: '租户名称', value: get(data, 'name') },
+                    { label: '租户服务时间', value: dayjs(get(data, 'serviceStartTime')).format('YYYY-MM-DD') + ' ~ ' + dayjs(get(data, 'serviceEndTime')).format('YYYY-MM-DD') },
+                    { label: '租户人数', value: get(data, 'accountNumber') + '人' }
+                    // { label: '当前人数', value: get(tenantUserList, 'length') + '人' }
                   ].map(({ label, value }) => (
-                    <Flex gap={8}>
+                    <Flex gap={8} key={label}>
                       {label}：{value}
                     </Flex>
                   ))}
