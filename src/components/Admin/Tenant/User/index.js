@@ -10,8 +10,10 @@ const User = createWithRemoteLoader({
   const { ajax, apis } = usePreset();
   const formModal = useFormModal();
   const tenantId = record.id;
+
   const { message } = App.useApp();
-  const { getFilterValue } = Filter;
+  const { fields: filterFields, getFilterValue } = Filter;
+  const { AdvancedSelectFilterItem } = filterFields;
   return (
     <UserListOptions
       apis={apis.account.admin}
@@ -58,7 +60,46 @@ const User = createWithRemoteLoader({
       {({ ref, filter, topOptions, optionsColumn }) => {
         return (
           <Flex vertical gap={8} flex={1}>
-            <Filter {...filter} extra={topOptions} className="page-filter" />
+            <Filter
+              {...Object.assign({}, filter, {
+                list: [
+                  [
+                    ...filter.list[0].slice(0, 2),
+                    <AdvancedSelectFilterItem
+                      label="状态"
+                      name="status"
+                      single
+                      api={{
+                        loader: () => {
+                          return {
+                            pageData: [
+                              { label: '正常', value: 0 },
+                              { label: '已关闭', value: 12 }
+                            ]
+                          };
+                        }
+                      }}
+                    />,
+                    <AdvancedSelectFilterItem
+                      label="角色"
+                      name="roleIds"
+                      api={Object.assign({}, apis.account.admin.getTenantRoleList, {
+                        params: { tenantId, withoutDefaultRole: true }
+                      })}
+                      dataFormat={({ pageData = [], totalCount }) => ({
+                        list: (pageData || []).map(item => ({
+                          label: item.name || '-',
+                          value: item.id
+                        })),
+                        total: totalCount
+                      })}
+                    />
+                  ]
+                ]
+              })}
+              extra={topOptions}
+              className="page-filter"
+            />
             <TablePage
               {...Object.assign({}, apis.account.admin.getTenantUserList, {
                 params: Object.assign({}, { tenantId, filter: getFilterValue(filter.value) })

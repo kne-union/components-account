@@ -1,5 +1,6 @@
 import { createWithRemoteLoader } from '@kne/remote-loader';
 import { useRef, useState } from 'react';
+import merge from 'lodash/merge';
 
 const ListOptions = createWithRemoteLoader({
   modules: ['components-core:Filter']
@@ -19,12 +20,12 @@ const ListOptions = createWithRemoteLoader({
           <AdvancedSelectFilterItem
             label="操作用户"
             name="userId"
-            api={Object.assign({}, apis.getUserList, { params: { tenantId } })}
+            api={merge({}, apis.getUserList, { params: { tenantId } })}
             single
             getSearchProps={value => ({ params: { tenantId, filter: { [searchMap.userId.label]: value } } })}
             dataFormat={({ pageData = [], totalCount }) => ({
               list: (pageData || []).map(item => ({
-                label: item[searchMap.userId.label],
+                label: item[searchMap.userId.label] || item.email || item.phone || '-',
                 value: item[searchMap.userId.value]
               })),
               total: totalCount
